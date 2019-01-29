@@ -25,7 +25,6 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-            - elm-stuff
           key: v1-dependencies-{{ checksum "package-lock.json" }}
 
   test:
@@ -48,7 +47,6 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-            - elm-stuff
           key: v1-dependencies-{{ checksum "package-lock.json" }}
 
 workflows:
