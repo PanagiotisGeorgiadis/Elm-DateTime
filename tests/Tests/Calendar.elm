@@ -840,7 +840,7 @@ getDatesInMonthTest : Test
 getDatesInMonthTest =
     let
         getDatesInMonth date =
-            Calendar.getDatesInMonth (Calendar.getYear date) (Calendar.getMonth date)
+            Calendar.getDatesInMonth date
 
         performTest rawDate datesCount =
             case rawDate of

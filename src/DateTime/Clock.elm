@@ -1,11 +1,11 @@
 module DateTime.Clock exposing
-    ( RawTime, Time, Hour, Minute, Second, Millisecond
-    , fromRawParts, fromPosix
-    , toMillis, hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
+    ( Time, RawTime
+    , fromPosix, fromRawParts
+    , toMillis
     , getHours, getMinutes, getSeconds, getMilliseconds
     , incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
-    , compareTime, compareHours, compareMinutes, compareSeconds, compareMilliseconds
+    , compareTime
     , zero
     )
 
@@ -14,17 +14,17 @@ module DateTime.Clock exposing
 
 # Type definition
 
-@docs RawTime, Time, Hour, Minute, Second, Millisecond
+@docs Time, RawTime
 
 
 # Creating values
 
-@docs fromRawParts, fromPosix
+@docs fromPosix, fromRawParts
 
 
 # Conversions
 
-@docs toMillis, hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
+@docs toMillis
 
 
 # Getters
@@ -53,7 +53,7 @@ module DateTime.Clock exposing
 
 -}
 
-import DateTime.Clock.Internal as Internal
+import DateTime.Clock.Internal as Internal exposing (Hour, Millisecond, Minute, Second)
 import Time as Time_
 
 
@@ -61,22 +61,6 @@ import Time as Time_
 -}
 type alias Time =
     Internal.Time
-
-
-type alias Hour =
-    Internal.Hour
-
-
-type alias Minute =
-    Internal.Minute
-
-
-type alias Second =
-    Internal.Second
-
-
-type alias Millisecond =
-    Internal.Millisecond
 
 
 {-| An 'abstract' representation of Time and its constituent parts based on Integers.
@@ -97,74 +81,6 @@ type alias RawTime =
 fromRawParts : RawTime -> Maybe Time
 fromRawParts =
     Internal.fromRawParts
-
-
-{-| Attempt to construct a `Hour` from an `Int`.
-
-> hoursFromInt 3
-> Just (Hour 3) : Maybe Hour
-> hoursFromInt 45
-> Just (Hour 45) : Maybe Hour
-> hoursFromInt 75
-> Nothing : Maybe Hour
-
--- Internal use only
-
--}
-hoursFromInt : Int -> Maybe Hour
-hoursFromInt =
-    Internal.hoursFromInt
-
-
-{-| Attempt to construct a `Minute` from an `Int`.
-
-> minutesFromInt 3
-> Just (Minute 3) : Maybe Minute
-> minutesFromInt 45
-> Just (Minute 45) : Maybe Minute
-> minutesFromInt 75
-> Nothing : Maybe Minute
-
--- Internal use only
-
--}
-minutesFromInt : Int -> Maybe Minute
-minutesFromInt =
-    Internal.minutesFromInt
-
-
-{-| Attempt to construct a `Second` from an `Int`.
-
-> secondsFromInt 3
-> Just (Second 3) : Maybe Second
-> secondsFromInt 45
-> Just (Second 45) : Maybe Second
-> secondsFromInt 75
-> Nothing : Maybe Second
-
--- Internal use only
-
--}
-secondsFromInt : Int -> Maybe Second
-secondsFromInt =
-    Internal.secondsFromInt
-
-
-{-| Attempt to construct a `Millisecond` from an `Int`.
-
-> millisecondsFromInt 300
-> Just (Millisecond 300) : Maybe Millisecond
-> millisecondsFromInt 450
-> Just (Millisecond 450) : Maybe Millisecond
-> millisecondsFromInt 1500
-> Nothing : Maybe Millisecond
-
--- Internal use only
-
--}
-millisecondsFromInt : Int -> Maybe Millisecond
-millisecondsFromInt =
-    Internal.millisecondsFromInt
 
 
 {-| Get a clock `Time` from a time zone and posix time.
@@ -192,88 +108,48 @@ toMillis =
     Internal.toMillis
 
 
-{-| Convert an `Hour` to an `Int`.
+{-| Returns the `Hour` portion of a 'Time' as an `Int`.
 
-> Maybe.map hoursToInt (hoursFromInt 12)
+> Maybe.map getHours (fromRawParts { hours = 12, minutes = 15, seconds = 0, milliseconds = 0 })
 > Just 12 : Maybe Int
 
--- I Think it should be internal because the consumer should never have
--- "Hour" in their model. The exposed one should be, getHours
-
 -}
-hoursToInt : Hour -> Int
-hoursToInt =
-    Internal.hoursToInt
-
-
-{-| Convert a `Minute` to an `Int`.
-
-> Maybe.map minutesToInt (minutesFromInt 30)
-> Just 30 : Maybe Int
-
--- I Think it should be internal because the consumer should never have
--- "Minute" in their model. The exposed one should be, getMinutes
-
--}
-minutesToInt : Minute -> Int
-minutesToInt =
-    Internal.minutesToInt
-
-
-{-| Convert a `Second` to an `Int`.
-
-> Maybe.map secondsToInt (secondsFromInt 30)
-> Just 30 : Maybe Int
-
--- I Think it should be internal because the consumer should never have
--- "Second" in their model. The exposed one should be, getSeconds
-
--}
-secondsToInt : Second -> Int
-secondsToInt =
-    Internal.secondsToInt
-
-
-{-| Convert a `Millisecond` to an `Int`.
-
-> Maybe.map millisecondsToInt (millisecondsFromInt 500)
-> Just 500 : Maybe Int
-
--- I Think it should be internal because the consumer should never have
--- "Millisecond" in their model. The exposed one should be, getMilliseconds
-
--}
-millisecondsToInt : Millisecond -> Int
-millisecondsToInt =
-    Internal.millisecondsToInt
-
-
-{-| Returns the 'Hour' portion of a 'Time'
--}
-getHours : Time -> Hour
+getHours : Time -> Int
 getHours =
-    Internal.getHours
+    Internal.hoursToInt << Internal.getHours
 
 
-{-| Returns the 'Minute' portion of a 'Time'
+{-| Returns the `Minute` portion of a 'Time' as an `Int`.
+
+> Maybe.map getMinutes (fromRawParts { hours = 12, minutes = 15, seconds = 0, milliseconds = 0 })
+> Just 15 : Maybe Int
+
 -}
-getMinutes : Time -> Minute
+getMinutes : Time -> Int
 getMinutes =
-    Internal.getMinutes
+    Internal.minutesToInt << Internal.getMinutes
 
 
-{-| Returns the 'Second' portion of a 'Time'
+{-| Returns the `Second` portion of a 'Time' as an `Int`.
+
+> Maybe.map getSeconds (fromRawParts { hours = 12, minutes = 15, seconds = 0, milliseconds = 0 })
+> Just 0 : Maybe Int
+
 -}
-getSeconds : Time -> Second
+getSeconds : Time -> Int
 getSeconds =
-    Internal.getSeconds
+    Internal.secondsToInt << Internal.getSeconds
 
 
-{-| Returns the 'Millisecond' portion of a 'Time'
+{-| Returns the `Millisecond` portion of a 'Time' as an `Int`.
+
+> Maybe.map getMilliseconds (fromRawParts { hours = 12, minutes = 15, seconds = 0, milliseconds = 0 })
+> Just 0 : Maybe Int
+
 -}
-getMilliseconds : Time -> Millisecond
+getMilliseconds : Time -> Int
 getMilliseconds =
-    Internal.getMilliseconds
+    Internal.millisecondsToInt << Internal.getMilliseconds
 
 
 {-| Increments an 'Hour' inside a 'Time'.
@@ -427,70 +303,6 @@ decrementMilliseconds =
 compareTime : Time -> Time -> Order
 compareTime lhs rhs =
     Internal.compareTime lhs rhs
-
-
-{-| Compare two `Hour` values.
-
-> Maybe.map2 compareHours (hoursFromInt 10) (hoursFromInt 6)
-> LT : Order
-
--- I think it could be internal use only because we don't want the consumer to
--- have any notion of 'Hour'.
-
--- Internal use only
-
--}
-compareHours : Hour -> Hour -> Order
-compareHours lhs rhs =
-    Internal.compareHours lhs rhs
-
-
-{-| Compare two `Minute` values.
-
-> Maybe.map2 compareMilliseconds (minutesFromInt 15) (minutesFromInt 15)
-> EQ : Order
-
--- I think it could be internal use only because we don't want the consumer to
--- have any notion of 'Hour'.
-
--- Internal use only
-
--}
-compareMinutes : Minute -> Minute -> Order
-compareMinutes lhs rhs =
-    Internal.compareMinutes lhs rhs
-
-
-{-| Compare two `Second` values.
-
-> Maybe.map2 compareSeconds (secondsFromInt 30) (secondsFromInt 45)
-> LT : Order
-
--- I think it could be internal use only because we don't want the consumer to
--- have any notion of 'Hour'.
-
--- Internal use only
-
--}
-compareSeconds : Second -> Second -> Order
-compareSeconds lhs rhs =
-    Internal.compareSeconds lhs rhs
-
-
-{-| Compare two `Millisecond` values.
-
-> Maybe.map2 compareMilliseconds (millisecondsFromInt 200) (millisecondsFromInt 200)
-> EQ : Order
-
--- I think it could be internal use only because we don't want the consumer to
--- have any notion of 'Hour'.
-
--- Internal use only
-
--}
-compareMilliseconds : Millisecond -> Millisecond -> Order
-compareMilliseconds lhs rhs =
-    Internal.compareMilliseconds lhs rhs
 
 
 {-| Returns a zero time. To be used with caution.

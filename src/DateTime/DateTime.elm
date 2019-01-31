@@ -2,13 +2,10 @@ module DateTime.DateTime exposing
     ( DateTime
     , fromPosix, fromRawParts
     , toPosix
-    , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
+    , getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
     , getNextMonth, getPreviousMonth, getDateRange, getDatesInMonth, getPreviousDay, getNextDay
     , compareDates, compareTime
-    , getYearInt, getMonthInt, getDayInt, getHoursInt, getMinutesInt, getSecondsInt, getMillisecondsInt
-    ,  daysSinceEpoch
-       -- , getDayDiff
-
+    , daysSinceEpoch
     )
 
 {-| A complete datetime type.
@@ -28,7 +25,7 @@ module DateTime.DateTime exposing
 
 # Accessors
 
-@docs getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
+@docs getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
 
 
 # Calendar Accessors
@@ -44,11 +41,6 @@ module DateTime.DateTime exposing
 # Comparers
 
 @docs compareDates, compareTime
-
-
-# NEW STUFF
-
-@docs getYearInt, getMonthInt, getDayInt, getHoursInt, getMinutesInt, getSecondsInt, getMillisecondsInt
 
 -}
 
@@ -169,21 +161,21 @@ getDate (DateTime { date }) =
     date
 
 
-{-| Extract the calendar year from a `DateTime`.
+{-| Returns the 'Year' from a 'DateTime' as an Int.
 
 > getYear (fromPosix (Time.millisToPosix 0))
-> Year 1970 : Year
+> 1970 : Int
 
 -}
-getYear : DateTime -> Calendar.Year
+getYear : DateTime -> Int
 getYear =
     Calendar.getYear << getDate
 
 
-{-| Extract the calendar month from a `DateTime`.
+{-| Returns the 'Month' from a 'DateTime' as a [Month](https://package.elm-lang.org/packages/elm/time/latest/Time#Month).
 
 > getMonth (fromPosix (Time.millisToPosix 0))
-> Jan : Month
+> Jan : Int
 
 -}
 getMonth : DateTime -> Time.Month
@@ -191,13 +183,24 @@ getMonth =
     Calendar.getMonth << getDate
 
 
-{-| Extract the calendar day from a `DateTime`.
+{-| Returns the 'Month' from a 'DateTime' as an Int starting from 1.
 
-> getDay (fromPosix (Time.millisToPosix 0))
-> Day 1 : Day
+> getMonth (fromPosix (Time.millisToPosix 0))
+> Jan : Int
 
 -}
-getDay : DateTime -> Calendar.Day
+getMonthInt : DateTime -> Int
+getMonthInt =
+    Calendar.monthToInt << Calendar.getMonth << getDate
+
+
+{-| Returns the 'Day' from a 'DateTime' as an Int.
+
+> getDay (fromPosix (Time.millisToPosix 0))
+> 1 : Int
+
+-}
+getDay : DateTime -> Int
 getDay =
     Calendar.getDay << getDate
 
@@ -226,101 +229,52 @@ getTime (DateTime { time }) =
     time
 
 
-{-| Extract the clock hour from a `DateTime`.
+{-| Returns the 'Hour' from a 'DateTime' as an Int.
 
 > getHours (fromPosix (Time.millisToPosix 0))
-> Hour 0 : Hour
-
--}
-getHours : DateTime -> Clock.Hour
-getHours =
-    getTime >> Clock.getHours
-
-
-{-| Extract the clock minute from a `DateTime`.
-
-> getMinutes (fromPosix (Time.millisToPosix 0))
-> Minute 0 : Minute
-
--}
-getMinutes : DateTime -> Clock.Minute
-getMinutes =
-    getTime >> Clock.getMinutes
-
-
-{-| Extract the clock second from a `DateTime`.
-
-> getSeconds (fromPosix (Time.millisToPosix 0))
-> Second 0 : Second
-
--}
-getSeconds : DateTime -> Clock.Second
-getSeconds =
-    getTime >> Clock.getSeconds
-
-
-{-| Extract the clock second from a `DateTime`.
-
-> millisecond (fromPosix (Time.millisToPosix 0))
 > 0 : Int
 
 -}
-getMilliseconds : DateTime -> Clock.Millisecond
+getHours : DateTime -> Int
+getHours =
+    Clock.getHours << getTime
+
+
+{-| Returns the 'Minute' from a 'DateTime' as an Int.
+
+> getMinutes (fromPosix (Time.millisToPosix 0))
+> 0 : Int
+
+-}
+getMinutes : DateTime -> Int
+getMinutes =
+    Clock.getMinutes << getTime
+
+
+{-| Returns the 'Second' from a 'DateTime' as an Int.
+
+> getSeconds (fromPosix (Time.millisToPosix 0))
+> 0 : Int
+
+-}
+getSeconds : DateTime -> Int
+getSeconds =
+    Clock.getSeconds << getTime
+
+
+{-| Returns the 'Millisecond' from a 'DateTime' as an Int.
+
+> getMilliseconds (fromPosix (Time.millisToPosix 0))
+> 0 : Int
+
+-}
+getMilliseconds : DateTime -> Int
 getMilliseconds =
-    getTime >> Clock.getMilliseconds
+    Clock.getMilliseconds << getTime
 
 
 
 -- NEW STUFF
-
-
-{-| Returns the 'Year' from a 'DateTime' as an Int.
--}
-getYearInt : DateTime -> Int
-getYearInt =
-    Calendar.yearToInt << Calendar.getYear << getDate
-
-
-{-| Returns the 'Month' from a 'DateTime' as an Int.
--}
-getMonthInt : DateTime -> Int
-getMonthInt =
-    Calendar.monthToInt << Calendar.getMonth << getDate
-
-
-{-| Returns the 'Day' from a 'DateTime' as an Int.
--}
-getDayInt : DateTime -> Int
-getDayInt =
-    Calendar.dayToInt << Calendar.getDay << getDate
-
-
-{-| Returns the 'Hour' from a 'DateTime' as an Int.
--}
-getHoursInt : DateTime -> Int
-getHoursInt =
-    Clock.hoursToInt << Clock.getHours << getTime
-
-
-{-| Returns the 'Minute' from a 'DateTime' as an Int.
--}
-getMinutesInt : DateTime -> Int
-getMinutesInt =
-    Clock.minutesToInt << Clock.getMinutes << getTime
-
-
-{-| Returns the 'Second' from a 'DateTime' as an Int.
--}
-getSecondsInt : DateTime -> Int
-getSecondsInt =
-    Clock.secondsToInt << Clock.getSeconds << getTime
-
-
-{-| Returns the 'Millisecond' from a 'DateTime' as an Int.
--}
-getMillisecondsInt : DateTime -> Int
-getMillisecondsInt =
-    Clock.millisecondsToInt << Clock.getMilliseconds << getTime
 
 
 {-| Returns a list of Dates that belong in the current month of the 'DateTime'.
@@ -331,7 +285,7 @@ getDatesInMonth (DateTime { date }) =
         (\date_ ->
             DateTime { date = date_, time = Clock.zero }
         )
-        (Calendar.getDatesInMonth (Calendar.getYear date) (Calendar.getMonth date))
+        (Calendar.getDatesInMonth date)
 
 
 {-| Returns a List of dates based on the start and end 'DateTime' given as parameters.
@@ -359,8 +313,6 @@ getDatesInMonth (DateTime { date }) =
 > , Date { day = Day 28, month = Feb, year = Year 2019 }
 > , Date { day = Day 1, month = Mar, year = Year 2019 }
 > ]
-
--- Can be exposed
 
 -}
 getDateRange : DateTime -> DateTime -> List DateTime

@@ -45,7 +45,7 @@ fromPosixTests =
     describe "Clock.fromPosix Test Suite"
         [ test "Year validation"
             (\_ ->
-                Expect.equal 2018 (DateTime.getYearInt date)
+                Expect.equal 2018 (DateTime.getYear date)
             )
         , test "Month Int validation"
             (\_ ->
@@ -57,7 +57,7 @@ fromPosixTests =
             )
         , test "Day validation"
             (\_ ->
-                Expect.equal 21 (DateTime.getDayInt date)
+                Expect.equal 21 (DateTime.getDay date)
             )
         , test "Weekday validation"
             (\_ ->
@@ -65,19 +65,19 @@ fromPosixTests =
             )
         , test "Hours validation"
             (\_ ->
-                Expect.equal 15 (DateTime.getHoursInt date)
+                Expect.equal 15 (DateTime.getHours date)
             )
         , test "Minutes validation"
             (\_ ->
-                Expect.equal 45 (DateTime.getMinutesInt date)
+                Expect.equal 45 (DateTime.getMinutes date)
             )
         , test "Seconds validation"
             (\_ ->
-                Expect.equal 30 (DateTime.getSecondsInt date)
+                Expect.equal 30 (DateTime.getSeconds date)
             )
         , test "Milliseconds validation"
             (\_ ->
-                Expect.equal 0 (DateTime.getMillisecondsInt date)
+                Expect.equal 0 (DateTime.getMilliseconds date)
             )
         , test "Milliseconds second validation"
             (\_ ->
@@ -85,7 +85,7 @@ fromPosixTests =
                     date_ =
                         DateTime.fromPosix (Time.millisToPosix (1545407130000 + 500))
                 in
-                Expect.equal 500 (DateTime.getMillisecondsInt date_)
+                Expect.equal 500 (DateTime.getMilliseconds date_)
             )
         ]
 

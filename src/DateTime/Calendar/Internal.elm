@@ -1066,8 +1066,8 @@ weekdayFromDate date =
 -- Can be exposed
 
 -}
-getDatesInMonth : Year -> Month -> List Date
-getDatesInMonth year month =
+getDatesInMonth : Date -> List Date
+getDatesInMonth (Date { year, month }) =
     let
         lastDayOfTheMonth =
             dayToInt (lastDayOf year month)

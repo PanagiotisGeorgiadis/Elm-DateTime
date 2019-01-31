@@ -1,12 +1,12 @@
 module DateTime.Calendar exposing
-    ( Date, Day, Month, Year, RawDate
+    ( Date, RawDate
     , fromPosix, fromRawYearMonthDay
     , getDay, getMonth, getYear
-    , toMillis, toPosix, dayToInt, monthToInt, yearToInt
+    , toMillis, toPosix, monthToInt
     , getNextDay, getNextMonth, incrementYear
     , getPreviousDay, getPreviousMonth, decrementYear
-    , compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, months, lastDayOf, getDayDiff
-    , millisInADay
+    , compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, lastDayOf, getDayDiff
+    , months, millisInADay
     )
 
 {-| A calendar date.
@@ -29,7 +29,7 @@ module DateTime.Calendar exposing
 
 # Converters
 
-@docs toMillis, toPosix, dayToInt, monthToInt, yearToInt
+@docs toMillis, toPosix, monthToInt
 
 
 # Incrementers
@@ -44,17 +44,17 @@ module DateTime.Calendar exposing
 
 # Utilities
 
-@docs compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, months, lastDayOf, getDayDiff
+@docs compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, lastDayOf, getDayDiff
 
 
 # Constants
 
-@docs millisInADay
+@docs months, millisInADay
 
 -}
 
 import Array exposing (Array)
-import DateTime.Calendar.Internal as Internal
+import DateTime.Calendar.Internal as Internal exposing (Day, Month, Year)
 import Time
 
 
@@ -62,18 +62,6 @@ import Time
 -}
 type alias Date =
     Internal.Date
-
-
-type alias Year =
-    Internal.Year
-
-
-type alias Month =
-    Internal.Month
-
-
-type alias Day =
-    Internal.Day
 
 
 type alias RawDate =
@@ -85,52 +73,16 @@ type alias RawDate =
 > getYear (fromPosix (Time.millisToPosix 0))
 > Year 1970 : Year
 
--- Can be exposed
-
 -}
-getYear : Date -> Year
+getYear : Date -> Int
 getYear =
-    Internal.getYear
-
-
-{-| Extract the Int value of a 'Year'.
-
-> date = fromPosix (Time.millisToPosix 0)
-> yearToInt (getYear date)
-> 1970 : Int
-
--- Can be exposed
-
--}
-yearToInt : Year -> Int
-yearToInt =
-    Internal.yearToInt
-
-
-{-| Attempt to construct a 'Year' from an Int value.
---- Currently the validity of the year is based on
---- the integer being greater than zero. ( year > 0 )
-
-> yearFromInt 1970
-> Just (Year 1970) : Maybe Year
->
-> yearFromInt -1
-> Nothing : Maybe Year
-
--- Internal use only
-
--}
-yearFromInt : Int -> Maybe Year
-yearFromInt =
-    Internal.yearFromInt
+    Internal.yearToInt << Internal.getYear
 
 
 {-| Extract the `Month` part of a `Date`.
 
 > getMonth (fromPosix (Time.millisToPosix 0))
 > Jan : Month
-
--- Can be exposed
 
 -}
 getMonth : Date -> Month
@@ -146,33 +98,10 @@ getMonth =
 > monthToInt Aug
 > 8 : Int
 
--- Can be exposed
-
 -}
 monthToInt : Month -> Int
 monthToInt =
     Internal.monthToInt
-
-
-{-| Attempt to construct a 'Month' from an Int value.
---- Currently the validity of the month is based on
---- the integer having a value between one and twelve. ( 1 ≥ month ≥ 12 )
-
-> monthFromInt 1
-> Just Jan : Maybe Month
->
-> monthFromInt 12
-> Just Dec : Maybe Month
->
-> monthFromInt -1
-> Nothing : Maybe Month
-
--- Internal, not to be exposed
-
--}
-monthFromInt : Int -> Maybe Month
-monthFromInt =
-    Internal.monthFromInt
 
 
 {-| Extract the `Day` part of a `Date`.
@@ -180,71 +109,10 @@ monthFromInt =
 > getDay (fromPosix (Time.millisToPosix 0))
 > Day 1 : Day
 
--- Can be exposed
-
 -}
-getDay : Date -> Day
+getDay : Date -> Int
 getDay =
-    Internal.getDay
-
-
-{-| Extract the Int part of a 'Day'.
-
-> date = fromPosix (Time.millisToPosix 0)
-> dayToInt (getDay date)
-> 1 : Int
-
--- Can be exposed
-
--}
-dayToInt : Day -> Int
-dayToInt =
-    Internal.dayToInt
-
-
-{-| Attempt to construct a 'Day' from an Int value.
---- Currently the validity of the day is based on
---- the validity of the 'Date' object being created.
---- This means that given a valid year & month we check
---- for the 'Date' max day. Then the given Int needs to be
---- greater than 0 and less than the max day for the given year && month.
---- ( 1 ≥ day ≥ maxValidDay )
-
-> dayFromInt (Year 2018) Dec 25
-> Just (Day 25) : Maybe Day
->
-> dayFromInt (Year 2019) Feb 29
-> Nothing : Maybe Day
->
-> dayFromInt (Year 2020) Feb 29
-> Just (Day 29) : Maybe Day
-
--- Internal, not to be exposed
-
--}
-dayFromInt : Year -> Month -> Int -> Maybe Day
-dayFromInt year month day =
-    Internal.dayFromInt year month day
-
-
-{-| Construct a `Date` from its constituent parts.
---- Returns `Nothing` if the combination would form an invalid date.
-
-> fromYearMonthDay (Year 2018) Dec (Day 25)
-> Just (Date { year = (Year 2018), month = Dec, day = (Day 25)})
->
-> fromYearMonthDay (Year 2019) Feb (Day 29)
-> Nothing
->
-> fromYearMonthDay (Year 2020) Feb (Day 29)
-> Just (Date { day = Day 29, month = Feb, year = Year 2020 }) : Maybe Date
-
--- Internal, not to be exposed
-
--}
-fromYearMonthDay : Year -> Month -> Day -> Maybe Date
-fromYearMonthDay y m d =
-    Internal.fromYearMonthDay y m d
+    Internal.dayToInt << Internal.getDay
 
 
 {-| Comparison on a Date level.
@@ -262,72 +130,10 @@ fromYearMonthDay y m d =
 > compareDates laterDate date
 > EQ : Order
 
--- Can be exposed
-
 -}
 compareDates : Date -> Date -> Order
 compareDates lhs rhs =
     Internal.compareDates lhs rhs
-
-
-{-| Comparison on a Day level.
---- Compares two given days and gives an Order
-
-> compareDays (Day 28) (Day 29)
-> LT : Order
->
-> compareDays (Day 28) (Day 15)
-> GT : Order
->
-> compareDays (Day 15) (Day 15)
-> EQ : Order
-
--- Internal, not to be exposed
-
--}
-compareDays : Day -> Day -> Order
-compareDays lhs rhs =
-    Internal.compareDays lhs rhs
-
-
-{-| Comparison on a Month level.
---- Compares two given months and gives an Order
-
-> compareMonths Jan Feb
-> LT : Order
->
-> compareMonths Dec Feb
-> GT : Order
->
-> compareMonths Aug Aug
-> EQ : Order
-
--- Internal, not to be exposed
-
--}
-compareMonths : Month -> Month -> Order
-compareMonths lhs rhs =
-    Internal.compareMonths lhs rhs
-
-
-{-| Comparison on a Year level.
---- Compares two given years and gives an Order
-
-> compareYears 2016 2017
-> LT : Order
->
-> compareYears 2017 2016
-> GT : Order
->
-> compareYears 2015 2015
-> EQ : Order
-
--- Internal, not to be exposed
-
--}
-compareYears : Year -> Year -> Order
-compareYears lhs rhs =
-    Internal.compareYears lhs rhs
 
 
 {-| Construct a `Date` from its (raw) constituent parts.
@@ -341,8 +147,6 @@ Returns `Nothing` if any parts or their combination would form an invalid date.
 >
 > fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear = 2020 }
 > Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
-
--- Can be exposed.
 
 -}
 fromRawYearMonthDay : RawDate -> Maybe Date
@@ -362,28 +166,6 @@ Returns `Nothing` if any parts or their combination would form an invalid date.
 > fromRawDay (Year 2020) Feb 29
 > Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
 
--- Internal, not to be exposed
-
--}
-fromRawDay : Year -> Month -> Int -> Maybe Date
-fromRawDay year month rawDay =
-    Internal.fromRawDay year month rawDay
-
-
-{-| Construct a `Date` from its constituent Year and Month by using its raw day.
-Returns `Nothing` if any parts or their combination would form an invalid date.
-
-> fromRawDay (Year 2018) Dec 25
-> Just (Date { day = Day 25, month = Dec, year = Year 2018 }) : Maybe Date
->
-> fromRawDay (Year 2019) Feb 29
-> Nothing : Maybe Date
->
-> fromRawDay (Year 2020) Feb 29
-> Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
-
--- Internal, not to be exposed
-
 -}
 months : Array Month
 months =
@@ -402,28 +184,10 @@ months =
 > getNextMonth (getNextMonth date)
 > Date { day = Day 28, rawMonth = 28, rawYear = 2019 } : Date
 
--- Can Be Exposed
-
 -}
 getNextMonth : Date -> Date
 getNextMonth =
     Internal.getNextMonth
-
-
-{-| Gets next month from the given month.
-
-> getNextMonth\_ Dec
-> Jan : Month
->
-> getNextMonth\_ Nov
-> Dec : Month
-
--- Internal, not to be exposed
-
--}
-getNextMonth_ : Month -> Month
-getNextMonth_ =
-    Internal.getNextMonth_
 
 
 {-| Gets previous month from the given date. It preserves the day and year as is (where applicable).
@@ -438,70 +202,16 @@ getNextMonth_ =
 > getNextMonth (getNextMonth date)
 > Date { day = Day 30, rawMonth = 11, rawYear = 2018 } : Date
 
--- Can Be Exposed
-
 -}
 getPreviousMonth : Date -> Date
 getPreviousMonth =
     Internal.getPreviousMonth
 
 
-{-| Gets next month from the given month.
-
-> getNextMonth\_ Jan
-> Dec : Month
->
-> getNextMonth\_ Dec
-> Nov : Month
-
--- Internal, not to be exposed
-
--}
-getPreviousMonth_ : Month -> Month
-getPreviousMonth_ =
-    Internal.getPreviousMonth_
-
-
-{-| Gets the list of the preceding months from the given month.
---- It doesn't include the given month in the resulting list.
-
-> getPrecedingMonths Aug
-> [ Jan, Feb, Mar, Apr, May, Jun, Jul ]
->
-> getPrecedingMonths Jan
-> []
-
--- Internal, not to be exposed
-
--}
-getPrecedingMonths : Month -> List Month
-getPrecedingMonths =
-    Internal.getPrecedingMonths
-
-
-{-| Gets the list of the following months from the given month.
---- It doesn't include the given month in the resulting list.
-
-> getFollowingMonths Aug
-> [ Sep, Oct, Nov, Dec ]
->
-> getFollowingMonths Dec
-> []
-
--- Internal, not to be exposed
-
--}
-getFollowingMonths : Month -> List Month
-getFollowingMonths =
-    Internal.getFollowingMonths
-
-
 {-| Get a UTC `Date` from a time zone and posix time.
 
 > fromPosix (Time.millisToPosix 0)
 > Date { day = Day 1, month = Jan, year = Year 1970 } : Date
-
--- Can Be Exposed
 
 -}
 fromPosix : Time.Posix -> Date
@@ -516,8 +226,6 @@ fromPosix =
 >
 > isLeapYear 2020
 > True
-
--- Can Be Exposed
 
 -}
 isLeapYear : Year -> Bool
@@ -535,8 +243,6 @@ isLeapYear =
 >
 > lastDayOf (Year 2020) Feb
 > 29
-
--- Can be exposed
 
 -}
 lastDayOf : Year -> Month -> Day
@@ -558,8 +264,6 @@ lastDayOf year month =
 > date3 = fromRawYearMonthDay { rawDay = 28, rawMonth = 2, rawYear 2019 }
 > incrementYear date3
 > Date { day = Day 28, month = Feb, year = Year 2020 }
-
--- Can be exposed
 
 --------------------- Note ---------------------
 --- Here we cannot rely on transforming the date
@@ -590,8 +294,6 @@ incrementYear =
 > decrementYear date3
 > Date { day = Day 28, month = Feb, year = Year 2018 }
 
--- Can be exposed
-
 --------------------- Note ---------------------
 --- Here we cannot rely on transforming the date
 --- to millis and removing a year because of the
@@ -607,9 +309,6 @@ decrementYear =
 
 
 {-| Transforms a 'Date' to a Posix time.
-
--- Can be exposed
-
 -}
 toPosix : Date -> Time.Posix
 toPosix =
@@ -627,71 +326,7 @@ toMillis =
 -}
 millisInADay : Int
 millisInADay =
-    1000 * 60 * 60 * 24
-
-
-{-| Returns the milliseconds in a year.
-
--- Internal, not to be exposed
-
--}
-millisInYear : Year -> Int
-millisInYear =
-    Internal.millisInYear
-
-
-{-| Returns the year milliseconds since epoch.
---- This function is intended to be used along with millisSinceStartOfTheYear
---- and millisSinceStartOfTheMonth.
-
-> millisSinceEpoch (Year 1970)
-> 0
->
-> millisSinceEpoch (Year 1971)
-> 31536000000
-
--- Internal, not to be exposed
-
--}
-millisSinceEpoch : Year -> Int
-millisSinceEpoch =
-    Internal.millisSinceEpoch
-
-
-{-| Returns the month milliseconds since the start of a given year.
---- This function is intended to be used along with millisSinceEpoch
---- and millisSinceStartOfTheMonth.
-
-> millisSinceStartOfTheYear (Year 2018) Time.Jan
-> 0 : Int
->
-> millisSinceStartOfTheYear (Year 2018) Time.Dec
-> 28857600000 : Int
-
--- Internal, not to be exposed
-
--}
-millisSinceStartOfTheYear : Year -> Month -> Int
-millisSinceStartOfTheYear year month =
-    Internal.millisSinceStartOfTheYear year month
-
-
-{-| Returns the day milliseconds since the start of a given month.
---- This function is intended to be used along with millisSinceEpoch
---- and millisSinceStartOfTheYear.
-
-> millisSinceStartOfTheMonth (Day 1)
-> 0 : Int
->
-> millisSinceStartOfTheMonth (Day 15)
-> 1209600000 : Int
-
--- Internal, not to be exposed
-
--}
-millisSinceStartOfTheMonth : Day -> Int
-millisSinceStartOfTheMonth =
-    Internal.millisSinceStartOfTheMonth
+    Internal.millisInADay
 
 
 {-| Returns the weekday of a specific 'Date'
@@ -703,8 +338,6 @@ millisSinceStartOfTheMonth =
 > date2 = fromRawYearMonthDay { rawDay = 25, rawMonth = 11, rawYear = 2018 }
 > weekdayFromDate date2
 > Tue : Time.Weekday
-
--- Can be exposed
 
 -}
 weekdayFromDate : Date -> Time.Weekday
@@ -726,12 +359,10 @@ weekdayFromDate =
 > , Date { day = Day 31, month = Dec, year = Year 2018 }
 > ]
 
--- Can be exposed
-
 -}
-getDatesInMonth : Year -> Month -> List Date
-getDatesInMonth year month =
-    Internal.getDatesInMonth year month
+getDatesInMonth : Date -> List Date
+getDatesInMonth =
+    Internal.getDatesInMonth
 
 
 {-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
@@ -748,8 +379,6 @@ getDatesInMonth year month =
 > date3 = fromRawYearMonthDay { rawDay = 24, rawMonth = 12, rawYear 2018 }
 > getNextDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
-
--- Can be exposed
 
 --------------------- Note ---------------------
 --- Its safe to get the next day by using milliseconds
@@ -779,8 +408,6 @@ getNextDay =
 > date3 = fromRawYearMonthDay { rawDay = 26, rawMonth = 12, rawYear 2018 }
 > getPreviousDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
-
--- Can be exposed
 
 --------------------- Note ---------------------
 --- Its safe to get the previous day by using milliseconds
@@ -822,22 +449,10 @@ getPreviousDay =
 > , Date { day = Day 1, month = Mar, year = Year 2019 }
 > ]
 
--- Can be exposed
-
 -}
 getDateRange : Date -> Date -> List Date
 getDateRange startDate endDate =
     Internal.getDateRange startDate endDate
-
-
-{-| Internal helper function for getDateRange.
-
--- Internal, not to be exposed
-
--}
-getDateRange_ : Int -> Date -> List Date -> List Date
-getDateRange_ daysCount prevDate res =
-    Internal.getDateRange_ daysCount prevDate res
 
 
 getDayDiff : Date -> Date -> Int
