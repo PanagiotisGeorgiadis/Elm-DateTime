@@ -1,6 +1,6 @@
 module Tests.DateTime exposing (suite)
 
-import DateTime.DateTime as DateTime
+import DateTime.DateTime.Internal as DateTime
 import Expect exposing (Expectation)
 import Test exposing (Test, describe, test)
 import Time

@@ -1,11 +1,20 @@
-module DateTime.DateTime exposing
-    ( DateTime
+module DateTime.DateTime.Internal
+    exposing
+    -- ( DateTime
+    -- , fromPosix, fromRawParts
+    -- , toPosix
+    -- , getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
+    -- , getNextMonth, getPreviousMonth, getDateRange, getDatesInMonth, getPreviousDay, getNextDay
+    -- , compareDates, compareTime
+    -- , daysSinceEpoch
+    -- )
+    ( DateTime(..)
     , fromPosix, fromRawParts
     , toPosix
     , getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
     , getNextMonth, getPreviousMonth, getDateRange, getDatesInMonth, getPreviousDay, getNextDay
     , compareDates, compareTime
-    , daysSinceEpoch
+    , InternalDateTime, daysSinceEpoch, fromUtcDateAndTime, getDate, getTime, toMillis, yearsSinceEpoch
     )
 
 {-| A complete datetime type.
@@ -44,16 +53,22 @@ module DateTime.DateTime exposing
 
 -}
 
+import Array
 import DateTime.Calendar as Calendar
 import DateTime.Clock as Clock
-import DateTime.DateTime.Internal as Internal
 import Time
 
 
 {-| An instant in time, composed of a calendar date, clock time and time zone.
 -}
-type alias DateTime =
-    Internal.DateTime
+type DateTime
+    = DateTime InternalDateTime
+
+
+type alias InternalDateTime =
+    { date : Calendar.Date
+    , time : Clock.Time
+    }
 
 
 {-| Create a `DateTime` from a time zone and posix time.
@@ -63,8 +78,11 @@ type alias DateTime =
 
 -}
 fromPosix : Time.Posix -> DateTime
-fromPosix =
-    Internal.fromPosix
+fromPosix timePosix =
+    DateTime
+        { date = Calendar.fromPosix timePosix
+        , time = Clock.fromPosix timePosix
+        }
 
 
 {-| Get back a posix time.
@@ -75,7 +93,7 @@ fromPosix =
 -}
 toPosix : DateTime -> Time.Posix
 toPosix =
-    Internal.toPosix
+    Time.millisToPosix << toMillis
 
 
 {-| Convers a 'DateTime' to the equivalent milliseconds since epoch.
@@ -85,8 +103,8 @@ toPosix =
 
 -}
 toMillis : DateTime -> Int
-toMillis =
-    Internal.toMillis
+toMillis (DateTime { date, time }) =
+    Calendar.toMillis date + Clock.toMillis time
 
 
 {-| Create a `DateTime` from a UTC date and time.
@@ -139,6 +157,19 @@ daysSinceEpoch dateTime =
     Nothing
 
 
+{-| Extract the calendar date from a `DateTime`.
+
+> getDate (fromPosix (Time.millisToPosix 0))
+> Date { day = Day 1, month = Jan, year = Year 1970 } : Calendar.Date
+
+-- Internal use only
+
+-}
+getDate : DateTime -> Calendar.Date
+getDate (DateTime { date }) =
+    date
+
+
 {-| Returns the 'Year' from a 'DateTime' as an Int.
 
 > getYear (fromPosix (Time.millisToPosix 0))
@@ -147,7 +178,7 @@ daysSinceEpoch dateTime =
 -}
 getYear : DateTime -> Int
 getYear =
-    Internal.getYear
+    Calendar.getYear << getDate
 
 
 {-| Returns the 'Month' from a 'DateTime' as a [Month](https://package.elm-lang.org/packages/elm/time/latest/Time#Month).
@@ -158,7 +189,7 @@ getYear =
 -}
 getMonth : DateTime -> Time.Month
 getMonth =
-    Internal.getMonth
+    Calendar.getMonth << getDate
 
 
 {-| Returns the 'Month' from a 'DateTime' as an Int starting from 1.
@@ -169,7 +200,7 @@ getMonth =
 -}
 getMonthInt : DateTime -> Int
 getMonthInt =
-    Internal.getMonthInt
+    Calendar.monthToInt << Calendar.getMonth << getDate
 
 
 {-| Returns the 'Day' from a 'DateTime' as an Int.
@@ -180,7 +211,7 @@ getMonthInt =
 -}
 getDay : DateTime -> Int
 getDay =
-    Internal.getDay
+    Calendar.getDay << getDate
 
 
 {-| Extract the weekday from a `DateTime`.
@@ -190,8 +221,21 @@ getDay =
 
 -}
 getWeekday : DateTime -> Time.Weekday
-getWeekday =
-    Internal.getWeekday
+getWeekday (DateTime dateTime) =
+    Calendar.weekdayFromDate dateTime.date
+
+
+{-| Extract the clock time from a `DateTime`.
+
+> getTime (fromPosix (Time.millisToPosix 0))
+> { hour = Hour 0, millisecond = 0, minute = Minute 0, second = Second 0 } : Clock.Time
+
+-- Internal use only
+
+-}
+getTime : DateTime -> Clock.Time
+getTime (DateTime { time }) =
+    time
 
 
 {-| Returns the 'Hour' from a 'DateTime' as an Int.
@@ -202,7 +246,7 @@ getWeekday =
 -}
 getHours : DateTime -> Int
 getHours =
-    Internal.getHours
+    Clock.getHours << getTime
 
 
 {-| Returns the 'Minute' from a 'DateTime' as an Int.
@@ -213,7 +257,7 @@ getHours =
 -}
 getMinutes : DateTime -> Int
 getMinutes =
-    Internal.getMinutes
+    Clock.getMinutes << getTime
 
 
 {-| Returns the 'Second' from a 'DateTime' as an Int.
@@ -224,7 +268,7 @@ getMinutes =
 -}
 getSeconds : DateTime -> Int
 getSeconds =
-    Internal.getSeconds
+    Clock.getSeconds << getTime
 
 
 {-| Returns the 'Millisecond' from a 'DateTime' as an Int.
@@ -235,7 +279,7 @@ getSeconds =
 -}
 getMilliseconds : DateTime -> Int
 getMilliseconds =
-    Internal.getMilliseconds
+    Clock.getMilliseconds << getTime
 
 
 
@@ -245,8 +289,12 @@ getMilliseconds =
 {-| Returns a list of Dates that belong in the current month of the 'DateTime'.
 -}
 getDatesInMonth : DateTime -> List DateTime
-getDatesInMonth =
-    Internal.getDatesInMonth
+getDatesInMonth (DateTime { date }) =
+    List.map
+        (\date_ ->
+            DateTime { date = date_, time = Clock.zero }
+        )
+        (Calendar.getDatesInMonth date)
 
 
 {-| Returns a List of dates based on the start and end 'DateTime' given as parameters.
@@ -263,6 +311,12 @@ getDatesInMonth =
 > , Date { day = Day 28, month = Feb, year = Year 2020 }
 > , Date { day = Day 29, month = Feb, year = Year 2020 }
 > , Date { day = Day 1, month = Mar, year = Year 2020 }
+> ][ Date { day = Day 25, month = Feb, year = Year 2020 }
+> , Date { day = Day 26, month = Feb, year = Year 2020 }
+> , Date { day = Day 27, month = Feb, year = Year 2020 }
+> , Date { day = Day 28, month = Feb, year = Year 2020 }
+> , Date { day = Day 29, month = Feb, year = Year 2020 }
+> , Date { day = Day 1, month = Mar, year = Year 2020 }
 > ]
 >
 > startDate2 = fromRawYearMonthDay { rawDay = 25, rawMonth = 2, rawYear = 2019 }
@@ -273,43 +327,69 @@ getDatesInMonth =
 > , Date { day = Day 27, month = Feb, year = Year 2019 }
 > , Date { day = Day 28, month = Feb, year = Year 2019 }
 > , Date { day = Day 1, month = Mar, year = Year 2019 }
+> ][ Date { day = Day 25, month = Feb, year = Year 2019 }
+> , Date { day = Day 26, month = Feb, year = Year 2019 }
+> , Date { day = Day 27, month = Feb, year = Year 2019 }
+> , Date { day = Day 28, month = Feb, year = Year 2019 }
+> , Date { day = Day 1, month = Mar, year = Year 2019 }
 > ]
 
 -}
 getDateRange : DateTime -> DateTime -> List DateTime
-getDateRange start end =
-    Internal.getDateRange start end
+getDateRange (DateTime start) (DateTime end) =
+    List.map
+        (\date ->
+            DateTime
+                { date = date
+                , time = Clock.zero
+                }
+        )
+        (Calendar.getDateRange start.date end.date)
 
 
 {-| Attempts to construct a new DateTime object from its raw constituent parts.
 -}
 fromRawParts : Calendar.RawDate -> Clock.RawTime -> Maybe DateTime
 fromRawParts rawDate rawTime =
-    Internal.fromRawParts rawDate rawTime
+    Maybe.andThen
+        (\date ->
+            Maybe.andThen
+                (\t ->
+                    Just (DateTime { date = date, time = t })
+                )
+                (Clock.fromRawParts rawTime)
+        )
+        (Calendar.fromRawYearMonthDay rawDate)
 
 
 {-| Returns a new 'DateTime' with an updated month value.
 -}
 getPreviousMonth : DateTime -> DateTime
-getPreviousMonth =
-    Internal.getPreviousMonth
+getPreviousMonth (DateTime { date, time }) =
+    DateTime
+        { date = Calendar.getPreviousMonth date
+        , time = time
+        }
 
 
 {-| Returns a new 'DateTime' with an updated month value.
 -}
 getNextMonth : DateTime -> DateTime
-getNextMonth =
-    Internal.getNextMonth
+getNextMonth (DateTime { date, time }) =
+    DateTime
+        { date = Calendar.getNextMonth date
+        , time = time
+        }
 
 
 compareDates : DateTime -> DateTime -> Order
-compareDates lhs rhs =
-    Internal.compareDates lhs rhs
+compareDates (DateTime lhs) (DateTime rhs) =
+    Calendar.compareDates lhs.date rhs.date
 
 
 compareTime : DateTime -> DateTime -> Order
-compareTime lhs rhs =
-    Internal.compareTime lhs rhs
+compareTime (DateTime lhs) (DateTime rhs) =
+    Clock.compareTime lhs.time rhs.time
 
 
 
@@ -335,8 +415,11 @@ compareTime lhs rhs =
 
 -}
 getPreviousDay : DateTime -> DateTime
-getPreviousDay =
-    Internal.getPreviousDay
+getPreviousDay (DateTime { date, time }) =
+    DateTime
+        { date = Calendar.getPreviousDay date
+        , time = time
+        }
 
 
 {-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
@@ -356,5 +439,8 @@ getPreviousDay =
 
 -}
 getNextDay : DateTime -> DateTime
-getNextDay =
-    Internal.getNextDay
+getNextDay (DateTime { date, time }) =
+    DateTime
+        { date = Calendar.getNextDay date
+        , time = time
+        }
