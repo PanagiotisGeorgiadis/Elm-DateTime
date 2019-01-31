@@ -1,68 +1,41 @@
-module DateTime.Clock.Internal
-    exposing
-    -- ( RawTime, Time, Hour, Minute, Second, Millisecond
-    -- , fromRawParts, fromPosix
-    -- , toMillis, hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
-    -- , getHours, getMinutes, getSeconds, getMilliseconds
-    -- , incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
-    -- , decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
-    -- , compareTime, compareHours, compareMinutes, compareSeconds, compareMilliseconds
-    -- , zero
-    -- )
-    ( RawTime, Time(..), Hour(..), Minute(..), Second(..), Millisecond(..)
-    , fromRawParts, fromPosix
-    , toMillis, hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
-    , getHours, getMinutes, getSeconds, getMilliseconds
-    , incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
-    , decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
-    , compareTime, compareHours, compareMinutes, compareSeconds, compareMilliseconds
+module DateTime.Clock.Internal exposing
+    ( Hour(..)
+    , InternalTime
+    , Millisecond(..)
+    , Minute(..)
+    , RawTime
+    , Second(..)
+    , Time(..)
+    , compareHours
+    , compareMilliseconds
+    , compareMinutes
+    , compareSeconds
+    , compareTime
+    , decrementHours
+    , decrementMilliseconds
+    , decrementMinutes
+    , decrementSeconds
+    , fromPosix
+    , fromRawParts
+    , getHours
+    , getMilliseconds
+    , getMinutes
+    , getSeconds
+    , hoursFromInt
+    , hoursToInt
+    , incrementHours
+    , incrementMilliseconds
+    , incrementMinutes
+    , incrementSeconds
+    , millisecondsFromInt
+    , millisecondsToInt
+    , minutesFromInt
+    , minutesToInt
+    , secondsFromInt
+    , secondsToInt
+    , toMillis
     , zero
-    , InternalTime, hoursFromInt, millisecondsFromInt, minutesFromInt, secondsFromInt
     )
-
-{-| A clock time.
-
-
-# Type definition
-
-@docs RawTime, Time, Hour, Minute, Second, Millisecond
-
-
-# Creating values
-
-@docs fromRawParts, fromPosix
-
-
-# Conversions
-
-@docs toMillis, hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
-
-
-# Getters
-
-@docs getHours, getMinutes, getSeconds, getMilliseconds
-
-
-# Incrementers
-
-@docs incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
-
-
-# Decrementers
-
-@docs decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
-
-
-# Comparers
-
-@docs compareTime, compareHours, compareMinutes, compareSeconds, compareMilliseconds
-
-
-# Constants
-
-@docs zero
-
--}
 
 import Time as Time_
 

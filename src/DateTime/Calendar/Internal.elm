@@ -1,14 +1,4 @@
-module DateTime.Calendar.Internal
-    exposing
-    -- ( Date, RawDate, Day, Year
-    -- , fromPosix, fromRawYearMonthDay
-    -- , getDay, getMonth, getYear
-    -- , toMillis, toPosix, dayToInt, monthToInt, yearToInt
-    -- , getNextDay, getNextMonth, incrementYear
-    -- , getPreviousDay, getPreviousMonth, decrementYear
-    -- , compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, months, lastDayOf, getDayDiff
-    -- , millisInADay
-    -- )
+module DateTime.Calendar.Internal exposing
     ( Date(..)
     , Day(..)
     , InternalDate
