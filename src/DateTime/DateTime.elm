@@ -53,7 +53,7 @@ module DateTime.DateTime exposing
 -}
 
 import Array
-import DateTime.Calendar as Calendar exposing (Day, Year)
+import DateTime.Calendar as Calendar
 import DateTime.Clock as Clock
 import Time
 
@@ -175,7 +175,7 @@ getDate (DateTime { date }) =
 > Year 1970 : Year
 
 -}
-getYear : DateTime -> Year
+getYear : DateTime -> Calendar.Year
 getYear =
     Calendar.getYear << getDate
 
@@ -197,7 +197,7 @@ getMonth =
 > Day 1 : Day
 
 -}
-getDay : DateTime -> Day
+getDay : DateTime -> Calendar.Day
 getDay =
     Calendar.getDay << getDate
 

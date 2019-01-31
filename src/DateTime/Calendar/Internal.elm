@@ -1,83 +1,98 @@
-module DateTime.Calendar exposing
-    ( Date, Day, Month, Year, RawDate
-    , fromPosix, fromRawYearMonthDay
-    , getDay, getMonth, getYear
-    , toMillis, toPosix, dayToInt, monthToInt, yearToInt
-    , getNextDay, getNextMonth, incrementYear
-    , getPreviousDay, getPreviousMonth, decrementYear
-    , compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, months, lastDayOf, getDayDiff
+module DateTime.Calendar.Internal
+    exposing
+    -- ( Date, RawDate, Day, Year
+    -- , fromPosix, fromRawYearMonthDay
+    -- , getDay, getMonth, getYear
+    -- , toMillis, toPosix, dayToInt, monthToInt, yearToInt
+    -- , getNextDay, getNextMonth, incrementYear
+    -- , getPreviousDay, getPreviousMonth, decrementYear
+    -- , compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, months, lastDayOf, getDayDiff
+    -- , millisInADay
+    -- )
+    ( Date(..)
+    , Day(..)
+    , InternalDate
+    , Month
+    , RawDate
+    , Year(..)
+    , compareDates
+    , compareDays
+    , compareMonths
+    , compareYears
+    , dayFromInt
+    , dayToInt
+    , decrementYear
+    , fromPosix
+    , fromRawDay
+    , fromRawYearMonthDay
+    , fromYearMonthDay
+    , getDateRange
+    , getDateRange_
+    , getDatesInMonth
+    , getDay
+    , getDayDiff
+    , getFollowingMonths
+    , getMonth
+    , getNextDay
+    , getNextMonth
+    , getNextMonth_
+    , getPrecedingMonths
+    , getPreviousDay
+    , getPreviousMonth
+    , getPreviousMonth_
+    , getYear
+    , incrementYear
+    , isLeapYear
+    , lastDayOf
     , millisInADay
+    , millisInYear
+    , millisSinceEpoch
+    , millisSinceStartOfTheMonth
+    , millisSinceStartOfTheYear
+    , monthFromInt
+    , monthToInt
+    , months
+    , toMillis
+    , toPosix
+    , weekdayFromDate
+    , yearFromInt
+    , yearToInt
     )
 
-{-| A calendar date.
-
-
-# Type definition
-
-@docs Date, Day, Month, Year, RawDate
-
-
-# Creating values
-
-@docs fromPosix, fromRawYearMonthDay
-
-
-# Accessors
-
-@docs getDay, getMonth, getYear
-
-
-# Converters
-
-@docs toMillis, toPosix, dayToInt, monthToInt, yearToInt
-
-
-# Incrementers
-
-@docs getNextDay, getNextMonth, incrementYear
-
-
-# Decrementers
-
-@docs getPreviousDay, getPreviousMonth, decrementYear
-
-
-# Utilities
-
-@docs compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, months, lastDayOf, getDayDiff
-
-
-# Constants
-
-@docs millisInADay
-
--}
-
 import Array exposing (Array)
-import DateTime.Calendar.Internal as Internal
 import Time
 
 
 {-| A full (Gregorian) calendar date.
 -}
-type alias Date =
-    Internal.Date
+type Date
+    = Date InternalDate
 
 
-type alias Year =
-    Internal.Year
+type alias InternalDate =
+    { year : Year
+    , month : Month
+    , day : Day
+    }
+
+
+type Year
+    = Year Int
 
 
 type alias Month =
-    Internal.Month
+    Time.Month
 
 
-type alias Day =
-    Internal.Day
+type Day
+    = Day Int
 
 
 type alias RawDate =
-    Internal.RawDate
+    { rawYear : Int
+    , rawMonth : Int
+    , rawDay : Int
+    }
 
 
 {-| Extract the `Year` part of a `Date`.
@@ -89,8 +104,8 @@ type alias RawDate =
 
 -}
 getYear : Date -> Year
-getYear =
-    Internal.getYear
+getYear (Date { year }) =
+    year
 
 
 {-| Extract the Int value of a 'Year'.
@@ -103,8 +118,8 @@ getYear =
 
 -}
 yearToInt : Year -> Int
-yearToInt =
-    Internal.yearToInt
+yearToInt (Year year) =
+    year
 
 
 {-| Attempt to construct a 'Year' from an Int value.
@@ -121,8 +136,12 @@ yearToInt =
 
 -}
 yearFromInt : Int -> Maybe Year
-yearFromInt =
-    Internal.yearFromInt
+yearFromInt year =
+    if year > 0 then
+        Just (Year year)
+
+    else
+        Nothing
 
 
 {-| Extract the `Month` part of a `Date`.
@@ -134,8 +153,8 @@ yearFromInt =
 
 -}
 getMonth : Date -> Month
-getMonth =
-    Internal.getMonth
+getMonth (Date { month }) =
+    month
 
 
 {-| Convert a given month to an integer starting from 1.
@@ -150,8 +169,43 @@ getMonth =
 
 -}
 monthToInt : Month -> Int
-monthToInt =
-    Internal.monthToInt
+monthToInt month =
+    case month of
+        Time.Jan ->
+            1
+
+        Time.Feb ->
+            2
+
+        Time.Mar ->
+            3
+
+        Time.Apr ->
+            4
+
+        Time.May ->
+            5
+
+        Time.Jun ->
+            6
+
+        Time.Jul ->
+            7
+
+        Time.Aug ->
+            8
+
+        Time.Sep ->
+            9
+
+        Time.Oct ->
+            10
+
+        Time.Nov ->
+            11
+
+        Time.Dec ->
+            12
 
 
 {-| Attempt to construct a 'Month' from an Int value.
@@ -171,8 +225,8 @@ monthToInt =
 
 -}
 monthFromInt : Int -> Maybe Month
-monthFromInt =
-    Internal.monthFromInt
+monthFromInt int =
+    Array.get (int - 1) months
 
 
 {-| Extract the `Day` part of a `Date`.
@@ -184,8 +238,8 @@ monthFromInt =
 
 -}
 getDay : Date -> Day
-getDay =
-    Internal.getDay
+getDay (Date date) =
+    date.day
 
 
 {-| Extract the Int part of a 'Day'.
@@ -198,8 +252,8 @@ getDay =
 
 -}
 dayToInt : Day -> Int
-dayToInt =
-    Internal.dayToInt
+dayToInt (Day day) =
+    day
 
 
 {-| Attempt to construct a 'Day' from an Int value.
@@ -224,7 +278,15 @@ dayToInt =
 -}
 dayFromInt : Year -> Month -> Int -> Maybe Day
 dayFromInt year month day =
-    Internal.dayFromInt year month day
+    let
+        maxValidDay =
+            dayToInt (lastDayOf year month)
+    in
+    if day > 0 && Basics.compare day maxValidDay /= GT then
+        Just (Day day)
+
+    else
+        Nothing
 
 
 {-| Construct a `Date` from its constituent parts.
@@ -244,7 +306,16 @@ dayFromInt year month day =
 -}
 fromYearMonthDay : Year -> Month -> Day -> Maybe Date
 fromYearMonthDay y m d =
-    Internal.fromYearMonthDay y m d
+    let
+        maxDay =
+            lastDayOf y m
+    in
+    case compareDays d maxDay of
+        GT ->
+            Nothing
+
+        _ ->
+            Just (Date { year = y, month = m, day = d })
 
 
 {-| Comparison on a Date level.
@@ -267,7 +338,24 @@ fromYearMonthDay y m d =
 -}
 compareDates : Date -> Date -> Order
 compareDates lhs rhs =
-    Internal.compareDates lhs rhs
+    let
+        ( yearsComparison, monthsComparison, daysComparison ) =
+            ( compareYears (getYear lhs) (getYear rhs)
+            , compareMonths (getMonth lhs) (getMonth rhs)
+            , compareDays (getDay lhs) (getDay rhs)
+            )
+    in
+    case yearsComparison of
+        EQ ->
+            case monthsComparison of
+                EQ ->
+                    daysComparison
+
+                _ ->
+                    monthsComparison
+
+        _ ->
+            yearsComparison
 
 
 {-| Comparison on a Day level.
@@ -287,7 +375,7 @@ compareDates lhs rhs =
 -}
 compareDays : Day -> Day -> Order
 compareDays lhs rhs =
-    Internal.compareDays lhs rhs
+    Basics.compare (dayToInt lhs) (dayToInt rhs)
 
 
 {-| Comparison on a Month level.
@@ -307,7 +395,7 @@ compareDays lhs rhs =
 -}
 compareMonths : Month -> Month -> Order
 compareMonths lhs rhs =
-    Internal.compareMonths lhs rhs
+    Basics.compare (monthToInt lhs) (monthToInt rhs)
 
 
 {-| Comparison on a Year level.
@@ -327,7 +415,7 @@ compareMonths lhs rhs =
 -}
 compareYears : Year -> Year -> Order
 compareYears lhs rhs =
-    Internal.compareYears lhs rhs
+    Basics.compare (yearToInt lhs) (yearToInt rhs)
 
 
 {-| Construct a `Date` from its (raw) constituent parts.
@@ -346,8 +434,16 @@ Returns `Nothing` if any parts or their combination would form an invalid date.
 
 -}
 fromRawYearMonthDay : RawDate -> Maybe Date
-fromRawYearMonthDay =
-    Internal.fromRawYearMonthDay
+fromRawYearMonthDay { rawYear, rawMonth, rawDay } =
+    yearFromInt rawYear
+        |> Maybe.andThen
+            (\y ->
+                monthFromInt rawMonth
+                    |> Maybe.andThen
+                        (\m ->
+                            fromRawDay y m rawDay
+                        )
+            )
 
 
 {-| Construct a `Date` from its constituent Year and Month by using its raw day.
@@ -367,7 +463,8 @@ Returns `Nothing` if any parts or their combination would form an invalid date.
 -}
 fromRawDay : Year -> Month -> Int -> Maybe Date
 fromRawDay year month rawDay =
-    Internal.fromRawDay year month rawDay
+    dayFromInt year month rawDay
+        |> Maybe.andThen (fromYearMonthDay year month)
 
 
 {-| Construct a `Date` from its constituent Year and Month by using its raw day.
@@ -387,7 +484,20 @@ Returns `Nothing` if any parts or their combination would form an invalid date.
 -}
 months : Array Month
 months =
-    Internal.months
+    Array.fromList
+        [ Time.Jan
+        , Time.Feb
+        , Time.Mar
+        , Time.Apr
+        , Time.May
+        , Time.Jun
+        , Time.Jul
+        , Time.Aug
+        , Time.Sep
+        , Time.Oct
+        , Time.Nov
+        , Time.Dec
+        ]
 
 
 {-| Gets next month from the given date. It preserves the day and year as is (where applicable).
@@ -406,8 +516,35 @@ months =
 
 -}
 getNextMonth : Date -> Date
-getNextMonth =
-    Internal.getNextMonth
+getNextMonth (Date date) =
+    let
+        updatedMonth =
+            getNextMonth_ date.month
+
+        updatedYear =
+            case updatedMonth of
+                Time.Jan ->
+                    Year (yearToInt date.year + 1)
+
+                _ ->
+                    date.year
+
+        lastDayOfUpdatedMonth =
+            lastDayOf updatedYear updatedMonth
+
+        updatedDay =
+            case compareDays date.day lastDayOfUpdatedMonth of
+                GT ->
+                    lastDayOfUpdatedMonth
+
+                _ ->
+                    date.day
+    in
+    Date
+        { year = updatedYear
+        , month = updatedMonth
+        , day = updatedDay
+        }
 
 
 {-| Gets next month from the given month.
@@ -422,8 +559,43 @@ getNextMonth =
 
 -}
 getNextMonth_ : Month -> Month
-getNextMonth_ =
-    Internal.getNextMonth_
+getNextMonth_ month =
+    case month of
+        Time.Jan ->
+            Time.Feb
+
+        Time.Feb ->
+            Time.Mar
+
+        Time.Mar ->
+            Time.Apr
+
+        Time.Apr ->
+            Time.May
+
+        Time.May ->
+            Time.Jun
+
+        Time.Jun ->
+            Time.Jul
+
+        Time.Jul ->
+            Time.Aug
+
+        Time.Aug ->
+            Time.Sep
+
+        Time.Sep ->
+            Time.Oct
+
+        Time.Oct ->
+            Time.Nov
+
+        Time.Nov ->
+            Time.Dec
+
+        Time.Dec ->
+            Time.Jan
 
 
 {-| Gets previous month from the given date. It preserves the day and year as is (where applicable).
@@ -442,8 +614,35 @@ getNextMonth_ =
 
 -}
 getPreviousMonth : Date -> Date
-getPreviousMonth =
-    Internal.getPreviousMonth
+getPreviousMonth (Date date) =
+    let
+        updatedMonth =
+            getPreviousMonth_ date.month
+
+        updatedYear =
+            case updatedMonth of
+                Time.Dec ->
+                    Year (yearToInt date.year - 1)
+
+                _ ->
+                    date.year
+
+        lastDayOfUpdatedMonth =
+            lastDayOf updatedYear updatedMonth
+
+        updatedDay =
+            case compareDays date.day lastDayOfUpdatedMonth of
+                GT ->
+                    lastDayOfUpdatedMonth
+
+                _ ->
+                    date.day
+    in
+    Date
+        { year = updatedYear
+        , month = updatedMonth
+        , day = updatedDay
+        }
 
 
 {-| Gets next month from the given month.
@@ -458,8 +657,43 @@ getPreviousMonth =
 
 -}
 getPreviousMonth_ : Month -> Month
-getPreviousMonth_ =
-    Internal.getPreviousMonth_
+getPreviousMonth_ month =
+    case month of
+        Time.Jan ->
+            Time.Dec
+
+        Time.Feb ->
+            Time.Jan
+
+        Time.Mar ->
+            Time.Feb
+
+        Time.Apr ->
+            Time.Mar
+
+        Time.May ->
+            Time.Apr
+
+        Time.Jun ->
+            Time.May
+
+        Time.Jul ->
+            Time.Jun
+
+        Time.Aug ->
+            Time.Jul
+
+        Time.Sep ->
+            Time.Aug
+
+        Time.Oct ->
+            Time.Sep
+
+        Time.Nov ->
+            Time.Oct
+
+        Time.Dec ->
+            Time.Nov
 
 
 {-| Gets the list of the preceding months from the given month.
@@ -475,8 +709,9 @@ getPreviousMonth_ =
 
 -}
 getPrecedingMonths : Month -> List Month
-getPrecedingMonths =
-    Internal.getPrecedingMonths
+getPrecedingMonths month =
+    Array.toList <|
+        Array.slice 0 (monthToInt month - 1) months
 
 
 {-| Gets the list of the following months from the given month.
@@ -492,8 +727,9 @@ getPrecedingMonths =
 
 -}
 getFollowingMonths : Month -> List Month
-getFollowingMonths =
-    Internal.getFollowingMonths
+getFollowingMonths month =
+    Array.toList <|
+        Array.slice (monthToInt month) 12 months
 
 
 {-| Get a UTC `Date` from a time zone and posix time.
@@ -505,8 +741,12 @@ getFollowingMonths =
 
 -}
 fromPosix : Time.Posix -> Date
-fromPosix =
-    Internal.fromPosix
+fromPosix posix =
+    Date
+        { year = Year (Time.toYear Time.utc posix)
+        , month = Time.toMonth Time.utc posix
+        , day = Day (Time.toDay Time.utc posix)
+        }
 
 
 {-| Checks if the given year is a leap year.
@@ -521,8 +761,8 @@ fromPosix =
 
 -}
 isLeapYear : Year -> Bool
-isLeapYear =
-    Internal.isLeapYear
+isLeapYear (Year int) =
+    (modBy 4 int == 0) && ((modBy 400 int == 0) || not (modBy 100 int == 0))
 
 
 {-| Get the last day of the given `Year` and `Month`.
@@ -541,7 +781,46 @@ isLeapYear =
 -}
 lastDayOf : Year -> Month -> Day
 lastDayOf year month =
-    Internal.lastDayOf year month
+    case month of
+        Time.Jan ->
+            Day 31
+
+        Time.Feb ->
+            if isLeapYear year then
+                Day 29
+
+            else
+                Day 28
+
+        Time.Mar ->
+            Day 31
+
+        Time.Apr ->
+            Day 30
+
+        Time.May ->
+            Day 31
+
+        Time.Jun ->
+            Day 30
+
+        Time.Jul ->
+            Day 31
+
+        Time.Aug ->
+            Day 31
+
+        Time.Sep ->
+            Day 30
+
+        Time.Oct ->
+            Day 31
+
+        Time.Nov ->
+            Day 30
+
+        Time.Dec ->
+            Day 31
 
 
 {-| Increments the 'Year' in a given 'Date' while preserving the month and
@@ -571,8 +850,27 @@ lastDayOf year month =
 
 -}
 incrementYear : Date -> Date
-incrementYear =
-    Internal.incrementYear
+incrementYear (Date date) =
+    let
+        updatedYear =
+            Year (yearToInt date.year + 1)
+
+        lastDayOfUpdatedMonth =
+            lastDayOf updatedYear date.month
+
+        updatedDay =
+            case compareDays date.day lastDayOfUpdatedMonth of
+                GT ->
+                    lastDayOfUpdatedMonth
+
+                _ ->
+                    date.day
+    in
+    Date
+        { year = updatedYear
+        , month = date.month
+        , day = updatedDay
+        }
 
 
 {-| Decrements the 'Year' in a given 'Date' while preserving the month and
@@ -602,8 +900,27 @@ incrementYear =
 
 -}
 decrementYear : Date -> Date
-decrementYear =
-    Internal.decrementYear
+decrementYear (Date date) =
+    let
+        updatedYear =
+            Year (yearToInt date.year - 1)
+
+        lastDayOfUpdatedMonth =
+            lastDayOf updatedYear date.month
+
+        updatedDay =
+            case compareDays date.day lastDayOfUpdatedMonth of
+                GT ->
+                    lastDayOfUpdatedMonth
+
+                _ ->
+                    date.day
+    in
+    Date
+        { year = updatedYear
+        , month = date.month
+        , day = updatedDay
+        }
 
 
 {-| Transforms a 'Date' to a Posix time.
@@ -613,14 +930,16 @@ decrementYear =
 -}
 toPosix : Date -> Time.Posix
 toPosix =
-    Internal.toPosix
+    Time.millisToPosix << toMillis
 
 
 {-| Transforms a 'Date' into milliseconds
 -}
 toMillis : Date -> Int
-toMillis =
-    Internal.toMillis
+toMillis (Date { year, month, day }) =
+    millisSinceEpoch year
+        + millisSinceStartOfTheYear year month
+        + millisSinceStartOfTheMonth day
 
 
 {-| Returns the milliseconds in a day.
@@ -636,8 +955,12 @@ millisInADay =
 
 -}
 millisInYear : Year -> Int
-millisInYear =
-    Internal.millisInYear
+millisInYear year =
+    if isLeapYear year then
+        1000 * 60 * 60 * 24 * 366
+
+    else
+        1000 * 60 * 60 * 24 * 365
 
 
 {-| Returns the year milliseconds since epoch.
@@ -654,8 +977,25 @@ millisInYear =
 
 -}
 millisSinceEpoch : Year -> Int
-millisSinceEpoch =
-    Internal.millisSinceEpoch
+millisSinceEpoch (Year year) =
+    let
+        -- year - 1 because we want the milliseconds
+        -- in the start of the target year in order to add
+        -- the months + days + hours + minues + secs if we want to.
+        years_ =
+            List.range 1970 (year - 1)
+    in
+    List.foldl
+        (\y result ->
+            let
+                yearMillis =
+                    Maybe.withDefault 0 <|
+                        Maybe.map millisInYear (yearFromInt y)
+            in
+            result + yearMillis
+        )
+        0
+        years_
 
 
 {-| Returns the month milliseconds since the start of a given year.
@@ -673,7 +1013,12 @@ millisSinceEpoch =
 -}
 millisSinceStartOfTheYear : Year -> Month -> Int
 millisSinceStartOfTheYear year month =
-    Internal.millisSinceStartOfTheYear year month
+    List.foldl
+        (\m res ->
+            res + (millisInADay * dayToInt (lastDayOf year m))
+        )
+        0
+        (getPrecedingMonths month)
 
 
 {-| Returns the day milliseconds since the start of a given month.
@@ -690,8 +1035,10 @@ millisSinceStartOfTheYear year month =
 
 -}
 millisSinceStartOfTheMonth : Day -> Int
-millisSinceStartOfTheMonth =
-    Internal.millisSinceStartOfTheMonth
+millisSinceStartOfTheMonth day =
+    -- -1 on the day because we are currently on that day and it hasn't passed yet.
+    -- We also need time in order to construct the full posix.
+    millisInADay * (dayToInt day - 1)
 
 
 {-| Returns the weekday of a specific 'Date'
@@ -708,8 +1055,8 @@ millisSinceStartOfTheMonth =
 
 -}
 weekdayFromDate : Date -> Time.Weekday
-weekdayFromDate =
-    Internal.weekdayFromDate
+weekdayFromDate date =
+    Time.toWeekday Time.utc (toPosix date)
 
 
 {-| Returns a list of 'Dates' for the given 'Year' and 'Month' combination.
@@ -731,7 +1078,19 @@ weekdayFromDate =
 -}
 getDatesInMonth : Year -> Month -> List Date
 getDatesInMonth year month =
-    Internal.getDatesInMonth year month
+    let
+        lastDayOfTheMonth =
+            dayToInt (lastDayOf year month)
+    in
+    List.map
+        (\day ->
+            Date
+                { year = year
+                , month = month
+                , day = Day day
+                }
+        )
+        (List.range 1 lastDayOfTheMonth)
 
 
 {-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
@@ -761,8 +1120,15 @@ getDatesInMonth year month =
 
 -}
 getNextDay : Date -> Date
-getNextDay =
-    Internal.getNextDay
+getNextDay date =
+    let
+        millis =
+            Time.posixToMillis (toPosix date) + millisInADay
+
+        newDate =
+            fromPosix (Time.millisToPosix millis)
+    in
+    newDate
 
 
 {-| Decrements the 'Day' in a given 'Date'. Will also decrement 'Month' && 'Year'
@@ -792,8 +1158,15 @@ getNextDay =
 
 -}
 getPreviousDay : Date -> Date
-getPreviousDay =
-    Internal.getPreviousDay
+getPreviousDay date =
+    let
+        millis =
+            Time.posixToMillis (toPosix date) - millisInADay
+
+        newDate =
+            fromPosix (Time.millisToPosix millis)
+    in
+    newDate
 
 
 {-| Returns a List of dates based on the start and end 'Dates' given as parameters.
@@ -827,7 +1200,23 @@ getPreviousDay =
 -}
 getDateRange : Date -> Date -> List Date
 getDateRange startDate endDate =
-    Internal.getDateRange startDate endDate
+    let
+        ( startPosix, endPosix ) =
+            ( toPosix startDate
+            , toPosix endDate
+            )
+
+        posixDiff =
+            Time.posixToMillis endPosix - Time.posixToMillis startPosix
+
+        daysDiff =
+            posixDiff // 1000 // 60 // 60 // 24
+    in
+    if daysDiff > 0 then
+        getDateRange_ daysDiff startDate []
+
+    else
+        getDateRange_ (abs daysDiff) endDate []
 
 
 {-| Internal helper function for getDateRange.
@@ -837,9 +1226,32 @@ getDateRange startDate endDate =
 -}
 getDateRange_ : Int -> Date -> List Date -> List Date
 getDateRange_ daysCount prevDate res =
-    Internal.getDateRange_ daysCount prevDate res
+    let
+        updatedRes =
+            res ++ [ prevDate ]
+    in
+    if daysCount > 0 then
+        let
+            ( updatedDaysCount, updatedPrevDate ) =
+                ( daysCount - 1
+                , getNextDay prevDate
+                )
+        in
+        getDateRange_ updatedDaysCount updatedPrevDate updatedRes
+
+    else
+        updatedRes
 
 
 getDayDiff : Date -> Date -> Int
 getDayDiff startDate endDate =
-    Internal.getDayDiff startDate endDate
+    let
+        ( startPosix, endPosix ) =
+            ( toPosix startDate
+            , toPosix endDate
+            )
+
+        posixDiff =
+            Time.posixToMillis endPosix - Time.posixToMillis startPosix
+    in
+    posixDiff // 1000 // 60 // 60 // 24

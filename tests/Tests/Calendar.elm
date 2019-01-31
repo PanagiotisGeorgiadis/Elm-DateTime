@@ -1,10 +1,9 @@
 module Tests.Calendar exposing (suite)
 
 import Array
+import DateTime.Calendar.Internal as Calendar
 import Expect exposing (Expectation)
-import Fuzz exposing (Fuzzer, int, list, string)
-import Test exposing (..)
-import Tests.DateTime.Calendar as Calendar
+import Test exposing (Test, describe, test)
 import Time
 
 
