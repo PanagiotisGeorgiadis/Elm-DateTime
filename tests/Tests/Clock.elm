@@ -1,9 +1,8 @@
 module Tests.Clock exposing (suite)
 
+import DateTime.Clock.Internal as Clock
 import Expect exposing (Expectation)
-import Fuzz exposing (Fuzzer, int, list, string)
-import Test exposing (..)
-import Tests.DateTime.Clock as Clock
+import Test exposing (Test, describe, test)
 import Time
 
 

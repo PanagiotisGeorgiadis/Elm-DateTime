@@ -1,5 +1,15 @@
-module DateTime.Clock exposing
-    ( RawTime, Time, Hour, Minute, Second, Millisecond
+module DateTime.Clock.Internal
+    exposing
+    -- ( RawTime, Time, Hour, Minute, Second, Millisecond
+    -- , fromRawParts, fromPosix
+    -- , toMillis, hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
+    -- , getHours, getMinutes, getSeconds, getMilliseconds
+    -- , incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
+    -- , decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
+    -- , compareTime, compareHours, compareMinutes, compareSeconds, compareMilliseconds
+    -- , zero
+    -- )
+    ( RawTime, Time(..), Hour(..), Minute(..), Second(..), Millisecond(..)
     , fromRawParts, fromPosix
     , toMillis, hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
     , getHours, getMinutes, getSeconds, getMilliseconds
@@ -7,6 +17,7 @@ module DateTime.Clock exposing
     , decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compareTime, compareHours, compareMinutes, compareSeconds, compareMilliseconds
     , zero
+    , InternalTime, hoursFromInt, millisecondsFromInt, minutesFromInt, secondsFromInt
     )
 
 {-| A clock time.
@@ -53,36 +64,49 @@ module DateTime.Clock exposing
 
 -}
 
-import DateTime.Clock.Internal as Internal
 import Time as Time_
 
 
 {-| A clock time.
 -}
-type alias Time =
-    Internal.Time
+type Time
+    = Time InternalTime
 
 
-type alias Hour =
-    Internal.Hour
+{-| The internal representation of Time and its constituent parts.
+-}
+type alias InternalTime =
+    { hours : Hour
+    , minutes : Minute
+    , seconds : Second
+    , milliseconds : Millisecond
+    }
 
 
-type alias Minute =
-    Internal.Minute
+type Hour
+    = Hour Int
 
 
-type alias Second =
-    Internal.Second
+type Minute
+    = Minute Int
 
 
-type alias Millisecond =
-    Internal.Millisecond
+type Second
+    = Second Int
+
+
+type Millisecond
+    = Millisecond Int
 
 
 {-| An 'abstract' representation of Time and its constituent parts based on Integers.
 -}
 type alias RawTime =
-    Internal.RawTime
+    { hours : Int
+    , minutes : Int
+    , seconds : Int
+    , milliseconds : Int
+    }
 
 
 {-| Construct a clock `Time` from raw hour, minute, second, millisecond integers.
@@ -95,8 +119,31 @@ type alias RawTime =
 
 -}
 fromRawParts : RawTime -> Maybe Time
-fromRawParts =
-    Internal.fromRawParts
+fromRawParts { hours, minutes, seconds, milliseconds } =
+    hoursFromInt hours
+        |> Maybe.andThen
+            (\hours_ ->
+                minutesFromInt minutes
+                    |> Maybe.andThen
+                        (\minutes_ ->
+                            secondsFromInt seconds
+                                |> Maybe.andThen
+                                    (\seconds_ ->
+                                        millisecondsFromInt milliseconds
+                                            |> Maybe.andThen
+                                                (\millis ->
+                                                    Just
+                                                        (Time
+                                                            { hours = hours_
+                                                            , minutes = minutes_
+                                                            , seconds = seconds_
+                                                            , milliseconds = millis
+                                                            }
+                                                        )
+                                                )
+                                    )
+                        )
+            )
 
 
 {-| Attempt to construct a `Hour` from an `Int`.
@@ -112,8 +159,12 @@ fromRawParts =
 
 -}
 hoursFromInt : Int -> Maybe Hour
-hoursFromInt =
-    Internal.hoursFromInt
+hoursFromInt hours =
+    if hours >= 0 && hours < 24 then
+        Just (Hour hours)
+
+    else
+        Nothing
 
 
 {-| Attempt to construct a `Minute` from an `Int`.
@@ -129,8 +180,12 @@ hoursFromInt =
 
 -}
 minutesFromInt : Int -> Maybe Minute
-minutesFromInt =
-    Internal.minutesFromInt
+minutesFromInt minutes =
+    if minutes >= 0 && minutes < 60 then
+        Just (Minute minutes)
+
+    else
+        Nothing
 
 
 {-| Attempt to construct a `Second` from an `Int`.
@@ -146,8 +201,12 @@ minutesFromInt =
 
 -}
 secondsFromInt : Int -> Maybe Second
-secondsFromInt =
-    Internal.secondsFromInt
+secondsFromInt seconds =
+    if seconds >= 0 && seconds < 60 then
+        Just (Second seconds)
+
+    else
+        Nothing
 
 
 {-| Attempt to construct a `Millisecond` from an `Int`.
@@ -163,8 +222,12 @@ secondsFromInt =
 
 -}
 millisecondsFromInt : Int -> Maybe Millisecond
-millisecondsFromInt =
-    Internal.millisecondsFromInt
+millisecondsFromInt millis =
+    if millis >= 0 && millis < 1000 then
+        Just (Millisecond millis)
+
+    else
+        Nothing
 
 
 {-| Get a clock `Time` from a time zone and posix time.
@@ -177,8 +240,13 @@ millisecondsFromInt =
 
 -}
 fromPosix : Time_.Posix -> Time
-fromPosix =
-    Internal.fromPosix
+fromPosix posix =
+    Time
+        { hours = Hour (Time_.toHour Time_.utc posix)
+        , minutes = Minute (Time_.toMinute Time_.utc posix)
+        , seconds = Second (Time_.toSecond Time_.utc posix)
+        , milliseconds = Millisecond (Time_.toMillis Time_.utc posix)
+        }
 
 
 {-| Convert a `Time` to milliseconds.
@@ -188,8 +256,13 @@ fromPosix =
 
 -}
 toMillis : Time -> Int
-toMillis =
-    Internal.toMillis
+toMillis (Time { hours, minutes, seconds, milliseconds }) =
+    List.sum
+        [ hoursToInt hours * 3600000
+        , minutesToInt minutes * 60000
+        , secondsToInt seconds * 1000
+        , millisecondsToInt milliseconds
+        ]
 
 
 {-| Convert an `Hour` to an `Int`.
@@ -197,13 +270,10 @@ toMillis =
 > Maybe.map hoursToInt (hoursFromInt 12)
 > Just 12 : Maybe Int
 
--- I Think it should be internal because the consumer should never have
--- "Hour" in their model. The exposed one should be, getHours
-
 -}
 hoursToInt : Hour -> Int
-hoursToInt =
-    Internal.hoursToInt
+hoursToInt (Hour hours) =
+    hours
 
 
 {-| Convert a `Minute` to an `Int`.
@@ -211,13 +281,10 @@ hoursToInt =
 > Maybe.map minutesToInt (minutesFromInt 30)
 > Just 30 : Maybe Int
 
--- I Think it should be internal because the consumer should never have
--- "Minute" in their model. The exposed one should be, getMinutes
-
 -}
 minutesToInt : Minute -> Int
-minutesToInt =
-    Internal.minutesToInt
+minutesToInt (Minute minutes) =
+    minutes
 
 
 {-| Convert a `Second` to an `Int`.
@@ -225,13 +292,10 @@ minutesToInt =
 > Maybe.map secondsToInt (secondsFromInt 30)
 > Just 30 : Maybe Int
 
--- I Think it should be internal because the consumer should never have
--- "Second" in their model. The exposed one should be, getSeconds
-
 -}
 secondsToInt : Second -> Int
-secondsToInt =
-    Internal.secondsToInt
+secondsToInt (Second seconds) =
+    seconds
 
 
 {-| Convert a `Millisecond` to an `Int`.
@@ -239,41 +303,38 @@ secondsToInt =
 > Maybe.map millisecondsToInt (millisecondsFromInt 500)
 > Just 500 : Maybe Int
 
--- I Think it should be internal because the consumer should never have
--- "Millisecond" in their model. The exposed one should be, getMilliseconds
-
 -}
 millisecondsToInt : Millisecond -> Int
-millisecondsToInt =
-    Internal.millisecondsToInt
+millisecondsToInt (Millisecond milliseconds) =
+    milliseconds
 
 
 {-| Returns the 'Hour' portion of a 'Time'
 -}
 getHours : Time -> Hour
-getHours =
-    Internal.getHours
+getHours (Time { hours }) =
+    hours
 
 
 {-| Returns the 'Minute' portion of a 'Time'
 -}
 getMinutes : Time -> Minute
-getMinutes =
-    Internal.getMinutes
+getMinutes (Time { minutes }) =
+    minutes
 
 
 {-| Returns the 'Second' portion of a 'Time'
 -}
 getSeconds : Time -> Second
-getSeconds =
-    Internal.getSeconds
+getSeconds (Time { seconds }) =
+    seconds
 
 
 {-| Returns the 'Millisecond' portion of a 'Time'
 -}
 getMilliseconds : Time -> Millisecond
-getMilliseconds =
-    Internal.getMilliseconds
+getMilliseconds (Time { milliseconds }) =
+    milliseconds
 
 
 {-| Increments an 'Hour' inside a 'Time'.
@@ -294,8 +355,20 @@ getMilliseconds =
 
 -}
 incrementHours : Time -> ( Time, Bool )
-incrementHours =
-    Internal.incrementHours
+incrementHours (Time time) =
+    let
+        newHours =
+            hoursToInt time.hours + 1
+    in
+    if newHours >= 24 then
+        ( Time { time | hours = Hour 0 }
+        , True
+        )
+
+    else
+        ( Time { time | hours = Hour newHours }
+        , False
+        )
 
 
 {-| Increments a 'Minute' inside a 'Time'.
@@ -310,8 +383,18 @@ incrementHours =
 
 -}
 incrementMinutes : Time -> ( Time, Bool )
-incrementMinutes =
-    Internal.incrementMinutes
+incrementMinutes (Time time) =
+    let
+        newMinutes =
+            minutesToInt time.minutes + 1
+    in
+    if newMinutes >= 60 then
+        incrementHours (Time { time | minutes = Minute 0 })
+
+    else
+        ( Time { time | minutes = Minute newMinutes }
+        , False
+        )
 
 
 {-| Increments a 'Second' inside a 'Time'.
@@ -326,8 +409,18 @@ incrementMinutes =
 
 -}
 incrementSeconds : Time -> ( Time, Bool )
-incrementSeconds =
-    Internal.incrementSeconds
+incrementSeconds (Time time) =
+    let
+        newSeconds =
+            secondsToInt time.seconds + 1
+    in
+    if newSeconds >= 60 then
+        incrementMinutes (Time { time | seconds = Second 0 })
+
+    else
+        ( Time { time | seconds = Second newSeconds }
+        , False
+        )
 
 
 {-| Increments a 'Millisecond' inside a 'Time'.
@@ -342,8 +435,18 @@ incrementSeconds =
 
 -}
 incrementMilliseconds : Time -> ( Time, Bool )
-incrementMilliseconds =
-    Internal.incrementMilliseconds
+incrementMilliseconds (Time time) =
+    let
+        newMillis =
+            millisecondsToInt time.milliseconds + 1
+    in
+    if newMillis >= 1000 then
+        incrementSeconds (Time { time | milliseconds = Millisecond 0 })
+
+    else
+        ( Time { time | milliseconds = Millisecond newMillis }
+        , False
+        )
 
 
 {-| Decrements an 'Hour' inside a 'Time'.
@@ -364,8 +467,20 @@ incrementMilliseconds =
 
 -}
 decrementHours : Time -> ( Time, Bool )
-decrementHours =
-    Internal.decrementHours
+decrementHours (Time time) =
+    let
+        newHours =
+            hoursToInt time.hours - 1
+    in
+    if newHours < 0 then
+        ( Time { time | hours = Hour 23 }
+        , True
+        )
+
+    else
+        ( Time { time | hours = Hour newHours }
+        , False
+        )
 
 
 {-| Decrements a 'Minute' inside a 'Time'.
@@ -380,8 +495,18 @@ decrementHours =
 
 -}
 decrementMinutes : Time -> ( Time, Bool )
-decrementMinutes =
-    Internal.decrementMinutes
+decrementMinutes (Time time) =
+    let
+        newMinutes =
+            minutesToInt time.minutes - 1
+    in
+    if newMinutes < 0 then
+        decrementHours (Time { time | minutes = Minute 59 })
+
+    else
+        ( Time { time | minutes = Minute newMinutes }
+        , False
+        )
 
 
 {-| Decrements a 'Second' inside a 'Time'.
@@ -396,8 +521,18 @@ decrementMinutes =
 
 -}
 decrementSeconds : Time -> ( Time, Bool )
-decrementSeconds =
-    Internal.decrementSeconds
+decrementSeconds (Time time) =
+    let
+        newSeconds =
+            secondsToInt time.seconds - 1
+    in
+    if newSeconds < 0 then
+        decrementMinutes (Time { time | seconds = Second 59 })
+
+    else
+        ( Time { time | seconds = Second newSeconds }
+        , False
+        )
 
 
 {-| Decrements a 'Millisecond' inside a 'Time'.
@@ -412,8 +547,18 @@ decrementSeconds =
 
 -}
 decrementMilliseconds : Time -> ( Time, Bool )
-decrementMilliseconds =
-    Internal.decrementMilliseconds
+decrementMilliseconds (Time time) =
+    let
+        newMillis =
+            millisecondsToInt time.milliseconds - 1
+    in
+    if newMillis < 0 then
+        decrementSeconds (Time { time | milliseconds = Millisecond 999 })
+
+    else
+        ( Time { time | milliseconds = Millisecond newMillis }
+        , False
+        )
 
 
 {-| Compare two `Time` values.
@@ -426,7 +571,29 @@ decrementMilliseconds =
 -}
 compareTime : Time -> Time -> Order
 compareTime lhs rhs =
-    Internal.compareTime lhs rhs
+    let
+        ( hoursComparison, minutesComparison, secondsComparison ) =
+            ( compareHours (getHours lhs) (getHours rhs)
+            , compareMinutes (getMinutes lhs) (getMinutes rhs)
+            , compareSeconds (getSeconds lhs) (getSeconds rhs)
+            )
+    in
+    case hoursComparison of
+        EQ ->
+            case minutesComparison of
+                EQ ->
+                    case secondsComparison of
+                        EQ ->
+                            compareMilliseconds (getMilliseconds lhs) (getMilliseconds rhs)
+
+                        _ ->
+                            secondsComparison
+
+                _ ->
+                    minutesComparison
+
+        _ ->
+            hoursComparison
 
 
 {-| Compare two `Hour` values.
@@ -441,8 +608,8 @@ compareTime lhs rhs =
 
 -}
 compareHours : Hour -> Hour -> Order
-compareHours lhs rhs =
-    Internal.compareHours lhs rhs
+compareHours (Hour lhs) (Hour rhs) =
+    compare lhs rhs
 
 
 {-| Compare two `Minute` values.
@@ -457,8 +624,8 @@ compareHours lhs rhs =
 
 -}
 compareMinutes : Minute -> Minute -> Order
-compareMinutes lhs rhs =
-    Internal.compareMinutes lhs rhs
+compareMinutes (Minute lhs) (Minute rhs) =
+    compare lhs rhs
 
 
 {-| Compare two `Second` values.
@@ -473,8 +640,8 @@ compareMinutes lhs rhs =
 
 -}
 compareSeconds : Second -> Second -> Order
-compareSeconds lhs rhs =
-    Internal.compareSeconds lhs rhs
+compareSeconds (Second lhs) (Second rhs) =
+    compare lhs rhs
 
 
 {-| Compare two `Millisecond` values.
@@ -489,12 +656,12 @@ compareSeconds lhs rhs =
 
 -}
 compareMilliseconds : Millisecond -> Millisecond -> Order
-compareMilliseconds lhs rhs =
-    Internal.compareMilliseconds lhs rhs
+compareMilliseconds (Millisecond lhs) (Millisecond rhs) =
+    compare lhs rhs
 
 
 {-| Returns a zero time. To be used with caution.
 -}
 zero : Time
 zero =
-    Internal.zero
+    Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }
