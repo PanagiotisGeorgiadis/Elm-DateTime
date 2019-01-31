@@ -19,6 +19,12 @@ jobs:
           name: Install npm dependencies
           command: npm install
       - run:
+          name: Remove Elm Cache
+          command: rm -rf /home/circleci/.elm
+      - run:
+          name: Remove Elm Stuff
+          command: rm -rf elm-stuff
+      - run:
           name: Install Elm dependencies
           command: npm run elm-make
 
