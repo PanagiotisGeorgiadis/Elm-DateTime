@@ -1,8 +1,8 @@
 module DateTime.Calendar exposing
     ( Date, RawDate
-    , fromPosix, fromRawYearMonthDay
+    , fromRawYearMonthDay
     , getDay, getMonth, getYear
-    , toMillis, toPosix, monthToInt
+    , toMillis, monthToInt
     , getNextDay, getNextMonth, incrementYear
     , getPreviousDay, getPreviousMonth, decrementYear
     , compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, lastDayOf, getDayDiff
@@ -19,7 +19,7 @@ module DateTime.Calendar exposing
 
 # Creating values
 
-@docs fromPosix, fromRawYearMonthDay
+@docs fromRawYearMonthDay
 
 
 # Accessors
@@ -29,7 +29,7 @@ module DateTime.Calendar exposing
 
 # Converters
 
-@docs toMillis, toPosix, monthToInt
+@docs toMillis, monthToInt
 
 
 # Incrementers
@@ -208,17 +208,6 @@ getPreviousMonth =
     Internal.getPreviousMonth
 
 
-{-| Get a UTC `Date` from a time zone and posix time.
-
-> fromPosix (Time.millisToPosix 0)
-> Date { day = Day 1, month = Jan, year = Year 1970 } : Date
-
--}
-fromPosix : Time.Posix -> Date
-fromPosix =
-    Internal.fromPosix
-
-
 {-| Checks if the given year is a leap year.
 
 > isLeapYear 2019
@@ -306,13 +295,6 @@ incrementYear =
 decrementYear : Date -> Date
 decrementYear =
     Internal.decrementYear
-
-
-{-| Transforms a 'Date' to a Posix time.
--}
-toPosix : Date -> Time.Posix
-toPosix =
-    Internal.toPosix
 
 
 {-| Transforms a 'Date' into milliseconds

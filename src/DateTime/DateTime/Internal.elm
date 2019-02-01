@@ -1,13 +1,4 @@
-module DateTime.DateTime.Internal
-    exposing
-    -- ( DateTime
-    -- , fromPosix, fromRawParts
-    -- , toPosix
-    -- , getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
-    -- , getNextMonth, getPreviousMonth, getDateRange, getDatesInMonth, getPreviousDay, getNextDay
-    -- , compareDates, compareTime
-    -- , daysSinceEpoch
-    -- )
+module DateTime.DateTime.Internal exposing
     ( DateTime(..)
     , fromPosix, fromRawParts
     , toPosix
@@ -55,7 +46,9 @@ module DateTime.DateTime.Internal
 
 import Array
 import DateTime.Calendar as Calendar
+import DateTime.Calendar.Internal as Calendar_
 import DateTime.Clock as Clock
+import DateTime.Clock.Internal as Clock_
 import Time
 
 
@@ -80,8 +73,8 @@ type alias InternalDateTime =
 fromPosix : Time.Posix -> DateTime
 fromPosix timePosix =
     DateTime
-        { date = Calendar.fromPosix timePosix
-        , time = Clock.fromPosix timePosix
+        { date = Calendar_.fromPosix timePosix
+        , time = Clock_.fromPosix timePosix
         }
 
 
@@ -311,23 +304,12 @@ getDatesInMonth (DateTime { date }) =
 > , Date { day = Day 28, month = Feb, year = Year 2020 }
 > , Date { day = Day 29, month = Feb, year = Year 2020 }
 > , Date { day = Day 1, month = Mar, year = Year 2020 }
-> ][ Date { day = Day 25, month = Feb, year = Year 2020 }
-> , Date { day = Day 26, month = Feb, year = Year 2020 }
-> , Date { day = Day 27, month = Feb, year = Year 2020 }
-> , Date { day = Day 28, month = Feb, year = Year 2020 }
-> , Date { day = Day 29, month = Feb, year = Year 2020 }
-> , Date { day = Day 1, month = Mar, year = Year 2020 }
 > ]
 >
 > startDate2 = fromRawYearMonthDay { rawDay = 25, rawMonth = 2, rawYear = 2019 }
 > endDate2 = fromRawYearMonthDay { rawDay = 1, rawMonth = 3, rawYear = 2019 }
 > getDateRange startDate2 endDate2
 > [ Date { day = Day 25, month = Feb, year = Year 2019 }
-> , Date { day = Day 26, month = Feb, year = Year 2019 }
-> , Date { day = Day 27, month = Feb, year = Year 2019 }
-> , Date { day = Day 28, month = Feb, year = Year 2019 }
-> , Date { day = Day 1, month = Mar, year = Year 2019 }
-> ][ Date { day = Day 25, month = Feb, year = Year 2019 }
 > , Date { day = Day 26, month = Feb, year = Year 2019 }
 > , Date { day = Day 27, month = Feb, year = Year 2019 }
 > , Date { day = Day 28, month = Feb, year = Year 2019 }

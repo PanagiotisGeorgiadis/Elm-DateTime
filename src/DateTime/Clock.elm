@@ -1,6 +1,6 @@
 module DateTime.Clock exposing
     ( Time, RawTime
-    , fromPosix, fromRawParts
+    , fromRawParts
     , toMillis
     , getHours, getMinutes, getSeconds, getMilliseconds
     , incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
@@ -19,7 +19,7 @@ module DateTime.Clock exposing
 
 # Creating values
 
-@docs fromPosix, fromRawParts
+@docs fromRawParts
 
 
 # Conversions
@@ -44,7 +44,7 @@ module DateTime.Clock exposing
 
 # Comparers
 
-@docs compareTime, compareHours, compareMinutes, compareSeconds, compareMilliseconds
+@docs compareTime
 
 
 # Constants
@@ -81,20 +81,6 @@ type alias RawTime =
 fromRawParts : RawTime -> Maybe Time
 fromRawParts =
     Internal.fromRawParts
-
-
-{-| Get a clock `Time` from a time zone and posix time.
-
-> fromPosix (Time.millisToPosix 0)
-> { hour = Hour 0, minute = Minute 0, second = Second 0, millisecond = 0 } : Time
->
-> fromPosix (Time.millisToPosix 1545328255284)
-> { hour = Hour 17, minute = Minute 50, second = Second 55, millisecond = Millisecond 284 }
-
--}
-fromPosix : Time_.Posix -> Time
-fromPosix =
-    Internal.fromPosix
 
 
 {-| Convert a `Time` to milliseconds.

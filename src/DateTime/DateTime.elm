@@ -2,7 +2,7 @@ module DateTime.DateTime exposing
     ( DateTime
     , fromPosix, fromRawParts
     , toPosix
-    , getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
+    , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
     , getNextMonth, getPreviousMonth, getDateRange, getDatesInMonth, getPreviousDay, getNextDay
     , compareDates, compareTime
     , daysSinceEpoch
@@ -25,7 +25,7 @@ module DateTime.DateTime exposing
 
 # Accessors
 
-@docs getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
+@docs getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
 
 
 # Calendar Accessors
@@ -159,17 +159,6 @@ getYear =
 getMonth : DateTime -> Time.Month
 getMonth =
     Internal.getMonth
-
-
-{-| Returns the 'Month' from a 'DateTime' as an Int starting from 1.
-
-> getMonth (fromPosix (Time.millisToPosix 0))
-> Jan : Int
-
--}
-getMonthInt : DateTime -> Int
-getMonthInt =
-    Internal.getMonthInt
 
 
 {-| Returns the 'Day' from a 'DateTime' as an Int.

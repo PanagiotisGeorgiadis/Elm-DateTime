@@ -914,9 +914,6 @@ decrementYear (Date date) =
 
 
 {-| Transforms a 'Date' to a Posix time.
-
--- Can be exposed
-
 -}
 toPosix : Date -> Time.Posix
 toPosix =
