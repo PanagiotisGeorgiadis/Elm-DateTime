@@ -14,7 +14,7 @@ This basically means that __DateTime__ can be constructed by a [Time.Posix][Time
 
 <br/>
 
-#### Constructing a DateTime
+### Constructing a DateTime
 
 You can construct a DateTime in 2 different ways. Either by providing a __Posix Time__ or by providing a Calendar.Date and a Clock.Time.
 
@@ -28,7 +28,7 @@ You can also ___attempt___ to construct a DateTime by providing its' constituent
 
 <br/>
 
-#### Constructing a Calendar.Date
+### Constructing a Calendar.Date
 
 You can attempt to construct a Calendar.Date by providing its' constituent parts as raw data as shown in the diagram below.
 
@@ -39,7 +39,7 @@ a Posix Time it will always default to 00:00 hours. You can always use this alon
 
 <br/>
 
-#### Constructing a Clock.Time
+### Constructing a Clock.Time
 
 You can attempt to construct a Clock.Time by providing its' constituent parts as raw data as shown in the diagram below.
 
@@ -49,7 +49,7 @@ Building a timer app could be one of the cases where you don't really care about
 to keep track of the time. Be very careful though if you want to get a valid Posix Time you would need to convert your Clock.Time to a DateTime by using a Calendar.Date as well.
 
 #
-#### Running the package locally
+### Running the package locally
 ```
 npm install
 npm run elm-make
