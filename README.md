@@ -13,6 +13,7 @@ The main goal of this package is to serve as an extension of [elm/time][elm-time
 This basically means that __DateTime__ can be constructed by a [Time.Posix][TimePosix] type and it can be converted back to [Time.Posix][TimePosix] without losing any of it's integrity.
 
 <br/>
+
 #### Constructing a DateTime
 
 You can construct a DateTime in 2 different ways. Either by providing a __Posix Time__ or by providing a Calendar.Date and a Clock.Time.
@@ -20,11 +21,13 @@ You can construct a DateTime in 2 different ways. Either by providing a __Posix 
 ![alt text](https://github.com/PanagiotisGeorgiadis/elm-datetime/blob/master/assets/Isomorphic-DateTime-Construction.png "Isomorphic DateTime construction")
 
 <br/>
+
 You can also ___attempt___ to construct a DateTime by providing its' constituent parts as raw data.
 
 ![alt text](https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/assets/RawParts-DateTime-Construction.png "RawParts to Maybe DateTime")
 
 <br/>
+
 #### Constructing a Calendar.Date
 
 You can attempt to construct a Calendar.Date by providing its' constituent parts as raw data as shown in the diagram below.
@@ -35,6 +38,7 @@ There could be some cases where you don't really care about the time but you onl
 a Posix Time it will always default to 00:00 hours. You can always use this along with a Clock.Time to construct a DateTime in case you need to.
 
 <br/>
+
 #### Constructing a Clock.Time
 
 You can attempt to construct a Clock.Time by providing its' constituent parts as raw data as shown in the diagram below.
