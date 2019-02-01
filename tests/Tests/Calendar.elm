@@ -104,7 +104,7 @@ fromPosixTests =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 27 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 27 }
                 in
                 case rawDate of
                     Just date ->
@@ -130,7 +130,7 @@ fromRawYearMonthDayTests =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 27 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 27 }
                 in
                 case rawDate of
                     Just date ->
@@ -142,16 +142,16 @@ fromRawYearMonthDayTests =
         , test "Valid date on start of the year from raw parts"
             (\_ ->
                 let
-                    ( rawDay, rawMonth, rawYear ) =
+                    ( day, month, year ) =
                         ( 1, 1, 2018 )
 
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = rawYear, rawMonth = rawMonth, rawDay = rawDay }
+                        Calendar.fromRawYearMonthDay { year = year, month = month, day = day }
                 in
                 case rawDate of
                     Just date ->
                         Expect.true "Created wrong date from raw components."
-                            (getDayInt date == rawDay && getMonthInt date == rawMonth && getYearInt date == rawYear)
+                            (getDayInt date == day && getMonthInt date == month && getYearInt date == year)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw components"
@@ -159,16 +159,16 @@ fromRawYearMonthDayTests =
         , test "Valid date on end of the year from raw parts"
             (\_ ->
                 let
-                    ( rawDay, rawMonth, rawYear ) =
+                    ( day, month, year ) =
                         ( 31, 12, 2018 )
 
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = rawYear, rawMonth = rawMonth, rawDay = rawDay }
+                        Calendar.fromRawYearMonthDay { year = year, month = month, day = day }
                 in
                 case rawDate of
                     Just date ->
                         Expect.true "Created wrong date from raw components."
-                            (getDayInt date == rawDay && getMonthInt date == rawMonth && getYearInt date == rawYear)
+                            (getDayInt date == day && getMonthInt date == month && getYearInt date == year)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw components"
@@ -177,7 +177,7 @@ fromRawYearMonthDayTests =
             (\_ ->
                 let
                     date =
-                        Calendar.fromRawYearMonthDay { rawYear = 0, rawMonth = 11, rawDay = 27 }
+                        Calendar.fromRawYearMonthDay { year = 0, month = 11, day = 27 }
                 in
                 Expect.equal date Nothing
             )
@@ -185,7 +185,7 @@ fromRawYearMonthDayTests =
             (\_ ->
                 let
                     date =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 13, rawDay = 27 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 13, day = 27 }
                 in
                 Expect.equal date Nothing
             )
@@ -193,7 +193,7 @@ fromRawYearMonthDayTests =
             (\_ ->
                 let
                     date =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 31 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 31 }
                 in
                 Expect.equal date Nothing
             )
@@ -201,7 +201,7 @@ fromRawYearMonthDayTests =
             (\_ ->
                 let
                     date =
-                        Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
+                        Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
                 in
                 Expect.notEqual date Nothing
             )
@@ -209,7 +209,7 @@ fromRawYearMonthDayTests =
             (\_ ->
                 let
                     date =
-                        Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 29 }
+                        Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 29 }
                 in
                 Expect.equal date Nothing
             )
@@ -220,18 +220,18 @@ compareDatesTests : Test
 compareDatesTests =
     let
         rawDate =
-            Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 27 }
+            Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 27 }
 
         ( nextDayRawDate, nextMonthRawDate, nextYearRawDate ) =
-            ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 28 }
-            , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 12, rawDay = 27 }
-            , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 11, rawDay = 27 }
+            ( Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 28 }
+            , Calendar.fromRawYearMonthDay { year = 2018, month = 12, day = 27 }
+            , Calendar.fromRawYearMonthDay { year = 2019, month = 11, day = 27 }
             )
 
         ( previousDayRawDate, previousMonthRawDate, previousYearRawDate ) =
-            ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 26 }
-            , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 10, rawDay = 27 }
-            , Calendar.fromRawYearMonthDay { rawYear = 2017, rawMonth = 11, rawDay = 27 }
+            ( Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 26 }
+            , Calendar.fromRawYearMonthDay { year = 2018, month = 10, day = 27 }
+            , Calendar.fromRawYearMonthDay { year = 2017, month = 11, day = 27 }
             )
 
         getDayInt =
@@ -324,8 +324,8 @@ getNextMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 15 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 12, rawDay = 15 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 15 }
+                        , Calendar.fromRawYearMonthDay { year = 2018, month = 12, day = 15 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -334,8 +334,8 @@ getNextMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 12, rawDay = 15 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 15 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 12, day = 15 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 15 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -344,8 +344,8 @@ getNextMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 1, rawDay = 29 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 1, day = 29 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -354,8 +354,8 @@ getNextMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 29 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 29 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 28 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -364,8 +364,8 @@ getNextMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 1, rawDay = 31 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 1, day = 31 }
+                        , Calendar.fromRawYearMonthDay { year = 2018, month = 2, day = 28 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -389,8 +389,8 @@ getPreviousMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 15 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 10, rawDay = 15 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 15 }
+                        , Calendar.fromRawYearMonthDay { year = 2018, month = 10, day = 15 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -399,8 +399,8 @@ getPreviousMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 15 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 12, rawDay = 15 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 15 }
+                        , Calendar.fromRawYearMonthDay { year = 2018, month = 12, day = 15 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -409,8 +409,8 @@ getPreviousMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 3, rawDay = 29 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 3, day = 29 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -419,8 +419,8 @@ getPreviousMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 3, rawDay = 29 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 3, day = 29 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 28 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -429,8 +429,8 @@ getPreviousMonthTests =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 3, rawDay = 31 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 3, day = 31 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 28 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -519,7 +519,7 @@ isLeapYearTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 1, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 1, day = 1 }
                 in
                 case rawDate of
                     Just date ->
@@ -533,7 +533,7 @@ isLeapYearTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 1, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2020, month = 1, day = 1 }
                 in
                 case rawDate of
                     Just date ->
@@ -565,7 +565,7 @@ lastDayOfTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 1, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 1, day = 1 }
                 in
                 performTest rawDate 31
             )
@@ -573,7 +573,7 @@ lastDayOfTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 2, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 2, day = 1 }
                 in
                 performTest rawDate 28
             )
@@ -581,7 +581,7 @@ lastDayOfTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 1 }
                 in
                 performTest rawDate 29
             )
@@ -589,7 +589,7 @@ lastDayOfTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 3, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 3, day = 1 }
                 in
                 performTest rawDate 31
             )
@@ -612,8 +612,8 @@ incrementYearTest =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 1 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 1, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 1 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 1, day = 1 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -622,8 +622,8 @@ incrementYearTest =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 12, rawDay = 31 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 12, rawDay = 31 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 12, day = 31 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 12, day = 31 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -632,8 +632,8 @@ incrementYearTest =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 28 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 28 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 28 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -642,8 +642,8 @@ incrementYearTest =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2021, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
+                        , Calendar.fromRawYearMonthDay { year = 2021, month = 2, day = 28 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -670,8 +670,8 @@ decrementYearTest =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 1, rawDay = 1 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 1, day = 1 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 1 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -683,8 +683,8 @@ decrementYearTest =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 12, rawDay = 31 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 12, rawDay = 31 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 12, day = 31 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 12, day = 31 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -696,8 +696,8 @@ decrementYearTest =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 28 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -709,8 +709,8 @@ decrementYearTest =
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2021, rawMonth = 2, rawDay = 28 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2021, month = 2, day = 28 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 28 }
                         )
                 in
                 performTest initialDate expectedDate
@@ -734,7 +734,7 @@ toPosixTest =
             (\_ ->
                 let
                     ( rawDate, expectedTimestamp ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 1 }
                         , 1546300800000
                         )
                 in
@@ -744,7 +744,7 @@ toPosixTest =
             (\_ ->
                 let
                     ( rawDate, expectedTimestamp ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 28 }
                         , 1551312000000
                         )
                 in
@@ -754,7 +754,7 @@ toPosixTest =
             (\_ ->
                 let
                     ( rawDate, expectedTimestamp ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
                         , 1582934400000
                         )
                 in
@@ -764,7 +764,7 @@ toPosixTest =
             (\_ ->
                 let
                     ( rawDate, expectedTimestamp ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 3, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 3, day = 1 }
                         , 1583020800000
                         )
                 in
@@ -824,7 +824,7 @@ weekdayFromDateTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
+                        Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
                 in
                 case rawDate of
                     Just date ->
@@ -855,7 +855,7 @@ getDatesInMonthTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 1 }
                 in
                 performTest rawDate 30
             )
@@ -863,7 +863,7 @@ getDatesInMonthTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 1 }
                 in
                 performTest rawDate 28
             )
@@ -871,7 +871,7 @@ getDatesInMonthTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 1 }
                 in
                 performTest rawDate 29
             )
@@ -879,8 +879,8 @@ getDatesInMonthTest =
             (\_ ->
                 let
                     ( firstDate, secondDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 3, rawDay = 1 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 3, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 3, day = 1 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 3, day = 1 }
                         )
                 in
                 case ( firstDate, secondDate ) of
@@ -894,7 +894,7 @@ getDatesInMonthTest =
             (\_ ->
                 let
                     rawDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 1 }
 
                     firstOfJanuaryMillis =
                         1546300800000
@@ -933,8 +933,8 @@ getNextDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 8, rawDay = 25 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 8, rawDay = 26 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 8, day = 25 }
+                        , Calendar.fromRawYearMonthDay { year = 2018, month = 8, day = 26 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -943,8 +943,8 @@ getNextDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 12, rawDay = 31 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 12, day = 31 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 1 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -953,8 +953,8 @@ getNextDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 28 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 3, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 28 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 3, day = 1 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -963,8 +963,8 @@ getNextDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 28 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 28 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -973,8 +973,8 @@ getNextDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 3, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 3, day = 1 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -998,8 +998,8 @@ getPreviousDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 8, rawDay = 25 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 8, rawDay = 24 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 8, day = 25 }
+                        , Calendar.fromRawYearMonthDay { year = 2018, month = 8, day = 24 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -1008,8 +1008,8 @@ getPreviousDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 1 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 12, rawDay = 31 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 1 }
+                        , Calendar.fromRawYearMonthDay { year = 2018, month = 12, day = 31 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -1018,8 +1018,8 @@ getPreviousDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 3, rawDay = 1 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 3, day = 1 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 28 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -1028,8 +1028,8 @@ getPreviousDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 3, rawDay = 1 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 3, day = 1 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -1038,8 +1038,8 @@ getPreviousDayTest =
             (\_ ->
                 let
                     ( rawDate, expectedDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 29 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 28 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 29 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 28 }
                         )
                 in
                 performTest rawDate expectedDate
@@ -1081,8 +1081,8 @@ getDateRangeTest =
             (\_ ->
                 let
                     ( startDate, endDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 15 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 11, rawDay = 25 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 15 }
+                        , Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 25 }
                         )
                 in
                 performTest startDate endDate 11
@@ -1091,8 +1091,8 @@ getDateRangeTest =
             (\_ ->
                 let
                     ( startDate, endDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 12, rawDay = 28 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 5 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 12, day = 28 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 5 }
                         )
                 in
                 performTest startDate endDate 9
@@ -1101,8 +1101,8 @@ getDateRangeTest =
             (\_ ->
                 let
                     ( startDate, endDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 2, rawDay = 25 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 3, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 2, day = 25 }
+                        , Calendar.fromRawYearMonthDay { year = 2019, month = 3, day = 1 }
                         )
                 in
                 performTest startDate endDate 5
@@ -1111,8 +1111,8 @@ getDateRangeTest =
             (\_ ->
                 let
                     ( startDate, endDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 2, rawDay = 25 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 3, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 2, day = 25 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 3, day = 1 }
                         )
                 in
                 performTest startDate endDate 6
@@ -1121,8 +1121,8 @@ getDateRangeTest =
             (\_ ->
                 let
                     ( startDate, endDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2019, rawMonth = 1, rawDay = 1 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 1, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2019, month = 1, day = 1 }
+                        , Calendar.fromRawYearMonthDay { year = 2020, month = 1, day = 1 }
                         )
                 in
                 performTest startDate endDate 366
@@ -1131,8 +1131,8 @@ getDateRangeTest =
             (\_ ->
                 let
                     ( startDate, endDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2020, rawMonth = 1, rawDay = 1 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2021, rawMonth = 1, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2020, month = 1, day = 1 }
+                        , Calendar.fromRawYearMonthDay { year = 2021, month = 1, day = 1 }
                         )
                 in
                 performTest startDate endDate 367
@@ -1141,8 +1141,8 @@ getDateRangeTest =
             (\_ ->
                 let
                     ( startDate, endDate ) =
-                        ( Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 1, rawDay = 15 }
-                        , Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 1, rawDay = 1 }
+                        ( Calendar.fromRawYearMonthDay { year = 2018, month = 1, day = 15 }
+                        , Calendar.fromRawYearMonthDay { year = 2018, month = 1, day = 1 }
                         )
                 in
                 performTest startDate endDate 15
@@ -1151,7 +1151,7 @@ getDateRangeTest =
             (\_ ->
                 let
                     startDate =
-                        Calendar.fromRawYearMonthDay { rawYear = 2018, rawMonth = 1, rawDay = 1 }
+                        Calendar.fromRawYearMonthDay { year = 2018, month = 1, day = 1 }
                 in
                 performTest startDate startDate 1
             )
