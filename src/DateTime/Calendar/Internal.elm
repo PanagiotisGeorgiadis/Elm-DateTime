@@ -43,6 +43,9 @@ module DateTime.Calendar.Internal exposing
     , monthFromInt
     , monthToInt
     , months
+    , setDay
+    , setMonth
+    , setYear
     , toMillis
     , toPosix
     , yearFromInt
@@ -1231,3 +1234,36 @@ getDayDiff startDate endDate =
             Time.posixToMillis endPosix - Time.posixToMillis startPosix
     in
     posixDiff // 1000 // 60 // 60 // 24
+
+
+{-| Attempts to set the 'Day' on an existing date
+-}
+setDay : Date -> Int -> Maybe Date
+setDay date day =
+    fromRawYearMonthDay
+        { year = yearToInt (getYear date)
+        , month = monthToInt (getMonth date)
+        , day = day
+        }
+
+
+{-| Attempts to set the 'Month' on an existing date
+-}
+setMonth : Date -> Month -> Maybe Date
+setMonth date month =
+    fromRawYearMonthDay
+        { year = yearToInt (getYear date)
+        , month = monthToInt month
+        , day = dayToInt (getDay date)
+        }
+
+
+{-| Attempts to set the 'Year' on an existing date
+-}
+setYear : Date -> Int -> Maybe Date
+setYear date year =
+    fromRawYearMonthDay
+        { year = year
+        , month = monthToInt (getMonth date)
+        , day = dayToInt (getDay date)
+        }

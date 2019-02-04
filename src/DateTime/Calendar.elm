@@ -2,6 +2,7 @@ module DateTime.Calendar exposing
     ( Date, RawDate
     , fromRawYearMonthDay
     , getDay, getMonth, getYear
+    , setDay, setMonth, setYear
     , toMillis, monthToInt
     , incrementDay, incrementMonth, incrementYear
     , decrementDay, decrementMonth, decrementYear
@@ -14,7 +15,7 @@ module DateTime.Calendar exposing
 
 # Type definition
 
-@docs Date, Day, Month, Year, RawDate
+@docs Date, RawDate
 
 
 # Creating values
@@ -25,6 +26,11 @@ module DateTime.Calendar exposing
 # Accessors
 
 @docs getDay, getMonth, getYear
+
+
+# Setters
+
+@docs setDay, setMonth, setYear
 
 
 # Converters
@@ -132,8 +138,8 @@ getDay =
 
 -}
 compareDates : Date -> Date -> Order
-compareDates lhs rhs =
-    Internal.compareDates lhs rhs
+compareDates =
+    Internal.compareDates
 
 
 {-| Construct a `Date` from its (raw) constituent parts.
@@ -416,10 +422,31 @@ decrementDay =
 
 -}
 getDateRange : Date -> Date -> List Date
-getDateRange startDate endDate =
-    Internal.getDateRange startDate endDate
+getDateRange =
+    Internal.getDateRange
 
 
 getDayDiff : Date -> Date -> Int
-getDayDiff startDate endDate =
-    Internal.getDayDiff startDate endDate
+getDayDiff =
+    Internal.getDayDiff
+
+
+{-| Attempts to set the 'Day' on an existing date
+-}
+setDay : Date -> Int -> Maybe Date
+setDay =
+    Internal.setDay
+
+
+{-| Attempts to set the 'Month' on an existing date
+-}
+setMonth : Date -> Month -> Maybe Date
+setMonth =
+    Internal.setMonth
+
+
+{-| Attempts to set the 'Year' on an existing date
+-}
+setYear : Date -> Int -> Maybe Date
+setYear =
+    Internal.setYear
