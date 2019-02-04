@@ -5,7 +5,9 @@
     "license": "MIT",
     "version": "1.0.0",
     "exposed-modules": [
-        "DateTime.DateTime"
+        "DateTime.DateTime",
+	"DateTime.Calendar",
+	"DateTime.Clock"
     ],
     "source-directories": [
         "src",
