@@ -227,7 +227,7 @@ getDay =
 -}
 getWeekday : DateTime -> Time.Weekday
 getWeekday (DateTime dateTime) =
-    Calendar.weekdayFromDate dateTime.date
+    Calendar.getWeekday dateTime.date
 
 
 {-| Extract the clock time from a `DateTime`.

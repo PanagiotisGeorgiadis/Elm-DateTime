@@ -27,6 +27,7 @@ module DateTime.Calendar.Internal exposing
     , getFollowingMonths
     , getMonth
     , getPrecedingMonths
+    , getWeekday
     , getYear
     , incrementDay
     , incrementMonth
@@ -44,7 +45,6 @@ module DateTime.Calendar.Internal exposing
     , months
     , toMillis
     , toPosix
-    , weekdayFromDate
     , yearFromInt
     , yearToInt
     )
@@ -457,20 +457,7 @@ fromRawDay year month day =
         |> Maybe.andThen (fromYearMonthDay year month)
 
 
-{-| Construct a `Date` from its constituent Year and Month by using its raw day.
-Returns `Nothing` if any parts or their combination would form an invalid date.
-
-> fromRawDay (Year 2018) Dec 25
-> Just (Date { day = Day 25, month = Dec, year = Year 2018 }) : Maybe Date
->
-> fromRawDay (Year 2019) Feb 29
-> Nothing : Maybe Date
->
-> fromRawDay (Year 2020) Feb 29
-> Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
-
--- Internal, not to be exposed
-
+{-| Returns a list of all the Months in Calendar order.
 -}
 months : Array Month
 months =
@@ -1031,18 +1018,18 @@ millisSinceStartOfTheMonth day =
 {-| Returns the weekday of a specific 'Date'
 
 > date = fromRawYearMonthDay { day = 29, month = 2, year = 2020 }
-> weekdayFromDate date
+> getWeekday date
 > Sat : Time.Weekday
 >
 > date2 = fromRawYearMonthDay { day = 25, month = 11, year = 2018 }
-> weekdayFromDate date2
+> getWeekday date2
 > Tue : Time.Weekday
 
 -- Can be exposed
 
 -}
-weekdayFromDate : Date -> Time.Weekday
-weekdayFromDate date =
+getWeekday : Date -> Time.Weekday
+getWeekday date =
     Time.toWeekday Time.utc (toPosix date)
 
 
@@ -1230,6 +1217,8 @@ getDateRange_ daysCount prevDate res =
         updatedRes
 
 
+{-| Returns the number of days between two 'Dates'.
+-}
 getDayDiff : Date -> Date -> Int
 getDayDiff startDate endDate =
     let

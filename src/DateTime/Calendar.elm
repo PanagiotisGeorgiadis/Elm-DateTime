@@ -5,7 +5,7 @@ module DateTime.Calendar exposing
     , toMillis, monthToInt
     , incrementDay, incrementMonth, incrementYear
     , decrementDay, decrementMonth, decrementYear
-    , compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, lastDayOf, getDayDiff
+    , compareDates, isLeapYear, getWeekday, getDatesInMonth, getDateRange, getDayDiff
     , months, millisInADay
     )
 
@@ -44,7 +44,7 @@ module DateTime.Calendar exposing
 
 # Utilities
 
-@docs compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, lastDayOf, getDayDiff
+@docs compareDates, isLeapYear, getWeekday, getDatesInMonth, getDateRange, getDayDiff
 
 
 # Constants
@@ -222,23 +222,6 @@ isLeapYear =
     Internal.isLeapYear
 
 
-{-| Get the last day of the given `Year` and `Month`.
-
-> lastDayOf (Year 2018) Dec
-> 31
->
-> lastDayOf (Year 2019) Feb
-> 28
->
-> lastDayOf (Year 2020) Feb
-> 29
-
--}
-lastDayOf : Year -> Month -> Day
-lastDayOf year month =
-    Internal.lastDayOf year month
-
-
 {-| Increments the 'Year' in a given 'Date' while preserving the month and
 --- day where applicable.
 
@@ -314,17 +297,17 @@ millisInADay =
 {-| Returns the weekday of a specific 'Date'
 
 > date = fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear = 2020 }
-> weekdayFromDate date
+> getWeekday date
 > Sat : Time.Weekday
 >
 > date2 = fromRawYearMonthDay { rawDay = 25, rawMonth = 11, rawYear = 2018 }
-> weekdayFromDate date2
+> getWeekday date2
 > Tue : Time.Weekday
 
 -}
-weekdayFromDate : Date -> Time.Weekday
-weekdayFromDate =
-    Internal.weekdayFromDate
+getWeekday : Date -> Time.Weekday
+getWeekday =
+    Internal.getWeekday
 
 
 {-| Returns a list of 'Dates' for the given 'Year' and 'Month' combination.

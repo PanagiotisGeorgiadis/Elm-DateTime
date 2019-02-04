@@ -37,7 +37,7 @@ suite =
         , incrementYearTest
         , decrementYearTest
         , toPosixTest
-        , weekdayFromDateTest
+        , getWeekdayTest
         , getDatesInMonthTest
         , incrementDayTest
         , decrementDayTest
@@ -813,12 +813,12 @@ toPosixTest =
         ]
 
 
-weekdayFromDateTest : Test
-weekdayFromDateTest =
-    describe "Calendar.weekdayFromDate Test Suite"
+getWeekdayTest : Test
+getWeekdayTest =
+    describe "Calendar.getWeekday Test Suite"
         [ test "Testing with the given date being 27th of November 2018"
             (\_ ->
-                Expect.equal (Calendar.weekdayFromDate testPosixDate) Time.Tue
+                Expect.equal (Calendar.getWeekday testPosixDate) Time.Tue
             )
         , test "Testing with the given date being 29th of February 2020"
             (\_ ->
@@ -828,7 +828,7 @@ weekdayFromDateTest =
                 in
                 case rawDate of
                     Just date ->
-                        Expect.equal (Calendar.weekdayFromDate date) Time.Sat
+                        Expect.equal (Calendar.getWeekday date) Time.Sat
 
                     _ ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -1492,7 +1492,7 @@ millisSinceStartOfTheMonthTest =
    decrementYear ?? -- DONE
 
    toPosix ??  -- DONE
-   weekdayFromDate  -- DONE
+   getWeekday  -- DONE
    getMonthDates ?? Rename it to getDatesInMonth ? -- DONE
    nextDay      -- DONE
    previousDay  -- DONE
