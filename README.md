@@ -1,4 +1,4 @@
-# DateTime
+# DateTime ![alt text][Elm-Package-Version] ![alt text][CircleCI-build] [![License: MIT][Licence-Icon]](https://opensource.org/licenses/MIT)
 
 The 0.19 version of Elm introduced some [important changes][important-changes] in the Time API which is now split into a [separate package][elm-time].
 
@@ -64,3 +64,6 @@ npm test
 [Calendar-Date]: https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/src/DateTime/Calendar/Internal.elm#L58
 [Clock-Time]: https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/src/DateTime/Clock/Internal.elm#L45
 [DateTime-url]: https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/src/DateTime/DateTime/Internal.elm#L57
+[CircleCI-build]: https://img.shields.io/circleci/project/github/PanagiotisGeorgiadis/Elm-DateTime.svg?style=flat
+[Licence-Icon]: https://img.shields.io/badge/License-MIT-blue.svg
+[Elm-Package-Version]: https://img.shields.io/elm-package/v/PanagiotisGeorgiadis/Elm-datetime.svg?style=flat
