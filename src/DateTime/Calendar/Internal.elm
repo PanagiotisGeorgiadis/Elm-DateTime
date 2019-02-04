@@ -11,6 +11,9 @@ module DateTime.Calendar.Internal exposing
     , compareYears
     , dayFromInt
     , dayToInt
+    , decrementDay
+    , decrementMonth
+    , decrementMonth_
     , decrementYear
     , fromPosix
     , fromRawDay
@@ -23,14 +26,11 @@ module DateTime.Calendar.Internal exposing
     , getDayDiff
     , getFollowingMonths
     , getMonth
-    , getNextDay
-    , getNextMonth
-    , getNextMonth_
     , getPrecedingMonths
-    , getPreviousDay
-    , getPreviousMonth
-    , getPreviousMonth_
     , getYear
+    , incrementDay
+    , incrementMonth
+    , incrementMonth_
     , incrementYear
     , isLeapYear
     , lastDayOf
@@ -496,20 +496,20 @@ months =
 
 > date = fromRawYearMonthDay { day = 31, month = 12 year = 2018 }
 >
-> getNextMonth date
+> incrementMonth date
 > Date { day = Day 31, month = 1, year = 2019 } : Date
 >
-> getNextMonth (getNextMonth date)
+> incrementMonth (incrementMonth date)
 > Date { day = Day 28, month = 28, year = 2019 } : Date
 
 -- Can Be Exposed
 
 -}
-getNextMonth : Date -> Date
-getNextMonth (Date date) =
+incrementMonth : Date -> Date
+incrementMonth (Date date) =
     let
         updatedMonth =
-            getNextMonth_ date.month
+            incrementMonth_ date.month
 
         updatedYear =
             case updatedMonth of
@@ -539,17 +539,17 @@ getNextMonth (Date date) =
 
 {-| Gets next month from the given month.
 
-> getNextMonth\_ Dec
+> incrementMonth\_ Dec
 > Jan : Month
 >
-> getNextMonth\_ Nov
+> incrementMonth\_ Nov
 > Dec : Month
 
 -- Internal, not to be exposed
 
 -}
-getNextMonth_ : Month -> Month
-getNextMonth_ month =
+incrementMonth_ : Month -> Month
+incrementMonth_ month =
     case month of
         Time.Jan ->
             Time.Feb
@@ -594,20 +594,20 @@ getNextMonth_ month =
 
 > date = fromRawYearMonthDay { day = 31, month = 1 year = 2019 }
 >
-> getPreviousMonth date
+> decrementMonth date
 > Date { day = Day 31, month = 12, year = 2018 } : Date
 >
-> getNextMonth (getNextMonth date)
+> decrementMonth (decrementMonth date)
 > Date { day = Day 30, month = 11, year = 2018 } : Date
 
 -- Can Be Exposed
 
 -}
-getPreviousMonth : Date -> Date
-getPreviousMonth (Date date) =
+decrementMonth : Date -> Date
+decrementMonth (Date date) =
     let
         updatedMonth =
-            getPreviousMonth_ date.month
+            decrementMonth_ date.month
 
         updatedYear =
             case updatedMonth of
@@ -637,17 +637,17 @@ getPreviousMonth (Date date) =
 
 {-| Gets next month from the given month.
 
-> getNextMonth\_ Jan
+> decrementMonth\_ Jan
 > Dec : Month
 >
-> getNextMonth\_ Dec
+> decrementMonth\_ Dec
 > Nov : Month
 
 -- Internal, not to be exposed
 
 -}
-getPreviousMonth_ : Month -> Month
-getPreviousMonth_ month =
+decrementMonth_ : Month -> Month
+decrementMonth_ month =
     case month of
         Time.Jan ->
             Time.Dec
@@ -1084,15 +1084,15 @@ getDatesInMonth (Date { year, month }) =
 --- if applicable.
 
 > date = fromRawYearMonthDay { day = 31, month = 12, year = 2018 }
-> getNextDay date
+> incrementDay date
 > Date { day = Day 1, month = Jan, year = Year 2019 }
 >
 > date2 = fromRawYearMonthDay { day = 29, month = 2, year 2020 }
-> getNextDay date2
+> incrementDay date2
 > Date { day = Day 1, month = Mar, year = Year 2020 }
 >
 > date3 = fromRawYearMonthDay { day = 24, month = 12, year 2018 }
-> getNextDay date3
+> incrementDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
 
 -- Can be exposed
@@ -1101,13 +1101,13 @@ getDatesInMonth (Date { year, month }) =
 --- Its safe to get the next day by using milliseconds
 --- here because we are responsible for transforming the
 --- given date to millis and parsing it from millis.
---- The getNextYear + getNextMonth are totally different
+--- The incrementYear + incrementMonth are totally different
 --- and they both have respectively different edge cases
 --- and implementations.
 
 -}
-getNextDay : Date -> Date
-getNextDay date =
+incrementDay : Date -> Date
+incrementDay date =
     let
         millis =
             Time.posixToMillis (toPosix date) + millisInADay
@@ -1122,15 +1122,15 @@ getNextDay date =
 --- if applicable.
 
 > date = fromRawYearMonthDay { day = 1, month = 1, year = 2019 }
-> getPreviousDay date
+> decrementDay date
 > Date { day = Day 31, month = Dec, year = Year 2018 }
 >
 > date2 = fromRawYearMonthDay { day = 1, month = 3, year 2020 }
-> getPreviousDay date2
+> decrementDay date2
 > Date { day = Day 29, month = Feb, year = Year 2020 }
 >
 > date3 = fromRawYearMonthDay { day = 26, month = 12, year 2018 }
-> getPreviousDay date3
+> decrementDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
 
 -- Can be exposed
@@ -1139,13 +1139,13 @@ getNextDay date =
 --- Its safe to get the previous day by using milliseconds
 --- here because we are responsible for transforming the
 --- given date to millis and parsing it from millis.
---- The getNextYear + getNextMonth are totally different
+--- The decrementYear + decrementMonth are totally different
 --- and they both have respectively different edge cases
 --- and implementations.
 
 -}
-getPreviousDay : Date -> Date
-getPreviousDay date =
+decrementDay : Date -> Date
+decrementDay date =
     let
         millis =
             Time.posixToMillis (toPosix date) - millisInADay
@@ -1221,7 +1221,7 @@ getDateRange_ daysCount prevDate res =
         let
             ( updatedDaysCount, updatedPrevDate ) =
                 ( daysCount - 1
-                , getNextDay prevDate
+                , incrementDay prevDate
                 )
         in
         getDateRange_ updatedDaysCount updatedPrevDate updatedRes

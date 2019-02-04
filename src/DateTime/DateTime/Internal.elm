@@ -3,7 +3,9 @@ module DateTime.DateTime.Internal exposing
     , fromPosix, fromRawParts
     , toPosix
     , getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
-    , getNextMonth, getPreviousMonth, getDateRange, getDatesInMonth, getPreviousDay, getNextDay
+    , getDateRange, getDatesInMonth
+    , incrementYear, incrementMonth, incrementDay
+    , decrementYear, decrementMonth, decrementDay
     , compareDates, compareTime
     , InternalDateTime, daysSinceEpoch, fromUtcDateAndTime, getDate, getTime, toMillis, yearsSinceEpoch
     )
@@ -30,7 +32,17 @@ module DateTime.DateTime.Internal exposing
 
 # Calendar Accessors
 
-@docs getNextMonth, getPreviousMonth, getDateRange, getDatesInMonth, getPreviousDay, getNextDay
+@docs getDateRange, getDatesInMonth
+
+
+# Incrementers
+
+@docs incrementYear, incrementMonth, incrementDay
+
+
+# Decrementers
+
+@docs decrementYear, decrementMonth, decrementDay
 
 
 # Utilities
@@ -155,7 +167,7 @@ daysSinceEpoch dateTime =
 > getDate (fromPosix (Time.millisToPosix 0))
 > Date { day = Day 1, month = Jan, year = Year 1970 } : Calendar.Date
 
--- Internal use only
+-- Can be exposed.
 
 -}
 getDate : DateTime -> Calendar.Date
@@ -223,7 +235,7 @@ getWeekday (DateTime dateTime) =
 > getTime (fromPosix (Time.millisToPosix 0))
 > { hour = Hour 0, millisecond = 0, minute = Minute 0, second = Second 0 } : Clock.Time
 
--- Internal use only
+-- Can be exposed.
 
 -}
 getTime : DateTime -> Clock.Time
@@ -344,22 +356,42 @@ fromRawParts rawDate rawTime =
         (Calendar.fromRawYearMonthDay rawDate)
 
 
-{-| Returns a new 'DateTime' with an updated month value.
+{-| Returns a new 'DateTime' with an updated year value.
 -}
-getPreviousMonth : DateTime -> DateTime
-getPreviousMonth (DateTime { date, time }) =
+incrementYear : DateTime -> DateTime
+incrementYear (DateTime { date, time }) =
     DateTime
-        { date = Calendar.getPreviousMonth date
+        { date = Calendar.incrementYear date
+        , time = time
+        }
+
+
+{-| Returns a new 'DateTime' with an updated year value.
+-}
+decrementYear : DateTime -> DateTime
+decrementYear (DateTime { date, time }) =
+    DateTime
+        { date = Calendar.decrementYear date
         , time = time
         }
 
 
 {-| Returns a new 'DateTime' with an updated month value.
 -}
-getNextMonth : DateTime -> DateTime
-getNextMonth (DateTime { date, time }) =
+decrementMonth : DateTime -> DateTime
+decrementMonth (DateTime { date, time }) =
     DateTime
-        { date = Calendar.getNextMonth date
+        { date = Calendar.decrementMonth date
+        , time = time
+        }
+
+
+{-| Returns a new 'DateTime' with an updated month value.
+-}
+incrementMonth : DateTime -> DateTime
+incrementMonth (DateTime { date, time }) =
+    DateTime
+        { date = Calendar.incrementMonth date
         , time = time
         }
 
@@ -384,22 +416,22 @@ compareTime (DateTime lhs) (DateTime rhs) =
 --- if applicable.
 
 > date = fromRawParts { rawDay = 1, rawMonth = 1, rawYear = 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getPreviousDay date
+> decrementDay date
 > DateTime { date = { day = Day 31, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
 > date2 = fromRawParts { rawDay = 1, rawMonth = 3, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getPreviousDay date2
+> decrementDay date2
 > DateTime { date = { day = Day 29, month = Feb, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
 > date3 = fromRawParts { rawDay = 26, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getPreviousDay date3
+> decrementDay date3
 > DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 
 -}
-getPreviousDay : DateTime -> DateTime
-getPreviousDay (DateTime { date, time }) =
+decrementDay : DateTime -> DateTime
+decrementDay (DateTime { date, time }) =
     DateTime
-        { date = Calendar.getPreviousDay date
+        { date = Calendar.decrementDay date
         , time = time
         }
 
@@ -408,21 +440,21 @@ getPreviousDay (DateTime { date, time }) =
 --- if applicable.
 
 > date = fromRawParts { rawDay = 31, rawMonth = 12, rawYear = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getNextDay date
+> incrementDay date
 > DateTime { date = { day = Day 1, month = Jan, year = Year 2019 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
 > date2 = fromRawParts { rawDay = 29, rawMonth = 2, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getNextDay date2
+> incrementDay date2
 > DateTime { date = { day = Day 1, month = Mar, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
 > date3 = fromRawParts { rawDay = 24, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getNextDay date3
+> incrementDay date3
 > DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 
 -}
-getNextDay : DateTime -> DateTime
-getNextDay (DateTime { date, time }) =
+incrementDay : DateTime -> DateTime
+incrementDay (DateTime { date, time }) =
     DateTime
-        { date = Calendar.getNextDay date
+        { date = Calendar.incrementDay date
         , time = time
         }

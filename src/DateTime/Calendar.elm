@@ -3,8 +3,8 @@ module DateTime.Calendar exposing
     , fromRawYearMonthDay
     , getDay, getMonth, getYear
     , toMillis, monthToInt
-    , getNextDay, getNextMonth, incrementYear
-    , getPreviousDay, getPreviousMonth, decrementYear
+    , incrementDay, incrementMonth, incrementYear
+    , decrementDay, decrementMonth, decrementYear
     , compareDates, isLeapYear, weekdayFromDate, getDatesInMonth, getDateRange, lastDayOf, getDayDiff
     , months, millisInADay
     )
@@ -34,12 +34,12 @@ module DateTime.Calendar exposing
 
 # Incrementers
 
-@docs getNextDay, getNextMonth, incrementYear
+@docs incrementDay, incrementMonth, incrementYear
 
 
 # Decrementers
 
-@docs getPreviousDay, getPreviousMonth, decrementYear
+@docs decrementDay, decrementMonth, decrementYear
 
 
 # Utilities
@@ -178,16 +178,16 @@ months =
 
 > date = fromRawYearMonthDay { rawDay = 31, rawMonth = 12 rawYear = 2018 }
 >
-> getNextMonth date
+> incrementMonth date
 > Date { day = Day 31, rawMonth = 1, rawYear = 2019 } : Date
 >
-> getNextMonth (getNextMonth date)
+> incrementMonth (incrementMonth date)
 > Date { day = Day 28, rawMonth = 28, rawYear = 2019 } : Date
 
 -}
-getNextMonth : Date -> Date
-getNextMonth =
-    Internal.getNextMonth
+incrementMonth : Date -> Date
+incrementMonth =
+    Internal.incrementMonth
 
 
 {-| Gets previous month from the given date. It preserves the day and year as is (where applicable).
@@ -196,16 +196,16 @@ getNextMonth =
 
 > date = fromRawYearMonthDay { rawDay = 31, rawMonth = 1 rawYear = 2019 }
 >
-> getPreviousMonth date
+> decrementMonth date
 > Date { day = Day 31, rawMonth = 12, rawYear = 2018 } : Date
 >
-> getNextMonth (getNextMonth date)
+> decrementMonth (decrementMonth date)
 > Date { day = Day 30, rawMonth = 11, rawYear = 2018 } : Date
 
 -}
-getPreviousMonth : Date -> Date
-getPreviousMonth =
-    Internal.getPreviousMonth
+decrementMonth : Date -> Date
+decrementMonth =
+    Internal.decrementMonth
 
 
 {-| Checks if the given year is a leap year.
@@ -351,58 +351,58 @@ getDatesInMonth =
 --- if applicable.
 
 > date = fromRawYearMonthDay { rawDay = 31, rawMonth = 12, rawYear = 2018 }
-> getNextDay date
+> incrementDay date
 > Date { day = Day 1, month = Jan, year = Year 2019 }
 >
 > date2 = fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear 2020 }
-> getNextDay date2
+> incrementDay date2
 > Date { day = Day 1, month = Mar, year = Year 2020 }
 >
 > date3 = fromRawYearMonthDay { rawDay = 24, rawMonth = 12, rawYear 2018 }
-> getNextDay date3
+> incrementDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
 
 --------------------- Note ---------------------
 --- Its safe to get the next day by using milliseconds
 --- here because we are responsible for transforming the
 --- given date to millis and parsing it from millis.
---- The getNextYear + getNextMonth are totally different
+--- The incrementYear + incrementMonth are totally different
 --- and they both have respectively different edge cases
 --- and implementations.
 
 -}
-getNextDay : Date -> Date
-getNextDay =
-    Internal.getNextDay
+incrementDay : Date -> Date
+incrementDay =
+    Internal.incrementDay
 
 
 {-| Decrements the 'Day' in a given 'Date'. Will also decrement 'Month' && 'Year'
 --- if applicable.
 
 > date = fromRawYearMonthDay { rawDay = 1, rawMonth = 1, rawYear = 2019 }
-> getPreviousDay date
+> decrementDay date
 > Date { day = Day 31, month = Dec, year = Year 2018 }
 >
 > date2 = fromRawYearMonthDay { rawDay = 1, rawMonth = 3, rawYear 2020 }
-> getPreviousDay date2
+> decrementDay date2
 > Date { day = Day 29, month = Feb, year = Year 2020 }
 >
 > date3 = fromRawYearMonthDay { rawDay = 26, rawMonth = 12, rawYear 2018 }
-> getPreviousDay date3
+> decrementDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
 
 --------------------- Note ---------------------
 --- Its safe to get the previous day by using milliseconds
 --- here because we are responsible for transforming the
 --- given date to millis and parsing it from millis.
---- The getNextYear + getNextMonth are totally different
+--- The decrementYear + decrementMonth are totally different
 --- and they both have respectively different edge cases
 --- and implementations.
 
 -}
-getPreviousDay : Date -> Date
-getPreviousDay =
-    Internal.getPreviousDay
+decrementDay : Date -> Date
+decrementDay =
+    Internal.decrementDay
 
 
 {-| Returns a List of dates based on the start and end 'Dates' given as parameters.

@@ -28,8 +28,8 @@ suite =
         [ fromPosixTests
         , fromRawYearMonthDayTests
         , compareDatesTests
-        , getNextMonthTests
-        , getPreviousMonthTests
+        , incrementMonthTests
+        , decrementMonthTests
         , getPrecedingMonthsTests
         , getFollowingMonthsTest
         , isLeapYearTest
@@ -39,8 +39,8 @@ suite =
         , toPosixTest
         , weekdayFromDateTest
         , getDatesInMonthTest
-        , getNextDayTest
-        , getPreviousDayTest
+        , incrementDayTest
+        , decrementDayTest
         , getDateRangeTest
         , yearFromIntTest
         , monthFromIntTest
@@ -308,19 +308,19 @@ compareDatesTests =
         ]
 
 
-getNextMonthTests : Test
-getNextMonthTests =
+incrementMonthTests : Test
+incrementMonthTests =
     let
         performTest initialDate expectedDate =
             case ( initialDate, expectedDate ) of
                 ( Just initial, Just expected ) ->
-                    Expect.equal (Calendar.getNextMonth initial) expected
+                    Expect.equal (Calendar.incrementMonth initial) expected
 
                 _ ->
                     Expect.fail "Couldn't create date from raw parts"
     in
-    describe "Calendar.getNextMonth Test Suite"
-        [ test "getNextMonth using 15th of Nov as the start date"
+    describe "Calendar.incrementMonth Test Suite"
+        [ test "incrementMonth using 15th of Nov as the start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -330,7 +330,7 @@ getNextMonthTests =
                 in
                 performTest initialDate expectedDate
             )
-        , test "getNextMonth using 15th of Dec as the start date"
+        , test "incrementMonth using 15th of Dec as the start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -340,7 +340,7 @@ getNextMonthTests =
                 in
                 performTest initialDate expectedDate
             )
-        , test "getNextMonth using 29th of Jan of a leap year as a start date"
+        , test "incrementMonth using 29th of Jan of a leap year as a start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -350,7 +350,7 @@ getNextMonthTests =
                 in
                 performTest initialDate expectedDate
             )
-        , test "getNextMonth using 29th of Jan of a non leap year as a start date"
+        , test "incrementMonth using 29th of Jan of a non leap year as a start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -360,7 +360,7 @@ getNextMonthTests =
                 in
                 performTest initialDate expectedDate
             )
-        , test "getNextMonth using 31st of Jan as the start date"
+        , test "incrementMonth using 31st of Jan as the start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -373,19 +373,19 @@ getNextMonthTests =
         ]
 
 
-getPreviousMonthTests : Test
-getPreviousMonthTests =
+decrementMonthTests : Test
+decrementMonthTests =
     let
         performTest initialDate expectedDate =
             case ( initialDate, expectedDate ) of
                 ( Just initial, Just expected ) ->
-                    Expect.equal (Calendar.getPreviousMonth initial) expected
+                    Expect.equal (Calendar.decrementMonth initial) expected
 
                 _ ->
                     Expect.fail "Couldn't create date from raw parts"
     in
-    describe "Calendar.getPreviousMonth Test Suite"
-        [ test "getPreviousMonth using 15th of Nov as the start date"
+    describe "Calendar.decrementMonth Test Suite"
+        [ test "decrementMonth using 15th of Nov as the start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -395,7 +395,7 @@ getPreviousMonthTests =
                 in
                 performTest initialDate expectedDate
             )
-        , test "getPreviousMonth using 15th of Jan as the start date"
+        , test "decrementMonth using 15th of Jan as the start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -405,7 +405,7 @@ getPreviousMonthTests =
                 in
                 performTest initialDate expectedDate
             )
-        , test "getPreviousMonth using 29th of Mar of a leap year as a start date"
+        , test "decrementMonth using 29th of Mar of a leap year as a start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -415,7 +415,7 @@ getPreviousMonthTests =
                 in
                 performTest initialDate expectedDate
             )
-        , test "getPreviousMonth using 29th of Mar of a non leap year as a start date"
+        , test "decrementMonth using 29th of Mar of a non leap year as a start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -425,7 +425,7 @@ getPreviousMonthTests =
                 in
                 performTest initialDate expectedDate
             )
-        , test "getPreviousMonth using 31st of Mar as the start date"
+        , test "decrementMonth using 31st of Mar as the start date"
             (\_ ->
                 let
                     ( initialDate, expectedDate ) =
@@ -917,18 +917,18 @@ getDatesInMonthTest =
         ]
 
 
-getNextDayTest : Test
-getNextDayTest =
+incrementDayTest : Test
+incrementDayTest =
     let
         performTest rawDate expectedDate =
             case ( rawDate, expectedDate ) of
                 ( Just date, Just expected ) ->
-                    Expect.equal (Calendar.getNextDay date) expected
+                    Expect.equal (Calendar.incrementDay date) expected
 
                 _ ->
                     Expect.fail "Couldn't create date from raw parts"
     in
-    describe "Calendar.getNextDay Test Suite"
+    describe "Calendar.incrementDay Test Suite"
         [ test "Testing with the given date of 25th of August 2018"
             (\_ ->
                 let
@@ -982,18 +982,18 @@ getNextDayTest =
         ]
 
 
-getPreviousDayTest : Test
-getPreviousDayTest =
+decrementDayTest : Test
+decrementDayTest =
     let
         performTest rawDate expectedDate =
             case ( rawDate, expectedDate ) of
                 ( Just date, Just expected ) ->
-                    Expect.equal (Calendar.getPreviousDay date) expected
+                    Expect.equal (Calendar.decrementDay date) expected
 
                 _ ->
                     Expect.fail "Couldn't create date from raw parts"
     in
-    describe "Calendar.getPreviousDay Test Suite"
+    describe "Calendar.decrementDay Test Suite"
         [ test "Testing with the given date of 25th of August 2018"
             (\_ ->
                 let
@@ -1462,8 +1462,8 @@ millisSinceStartOfTheMonthTest =
 
    fromRawDay       -- DONE
 
-   getNextMonth_     -- TODO ??? NOPE since they are internal and they are part of getNextMonth
-   getPreviousMonth_ -- TODO ??? NOPE since they are internal and they are part of getPreviousMonth
+   incrementMonth_     -- TODO ??? NOPE since they are internal and they are part of incrementMonth
+   decrementMonth_ -- TODO ??? NOPE since they are internal and they are part of decrementMonth
 
    millisInYear      -- TODO ??? NOPE
 
@@ -1477,8 +1477,8 @@ millisSinceStartOfTheMonthTest =
    monthFromInt -- Not to be exposed
    dayFromInt   -- Not to be exposed
 
-   getNextMonth     -- DONE
-   getPreviousMonth -- DONE
+   incrementMonth     -- DONE
+   decrementMonth -- DONE
 
    previousMonthsInTheYear -- Rename to getPrecedingMonths ? -- DONE
    nextMonthsInTheYear     -- Implement ? Rename to followingMonthsInYear ? -- DONE

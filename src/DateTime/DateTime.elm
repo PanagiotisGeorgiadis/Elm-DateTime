@@ -3,7 +3,9 @@ module DateTime.DateTime exposing
     , fromPosix, fromRawParts
     , toPosix
     , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
-    , getNextMonth, getPreviousMonth, getDateRange, getDatesInMonth, getPreviousDay, getNextDay
+    , getDateRange, getDatesInMonth
+    , incrementYear, incrementMonth, incrementDay
+    , decrementYear, decrementMonth, decrementDay
     , compareDates, compareTime
     , daysSinceEpoch
     )
@@ -30,7 +32,17 @@ module DateTime.DateTime exposing
 
 # Calendar Accessors
 
-@docs getNextMonth, getPreviousMonth, getDateRange, getDatesInMonth, getPreviousDay, getNextDay
+@docs getDateRange, getDatesInMonth
+
+
+# Incrementers
+
+@docs incrementYear, incrementMonth, incrementDay
+
+
+# Decrementers
+
+@docs decrementYear, decrementMonth, decrementDay
 
 
 # Utilities
@@ -277,18 +289,32 @@ fromRawParts rawDate rawTime =
     Internal.fromRawParts rawDate rawTime
 
 
-{-| Returns a new 'DateTime' with an updated month value.
+{-| Returns a new 'DateTime' with an updated year value.
 -}
-getPreviousMonth : DateTime -> DateTime
-getPreviousMonth =
-    Internal.getPreviousMonth
+incrementYear : DateTime -> DateTime
+incrementYear =
+    Internal.incrementYear
+
+
+{-| Returns a new 'DateTime' with an updated year value.
+-}
+decrementYear : DateTime -> DateTime
+decrementYear =
+    Internal.decrementYear
 
 
 {-| Returns a new 'DateTime' with an updated month value.
 -}
-getNextMonth : DateTime -> DateTime
-getNextMonth =
-    Internal.getNextMonth
+decrementMonth : DateTime -> DateTime
+decrementMonth =
+    Internal.decrementMonth
+
+
+{-| Returns a new 'DateTime' with an updated month value.
+-}
+incrementMonth : DateTime -> DateTime
+incrementMonth =
+    Internal.incrementMonth
 
 
 compareDates : DateTime -> DateTime -> Order
@@ -311,39 +337,61 @@ compareTime lhs rhs =
 --- if applicable.
 
 > date = fromRawParts { rawDay = 1, rawMonth = 1, rawYear = 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getPreviousDay date
+> decrementDay date
 > DateTime { date = { day = Day 31, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
 > date2 = fromRawParts { rawDay = 1, rawMonth = 3, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getPreviousDay date2
+> decrementDay date2
 > DateTime { date = { day = Day 29, month = Feb, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
 > date3 = fromRawParts { rawDay = 26, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getPreviousDay date3
+> decrementDay date3
 > DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 
 -}
-getPreviousDay : DateTime -> DateTime
-getPreviousDay =
-    Internal.getPreviousDay
+decrementDay : DateTime -> DateTime
+decrementDay =
+    Internal.decrementDay
 
 
 {-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
 --- if applicable.
 
 > date = fromRawParts { rawDay = 31, rawMonth = 12, rawYear = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getNextDay date
+> incrementDay date
 > DateTime { date = { day = Day 1, month = Jan, year = Year 2019 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
 > date2 = fromRawParts { rawDay = 29, rawMonth = 2, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getNextDay date2
+> incrementDay date2
 > DateTime { date = { day = Day 1, month = Mar, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
 > date3 = fromRawParts { rawDay = 24, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> getNextDay date3
+> incrementDay date3
 > DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 
 -}
-getNextDay : DateTime -> DateTime
-getNextDay =
-    Internal.getNextDay
+incrementDay : DateTime -> DateTime
+incrementDay =
+    Internal.incrementDay
+
+
+{-| Extract the calendar date from a `DateTime`.
+
+> getDate (fromPosix (Time.millisToPosix 0))
+> Date { day = Day 1, month = Jan, year = Year 1970 } : Calendar.Date
+
+-}
+getDate : DateTime -> Calendar.Date
+getDate =
+    Internal.getDate
+
+
+{-| Extract the clock time from a `DateTime`.
+
+> getTime (fromPosix (Time.millisToPosix 0))
+> Time { hour = Hour 0, millisecond = 0, minute = Minute 0, second = Second 0 } : Clock.Time
+
+-}
+getTime : DateTime -> Clock.Time
+getTime =
+    Internal.getTime
