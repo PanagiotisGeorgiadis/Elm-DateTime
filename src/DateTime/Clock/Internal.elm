@@ -27,14 +27,18 @@ module DateTime.Clock.Internal exposing
     , incrementMilliseconds
     , incrementMinutes
     , incrementSeconds
+    , midnight
     , millisecondsFromInt
     , millisecondsToInt
     , minutesFromInt
     , minutesToInt
     , secondsFromInt
     , secondsToInt
+    , setHours
+    , setMilliseconds
+    , setMinutes
+    , setSeconds
     , toMillis
-    , zero
     )
 
 import Time as Time_
@@ -633,8 +637,56 @@ compareMilliseconds (Millisecond lhs) (Millisecond rhs) =
     compare lhs rhs
 
 
-{-| Returns a zero time. To be used with caution.
+{-| Returns midnight time. To be used with caution.
 -}
-zero : Time
-zero =
+midnight : Time
+midnight =
     Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }
+
+
+{-| Attempts to set the 'Hours' on an existing time.
+-}
+setHours : Time -> Int -> Maybe Time
+setHours time hours =
+    fromRawParts
+        { hours = hours
+        , minutes = minutesToInt (getMinutes time)
+        , seconds = secondsToInt (getSeconds time)
+        , milliseconds = millisecondsToInt (getMilliseconds time)
+        }
+
+
+{-| Attempts to set the 'Minutes' on an existing time.
+-}
+setMinutes : Time -> Int -> Maybe Time
+setMinutes time minutes =
+    fromRawParts
+        { hours = hoursToInt (getHours time)
+        , minutes = minutes
+        , seconds = secondsToInt (getSeconds time)
+        , milliseconds = millisecondsToInt (getMilliseconds time)
+        }
+
+
+{-| Attempts to set the 'Seconds' on an existing time.
+-}
+setSeconds : Time -> Int -> Maybe Time
+setSeconds time seconds =
+    fromRawParts
+        { hours = hoursToInt (getHours time)
+        , minutes = minutesToInt (getMinutes time)
+        , seconds = seconds
+        , milliseconds = millisecondsToInt (getMilliseconds time)
+        }
+
+
+{-| Attempts to set the 'Milliseconds' on an existing time.
+-}
+setMilliseconds : Time -> Int -> Maybe Time
+setMilliseconds time milliseconds =
+    fromRawParts
+        { hours = hoursToInt (getHours time)
+        , minutes = minutesToInt (getMinutes time)
+        , seconds = secondsToInt (getSeconds time)
+        , milliseconds = milliseconds
+        }

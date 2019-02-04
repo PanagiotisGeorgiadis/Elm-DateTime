@@ -3,10 +3,11 @@ module DateTime.Clock exposing
     , fromRawParts
     , toMillis
     , getHours, getMinutes, getSeconds, getMilliseconds
+    , setHours, setMinutes, setSeconds, setMilliseconds
     , incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compareTime
-    , zero
+    , midnight
     )
 
 {-| A clock time.
@@ -27,9 +28,14 @@ module DateTime.Clock exposing
 @docs toMillis
 
 
-# Getters
+# Accessors
 
 @docs getHours, getMinutes, getSeconds, getMilliseconds
+
+
+# Setters
+
+@docs setHours, setMinutes, setSeconds, setMilliseconds
 
 
 # Incrementers
@@ -49,7 +55,7 @@ module DateTime.Clock exposing
 
 # Constants
 
-@docs zero
+@docs midnight
 
 -}
 
@@ -287,12 +293,40 @@ decrementMilliseconds =
 
 -}
 compareTime : Time -> Time -> Order
-compareTime lhs rhs =
-    Internal.compareTime lhs rhs
+compareTime =
+    Internal.compareTime
 
 
-{-| Returns a zero time. To be used with caution.
+{-| Returns midnight time. To be used with caution.
 -}
-zero : Time
-zero =
-    Internal.zero
+midnight : Time
+midnight =
+    Internal.midnight
+
+
+{-| Attempts to set the 'Hours' on an existing time.
+-}
+setHours : Time -> Int -> Maybe Time
+setHours =
+    Internal.setHours
+
+
+{-| Attempts to set the 'Minutes' on an existing time.
+-}
+setMinutes : Time -> Int -> Maybe Time
+setMinutes =
+    Internal.setHours
+
+
+{-| Attempts to set the 'Seconds' on an existing time.
+-}
+setSeconds : Time -> Int -> Maybe Time
+setSeconds =
+    Internal.setSeconds
+
+
+{-| Attempts to set the 'Milliseconds' on an existing time.
+-}
+setMilliseconds : Time -> Int -> Maybe Time
+setMilliseconds =
+    Internal.setMilliseconds

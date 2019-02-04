@@ -297,7 +297,7 @@ getDatesInMonth : DateTime -> List DateTime
 getDatesInMonth (DateTime { date }) =
     List.map
         (\date_ ->
-            DateTime { date = date_, time = Clock.zero }
+            DateTime { date = date_, time = Clock.midnight }
         )
         (Calendar.getDatesInMonth date)
 
@@ -335,7 +335,7 @@ getDateRange (DateTime start) (DateTime end) =
         (\date ->
             DateTime
                 { date = date
-                , time = Clock.zero
+                , time = Clock.midnight
                 }
         )
         (Calendar.getDateRange start.date end.date)
@@ -396,11 +396,15 @@ incrementMonth (DateTime { date, time }) =
         }
 
 
+{-| Returns the 'Order' of the 'Date' part of a DateTime.
+-}
 compareDates : DateTime -> DateTime -> Order
 compareDates (DateTime lhs) (DateTime rhs) =
     Calendar.compareDates lhs.date rhs.date
 
 
+{-| Returns the 'Order' of the 'Time' part of a DateTime.
+-}
 compareTime : DateTime -> DateTime -> Order
 compareTime (DateTime lhs) (DateTime rhs) =
     Clock.compareTime lhs.time rhs.time
