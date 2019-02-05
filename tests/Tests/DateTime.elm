@@ -1,5 +1,6 @@
 module Tests.DateTime exposing (suite)
 
+import DateTime.Calendar.Internal as Calendar
 import DateTime.DateTime.Internal as DateTime
 import Expect exposing (Expectation)
 import Test exposing (Test, describe, test)
@@ -49,7 +50,7 @@ fromPosixTests =
             )
         , test "Month Int validation"
             (\_ ->
-                Expect.equal 12 (DateTime.getMonthInt date)
+                Expect.equal 12 (Calendar.monthToInt <| DateTime.getMonth date)
             )
         , test "Month validation"
             (\_ ->

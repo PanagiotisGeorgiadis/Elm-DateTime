@@ -1,13 +1,12 @@
 module DateTime.DateTime exposing
     ( DateTime
-    , fromPosix, fromRawParts
+    , fromPosix, fromRawParts, fromDateAndTime
     , toPosix
     , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
     , getDateRange, getDatesInMonth
     , incrementYear, incrementMonth, incrementDay
     , decrementYear, decrementMonth, decrementDay
     , compareDates, compareTime
-    , daysSinceEpoch
     )
 
 {-| A complete datetime type.
@@ -17,7 +16,7 @@ module DateTime.DateTime exposing
 
 # Creating a `DateTime`
 
-@docs fromPosix, fromRawParts
+@docs fromPosix, fromRawParts, fromDateAndTime
 
 
 # Conversions
@@ -99,56 +98,6 @@ toPosix =
 toMillis : DateTime -> Int
 toMillis =
     Internal.toMillis
-
-
-{-| Create a `DateTime` from a UTC date and time.
---- Think about this one
---- Update: I think that we don't need this function here since we can
---- always get the milliseconds from a DateTime and update them as we like
---- and then create a new date fromPosix.
---- Also all the operations like incrementing & decrementing are available
---- in Calendar or Time level.
-
--- fromUtcDateAndTime : Calendar.Date -> Clock.Time -> DateTime
--- fromUtcDateAndTime calendarDate clockTime =
--- let
--- posix : Time.Posix
--- posix =
--- Time.millisToPosix <|
--- daysToMillis (daysSinceEpoch calendarDate)
--- + Clock.toMillis clockTime
--- in
--- DateTime
--- { date = calendarDate
--- , time = clockTime
--- }
-
--}
-fromUtcDateAndTime : Calendar.Date -> Clock.Time -> Maybe DateTime
-fromUtcDateAndTime date time =
-    Nothing
-
-
-{-| Do we need that one ?
---- I think not...
--- yearsSinceEpoch : DateTime -> Int
--- yearsSinceEpoch (DateTime { date }) =
--- List.length <| List.range 1970 (Calendar.yearToInt (Calendar.getYear date))
--}
-yearsSinceEpoch : DateTime -> Maybe Int
-yearsSinceEpoch dateTime =
-    Nothing
-
-
-{-| Do we need that one ?
---- I think not...
--- daysSinceEpoch : DateTime -> Int
--- daysSinceEpoch (DateTime { date }) =
--- Calendar.toMillis date // Calendar.millisInADay
--}
-daysSinceEpoch : DateTime -> Maybe Int
-daysSinceEpoch dateTime =
-    Nothing
 
 
 {-| Returns the 'Year' from a 'DateTime' as an Int.
@@ -395,3 +344,10 @@ getDate =
 getTime : DateTime -> Clock.Time
 getTime =
     Internal.getTime
+
+
+{-| Create a `DateTime` from a 'Date' and 'Time'.
+-}
+fromDateAndTime : Calendar.Date -> Clock.Time -> DateTime
+fromDateAndTime =
+    Internal.fromDateAndTime

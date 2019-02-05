@@ -1,13 +1,13 @@
 module DateTime.DateTime.Internal exposing
     ( DateTime(..)
-    , fromPosix, fromRawParts
+    , fromPosix, fromRawParts, fromDateAndTime
     , toPosix
-    , getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
+    , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
     , getDateRange, getDatesInMonth
     , incrementYear, incrementMonth, incrementDay
     , decrementYear, decrementMonth, decrementDay
     , compareDates, compareTime
-    , InternalDateTime, daysSinceEpoch, fromUtcDateAndTime, getDate, getTime, toMillis, yearsSinceEpoch
+    , InternalDateTime, getDate, getTime, toMillis
     )
 
 {-| A complete datetime type.
@@ -17,7 +17,7 @@ module DateTime.DateTime.Internal exposing
 
 # Creating a `DateTime`
 
-@docs fromPosix, fromRawParts
+@docs fromPosix, fromRawParts, fromDateAndTime
 
 
 # Conversions
@@ -27,7 +27,7 @@ module DateTime.DateTime.Internal exposing
 
 # Accessors
 
-@docs getYear, getMonth, getMonthInt, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
+@docs getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
 
 
 # Calendar Accessors
@@ -112,56 +112,6 @@ toMillis (DateTime { date, time }) =
     Calendar.toMillis date + Clock.toMillis time
 
 
-{-| Create a `DateTime` from a UTC date and time.
---- Think about this one
---- Update: I think that we don't need this function here since we can
---- always get the milliseconds from a DateTime and update them as we like
---- and then create a new date fromPosix.
---- Also all the operations like incrementing & decrementing are available
---- in Calendar or Time level.
-
--- fromUtcDateAndTime : Calendar.Date -> Clock.Time -> DateTime
--- fromUtcDateAndTime calendarDate clockTime =
--- let
--- posix : Time.Posix
--- posix =
--- Time.millisToPosix <|
--- daysToMillis (daysSinceEpoch calendarDate)
--- + Clock.toMillis clockTime
--- in
--- DateTime
--- { date = calendarDate
--- , time = clockTime
--- }
-
--}
-fromUtcDateAndTime : Calendar.Date -> Clock.Time -> Maybe DateTime
-fromUtcDateAndTime date time =
-    Nothing
-
-
-{-| Do we need that one ?
---- I think not...
--- yearsSinceEpoch : DateTime -> Int
--- yearsSinceEpoch (DateTime { date }) =
--- List.length <| List.range 1970 (Calendar.yearToInt (Calendar.getYear date))
--}
-yearsSinceEpoch : DateTime -> Maybe Int
-yearsSinceEpoch dateTime =
-    Nothing
-
-
-{-| Do we need that one ?
---- I think not...
--- daysSinceEpoch : DateTime -> Int
--- daysSinceEpoch (DateTime { date }) =
--- Calendar.toMillis date // Calendar.millisInADay
--}
-daysSinceEpoch : DateTime -> Maybe Int
-daysSinceEpoch dateTime =
-    Nothing
-
-
 {-| Extract the calendar date from a `DateTime`.
 
 > getDate (fromPosix (Time.millisToPosix 0))
@@ -195,17 +145,6 @@ getYear =
 getMonth : DateTime -> Time.Month
 getMonth =
     Calendar.getMonth << getDate
-
-
-{-| Returns the 'Month' from a 'DateTime' as an Int starting from 1.
-
-> getMonth (fromPosix (Time.millisToPosix 0))
-> Jan : Int
-
--}
-getMonthInt : DateTime -> Int
-getMonthInt =
-    Calendar.monthToInt << Calendar.getMonth << getDate
 
 
 {-| Returns the 'Day' from a 'DateTime' as an Int.
@@ -460,5 +399,15 @@ incrementDay : DateTime -> DateTime
 incrementDay (DateTime { date, time }) =
     DateTime
         { date = Calendar.incrementDay date
+        , time = time
+        }
+
+
+{-| Create a `DateTime` from a 'Date' and 'Time'.
+-}
+fromDateAndTime : Calendar.Date -> Clock.Time -> DateTime
+fromDateAndTime date time =
+    DateTime
+        { date = date
         , time = time
         }
