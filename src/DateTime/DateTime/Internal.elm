@@ -34,6 +34,13 @@ module DateTime.DateTime.Internal exposing
     , incrementYear
     , rollDayBackwards
     , rollDayForward
+    , setDay
+    , setHours
+    , setMilliseconds
+    , setMinutes
+    , setMonth
+    , setSeconds
+    , setYear
     , toMillis
     , toPosix
     )
@@ -232,6 +239,59 @@ getSeconds =
 getMilliseconds : DateTime -> Int
 getMilliseconds =
     Clock.getMilliseconds << getTime
+
+
+
+-- Setters
+
+
+{-| Attempts to set the 'Year' part of a Calendar.Date in a DateTime.
+-}
+setYear : DateTime -> Int -> Maybe DateTime
+setYear dateTime =
+    Maybe.map (updateDate dateTime) << Calendar.setYear (getDate dateTime)
+
+
+{-| Attempts to set the 'Month' part of a Calendar.Date in a DateTime.
+-}
+setMonth : DateTime -> Time.Month -> Maybe DateTime
+setMonth dateTime =
+    Maybe.map (updateDate dateTime) << Calendar.setMonth (getDate dateTime)
+
+
+{-| Attempts to set the 'Day' part of a Calendar.Date in a DateTime.
+-}
+setDay : DateTime -> Int -> Maybe DateTime
+setDay dateTime =
+    Maybe.map (updateDate dateTime) << Calendar.setDay (getDate dateTime)
+
+
+{-| Attempts to set the 'Hours' part of a Clock.Time in a DateTime.
+-}
+setHours : DateTime -> Int -> Maybe DateTime
+setHours dateTime =
+    Maybe.map (updateTime dateTime) << Clock.setHours (getTime dateTime)
+
+
+{-| Attempts to set the 'Minutes' part of a Clock.Time in a DateTime.
+-}
+setMinutes : DateTime -> Int -> Maybe DateTime
+setMinutes dateTime =
+    Maybe.map (updateTime dateTime) << Clock.setMinutes (getTime dateTime)
+
+
+{-| Attempts to set the 'Seconds' part of a Clock.Time in a DateTime.
+-}
+setSeconds : DateTime -> Int -> Maybe DateTime
+setSeconds dateTime =
+    Maybe.map (updateTime dateTime) << Clock.setSeconds (getTime dateTime)
+
+
+{-| Attempts to set the 'Milliseconds' part of a Clock.Time in a DateTime.
+-}
+setMilliseconds : DateTime -> Int -> Maybe DateTime
+setMilliseconds dateTime =
+    Maybe.map (updateTime dateTime) << Clock.setMilliseconds (getTime dateTime)
 
 
 
@@ -525,13 +585,7 @@ getDateRange (DateTime start) (DateTime end) =
         (Calendar.getDateRange start.date end.date)
 
 
-
--- getDayDiff : DateTime -> DateTime -> Int
--- getDayDiff (DateTime startDate) (DateTime endDate) =
---     Calendar.getDayDiff startDate.date endDate.date
-
-
-{-| Decides if we should 'roll' the Calendar.Date forward due to a Clock.Time change.
+{-| Helper function that decides if we should 'roll' the Calendar.Date forward due to a Clock.Time change.
 -}
 rollDayForward : Bool -> Calendar.Date -> Calendar.Date
 rollDayForward shouldRoll date =
@@ -542,7 +596,7 @@ rollDayForward shouldRoll date =
         date
 
 
-{-| Decides if we should 'roll' the Calendar.Date backwards due to a Clock.Time change.
+{-| Helper function that decides if we should 'roll' the Calendar.Date backwards due to a Clock.Time change.
 -}
 rollDayBackwards : Bool -> Calendar.Date -> Calendar.Date
 rollDayBackwards shouldRoll date =
@@ -551,3 +605,29 @@ rollDayBackwards shouldRoll date =
 
     else
         date
+
+
+{-| Helper function that updates the 'Date' part of a DateTime.
+-}
+updateDate : DateTime -> Calendar.Date -> DateTime
+updateDate (DateTime { time }) date =
+    DateTime
+        { date = date
+        , time = time
+        }
+
+
+{-| Helper function that updates the 'Time' part of a DateTime.
+-}
+updateTime : DateTime -> Clock.Time -> DateTime
+updateTime (DateTime { date }) time =
+    DateTime
+        { date = date
+        , time = time
+        }
+
+
+
+-- getDayDiff : DateTime -> DateTime -> Int
+-- getDayDiff (DateTime startDate) (DateTime endDate) =
+--     Calendar.getDayDiff startDate.date endDate.date
