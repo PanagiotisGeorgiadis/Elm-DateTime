@@ -1,12 +1,13 @@
 module DateTime.Calendar exposing
     ( Date, RawDate
     , fromRawYearMonthDay
+    , toMillis, monthToInt
     , getDay, getMonth, getYear
     , setDay, setMonth, setYear
-    , toMillis, monthToInt
     , incrementDay, incrementMonth, incrementYear
     , decrementDay, decrementMonth, decrementYear
-    , compareDates, isLeapYear, getWeekday, getDatesInMonth, getDateRange, getDayDiff
+    , compareDates
+    , getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear
     , months, millisInADay
     )
 
@@ -23,6 +24,11 @@ module DateTime.Calendar exposing
 @docs fromRawYearMonthDay
 
 
+# Converters
+
+@docs toMillis, monthToInt
+
+
 # Accessors
 
 @docs getDay, getMonth, getYear
@@ -31,11 +37,6 @@ module DateTime.Calendar exposing
 # Setters
 
 @docs setDay, setMonth, setYear
-
-
-# Converters
-
-@docs toMillis, monthToInt
 
 
 # Incrementers
@@ -48,9 +49,14 @@ module DateTime.Calendar exposing
 @docs decrementDay, decrementMonth, decrementYear
 
 
+# Comparers
+
+@docs compareDates
+
+
 # Utilities
 
-@docs compareDates, isLeapYear, getWeekday, getDatesInMonth, getDateRange, getDayDiff
+@docs getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear
 
 
 # Constants
@@ -72,6 +78,57 @@ type alias Date =
 
 type alias RawDate =
     Internal.RawDate
+
+
+
+-- Constructors
+
+
+{-| Construct a `Date` from its (raw) constituent parts.
+Returns `Nothing` if any parts or their combination would form an invalid date.
+
+> fromRawYearMonthDay { rawDay = 11, rawMonth = 12, rawYear = 2018 }
+> Just (Date { day = Day 11, month = Dec, year = Year 2018 }) : Maybe Date
+>
+> fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear = 2019 }
+> Nothing : Maybe Date
+>
+> fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear = 2020 }
+> Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
+
+-}
+fromRawYearMonthDay : RawDate -> Maybe Date
+fromRawYearMonthDay =
+    Internal.fromRawYearMonthDay
+
+
+
+-- Converters
+
+
+{-| Transforms a 'Date' into milliseconds
+-}
+toMillis : Date -> Int
+toMillis =
+    Internal.toMillis
+
+
+{-| Convert a given month to an integer starting from 1.
+
+> monthToInt Jan
+> 1 : Int
+>
+> monthToInt Aug
+> 8 : Int
+
+-}
+monthToInt : Month -> Int
+monthToInt =
+    Internal.monthToInt
+
+
+
+-- Accessors
 
 
 {-| Extract the `Year` part of a `Date`.
@@ -96,20 +153,6 @@ getMonth =
     Internal.getMonth
 
 
-{-| Convert a given month to an integer starting from 1.
-
-> monthToInt Jan
-> 1 : Int
->
-> monthToInt Aug
-> 8 : Int
-
--}
-monthToInt : Month -> Int
-monthToInt =
-    Internal.monthToInt
-
-
 {-| Extract the `Day` part of a `Date`.
 
 > getDay (fromPosix (Time.millisToPosix 0))
@@ -121,111 +164,33 @@ getDay =
     Internal.dayToInt << Internal.getDay
 
 
-{-| Comparison on a Date level.
---- Compares two given dates and gives an Order
 
-> date = (fromPosix (Time.millisToPosix 0)) -- 1 Jan 1970
-> laterDate = (fromPosix (Time.millisToPosix 10000000000)) -- 26 Apr 1970
+-- Setters
 
-> compareDates date laterDate
-> LT : Order
->
-> compareDates laterDate date
-> GT : Order
->
-> compareDates laterDate date
-> EQ : Order
 
+{-| Attempts to set the 'Year' on an existing date
 -}
-compareDates : Date -> Date -> Order
-compareDates =
-    Internal.compareDates
+setYear : Date -> Int -> Maybe Date
+setYear =
+    Internal.setYear
 
 
-{-| Construct a `Date` from its (raw) constituent parts.
-Returns `Nothing` if any parts or their combination would form an invalid date.
-
-> fromRawYearMonthDay { rawDay = 11, rawMonth = 12, rawYear = 2018 }
-> Just (Date { day = Day 11, month = Dec, year = Year 2018 }) : Maybe Date
->
-> fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear = 2019 }
-> Nothing : Maybe Date
->
-> fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear = 2020 }
-> Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
-
+{-| Attempts to set the 'Month' on an existing date
 -}
-fromRawYearMonthDay : RawDate -> Maybe Date
-fromRawYearMonthDay =
-    Internal.fromRawYearMonthDay
+setMonth : Date -> Month -> Maybe Date
+setMonth =
+    Internal.setMonth
 
 
-{-| Construct a `Date` from its constituent Year and Month by using its raw day.
-Returns `Nothing` if any parts or their combination would form an invalid date.
-
-> fromRawDay (Year 2018) Dec 25
-> Just (Date { day = Day 25, month = Dec, year = Year 2018 }) : Maybe Date
->
-> fromRawDay (Year 2019) Feb 29
-> Nothing : Maybe Date
->
-> fromRawDay (Year 2020) Feb 29
-> Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
-
+{-| Attempts to set the 'Day' on an existing date
 -}
-months : Array Month
-months =
-    Internal.months
+setDay : Date -> Int -> Maybe Date
+setDay =
+    Internal.setDay
 
 
-{-| Gets next month from the given date. It preserves the day and year as is (where applicable).
---- If the day of the given date is out of bounds for the next month
---- then we return the maxDay for that month.
 
-> date = fromRawYearMonthDay { rawDay = 31, rawMonth = 12 rawYear = 2018 }
->
-> incrementMonth date
-> Date { day = Day 31, rawMonth = 1, rawYear = 2019 } : Date
->
-> incrementMonth (incrementMonth date)
-> Date { day = Day 28, rawMonth = 28, rawYear = 2019 } : Date
-
--}
-incrementMonth : Date -> Date
-incrementMonth =
-    Internal.incrementMonth
-
-
-{-| Gets previous month from the given date. It preserves the day and year as is (where applicable).
---- If the day of the given date is out of bounds for the previous month then
---- we return the maxDay for that month.
-
-> date = fromRawYearMonthDay { rawDay = 31, rawMonth = 1 rawYear = 2019 }
->
-> decrementMonth date
-> Date { day = Day 31, rawMonth = 12, rawYear = 2018 } : Date
->
-> decrementMonth (decrementMonth date)
-> Date { day = Day 30, rawMonth = 11, rawYear = 2018 } : Date
-
--}
-decrementMonth : Date -> Date
-decrementMonth =
-    Internal.decrementMonth
-
-
-{-| Checks if the given year is a leap year.
-
-> isLeapYear 2019
-> False
->
-> isLeapYear 2020
-> True
-
--}
-isLeapYear : Year -> Bool
-isLeapYear =
-    Internal.isLeapYear
+-- Incrementers
 
 
 {-| Increments the 'Year' in a given 'Date' while preserving the month and
@@ -257,83 +222,22 @@ incrementYear =
     Internal.incrementYear
 
 
-{-| Decrements the 'Year' in a given 'Date' while preserving the month and
---- day where applicable.
+{-| Gets next month from the given date. It preserves the day and year as is (where applicable).
+--- If the day of the given date is out of bounds for the next month
+--- then we return the maxDay for that month.
 
-> date = fromRawYearMonthDay { rawDay = 31, rawMonth = 1 rawYear = 2019 }
-> decrementYear date
-> Date { day = Day 31, month = Jan, year = Year 2018 }
+> date = fromRawYearMonthDay { rawDay = 31, rawMonth = 12 rawYear = 2018 }
 >
-> date2 = fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear 2020 }
-> decrementYear date2
-> Date { day = Day 28, month = Feb, year = Year 2019 }
+> incrementMonth date
+> Date { day = Day 31, rawMonth = 1, rawYear = 2019 } : Date
 >
-> date3 = fromRawYearMonthDay { rawDay = 28, rawMonth = 2, rawYear 2019 }
-> decrementYear date3
-> Date { day = Day 28, month = Feb, year = Year 2018 }
-
---------------------- Note ---------------------
---- Here we cannot rely on transforming the date
---- to millis and removing a year because of the
---- edge case restrictions such as current year
---- might be a leap year and the given date may
---- contain the 29th of February but on the previous
---- year, February would only have 28 days.
+> incrementMonth (incrementMonth date)
+> Date { day = Day 28, rawMonth = 28, rawYear = 2019 } : Date
 
 -}
-decrementYear : Date -> Date
-decrementYear =
-    Internal.decrementYear
-
-
-{-| Transforms a 'Date' into milliseconds
--}
-toMillis : Date -> Int
-toMillis =
-    Internal.toMillis
-
-
-{-| Returns the milliseconds in a day.
--}
-millisInADay : Int
-millisInADay =
-    Internal.millisInADay
-
-
-{-| Returns the weekday of a specific 'Date'
-
-> date = fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear = 2020 }
-> getWeekday date
-> Sat : Time.Weekday
->
-> date2 = fromRawYearMonthDay { rawDay = 25, rawMonth = 11, rawYear = 2018 }
-> getWeekday date2
-> Tue : Time.Weekday
-
--}
-getWeekday : Date -> Time.Weekday
-getWeekday =
-    Internal.getWeekday
-
-
-{-| Returns a list of 'Dates' for the given 'Year' and 'Month' combination.
-
-> getDatesInMonth (Year 2018) Dec
-> [ Date { day = Day 1, month = Dec, year = Year 2018 }
-> , Date { day = Day 2, month = Dec, year = Year 2018 }
-> , Date { day = Day 3, month = Dec, year = Year 2018 }
-> , Date { day = Day 4, month = Dec, year = Year 2018 }
-> , Date { day = Day 5, month = Dec, year = Year 2018 }
-> ...
-> , Date { day = Day 29, month = Dec, year = Year 2018 }
-> , Date { day = Day 30, month = Dec, year = Year 2018 }
-> , Date { day = Day 31, month = Dec, year = Year 2018 }
-> ]
-
--}
-getDatesInMonth : Date -> List Date
-getDatesInMonth =
-    Internal.getDatesInMonth
+incrementMonth : Date -> Date
+incrementMonth =
+    Internal.incrementMonth
 
 
 {-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
@@ -365,6 +269,57 @@ incrementDay =
     Internal.incrementDay
 
 
+
+-- Decrementers
+
+
+{-| Decrements the 'Year' in a given 'Date' while preserving the month and
+--- day where applicable.
+
+> date = fromRawYearMonthDay { rawDay = 31, rawMonth = 1 rawYear = 2019 }
+> decrementYear date
+> Date { day = Day 31, month = Jan, year = Year 2018 }
+>
+> date2 = fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear 2020 }
+> decrementYear date2
+> Date { day = Day 28, month = Feb, year = Year 2019 }
+>
+> date3 = fromRawYearMonthDay { rawDay = 28, rawMonth = 2, rawYear 2019 }
+> decrementYear date3
+> Date { day = Day 28, month = Feb, year = Year 2018 }
+
+--------------------- Note ---------------------
+--- Here we cannot rely on transforming the date
+--- to millis and removing a year because of the
+--- edge case restrictions such as current year
+--- might be a leap year and the given date may
+--- contain the 29th of February but on the previous
+--- year, February would only have 28 days.
+
+-}
+decrementYear : Date -> Date
+decrementYear =
+    Internal.decrementYear
+
+
+{-| Gets previous month from the given date. It preserves the day and year as is (where applicable).
+--- If the day of the given date is out of bounds for the previous month then
+--- we return the maxDay for that month.
+
+> date = fromRawYearMonthDay { rawDay = 31, rawMonth = 1 rawYear = 2019 }
+>
+> decrementMonth date
+> Date { day = Day 31, rawMonth = 12, rawYear = 2018 } : Date
+>
+> decrementMonth (decrementMonth date)
+> Date { day = Day 30, rawMonth = 11, rawYear = 2018 } : Date
+
+-}
+decrementMonth : Date -> Date
+decrementMonth =
+    Internal.decrementMonth
+
+
 {-| Decrements the 'Day' in a given 'Date'. Will also decrement 'Month' && 'Year'
 --- if applicable.
 
@@ -392,6 +347,35 @@ incrementDay =
 decrementDay : Date -> Date
 decrementDay =
     Internal.decrementDay
+
+
+
+-- Comparers
+
+
+{-| Comparison on a Date level.
+--- Compares two given dates and gives an Order
+
+> date = (fromPosix (Time.millisToPosix 0)) -- 1 Jan 1970
+> laterDate = (fromPosix (Time.millisToPosix 10000000000)) -- 26 Apr 1970
+
+> compareDates date laterDate
+> LT : Order
+>
+> compareDates laterDate date
+> GT : Order
+>
+> compareDates laterDate date
+> EQ : Order
+
+-}
+compareDates : Date -> Date -> Order
+compareDates =
+    Internal.compareDates
+
+
+
+-- Utilities
 
 
 {-| Returns a List of dates based on the start and end 'Dates' given as parameters.
@@ -426,27 +410,87 @@ getDateRange =
     Internal.getDateRange
 
 
+{-| Returns a list of 'Dates' for the given 'Year' and 'Month' combination.
+
+> getDatesInMonth (Year 2018) Dec
+> [ Date { day = Day 1, month = Dec, year = Year 2018 }
+> , Date { day = Day 2, month = Dec, year = Year 2018 }
+> , Date { day = Day 3, month = Dec, year = Year 2018 }
+> , Date { day = Day 4, month = Dec, year = Year 2018 }
+> , Date { day = Day 5, month = Dec, year = Year 2018 }
+> ...
+> , Date { day = Day 29, month = Dec, year = Year 2018 }
+> , Date { day = Day 30, month = Dec, year = Year 2018 }
+> , Date { day = Day 31, month = Dec, year = Year 2018 }
+> ]
+
+-}
+getDatesInMonth : Date -> List Date
+getDatesInMonth =
+    Internal.getDatesInMonth
+
+
+{-| Returns the number of days between two 'Dates'.
+-}
 getDayDiff : Date -> Date -> Int
 getDayDiff =
     Internal.getDayDiff
 
 
-{-| Attempts to set the 'Day' on an existing date
+{-| Returns the weekday of a specific 'Date'
+
+> date = fromRawYearMonthDay { rawDay = 29, rawMonth = 2, rawYear = 2020 }
+> getWeekday date
+> Sat : Time.Weekday
+>
+> date2 = fromRawYearMonthDay { rawDay = 25, rawMonth = 11, rawYear = 2018 }
+> getWeekday date2
+> Tue : Time.Weekday
+
 -}
-setDay : Date -> Int -> Maybe Date
-setDay =
-    Internal.setDay
+getWeekday : Date -> Time.Weekday
+getWeekday =
+    Internal.getWeekday
 
 
-{-| Attempts to set the 'Month' on an existing date
+{-| Checks if the given year is a leap year.
+
+> isLeapYear 2019
+> False
+>
+> isLeapYear 2020
+> True
+
 -}
-setMonth : Date -> Month -> Maybe Date
-setMonth =
-    Internal.setMonth
+isLeapYear : Year -> Bool
+isLeapYear =
+    Internal.isLeapYear
 
 
-{-| Attempts to set the 'Year' on an existing date
+
+-- Constants
+
+
+{-| Construct a `Date` from its constituent Year and Month by using its raw day.
+Returns `Nothing` if any parts or their combination would form an invalid date.
+
+> fromRawDay (Year 2018) Dec 25
+> Just (Date { day = Day 25, month = Dec, year = Year 2018 }) : Maybe Date
+>
+> fromRawDay (Year 2019) Feb 29
+> Nothing : Maybe Date
+>
+> fromRawDay (Year 2020) Feb 29
+> Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
+
 -}
-setYear : Date -> Int -> Maybe Date
-setYear =
-    Internal.setYear
+months : Array Month
+months =
+    Internal.months
+
+
+{-| Returns the milliseconds in a day.
+-}
+millisInADay : Int
+millisInADay =
+    Internal.millisInADay
