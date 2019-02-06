@@ -1051,7 +1051,7 @@ getDayDiff startDate endDate =
         posixDiff =
             Time.posixToMillis endPosix - Time.posixToMillis startPosix
     in
-    posixDiff // 1000 // 60 // 60 // 24
+    posixDiff // millisInADay
 
 
 {-| Gets the list of the following months from the given month.
