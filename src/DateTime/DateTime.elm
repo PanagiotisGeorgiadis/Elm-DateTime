@@ -2,11 +2,11 @@ module DateTime.DateTime exposing
     ( DateTime
     , fromPosix, fromRawParts, fromDateAndTime
     , toPosix, toMillis
-    , getDate, getYear, getMonth, getDay, getTime, getHours, getMinutes, getSeconds, getMilliseconds
+    , getDate, getTime, getYear, getMonth, getDay, getHours, getMinutes, getSeconds, getMilliseconds
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
-    , getWeekday, getDateRange, getDatesInMonth
     , compareDates, compareTime
+    , getWeekday, getDateRange, getDatesInMonth
     )
 
 {-| A complete datetime type.
@@ -26,7 +26,7 @@ module DateTime.DateTime exposing
 
 # Accessors
 
-@docs getDate, getYear, getMonth, getDay, getTime, getHours, getMinutes, getSeconds, getMilliseconds
+@docs getDate, getTime, getYear, getMonth, getDay, getHours, getMinutes, getSeconds, getMilliseconds
 
 
 # Incrementers
@@ -39,14 +39,14 @@ module DateTime.DateTime exposing
 @docs decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
 
 
-# Utilities
-
-@docs getDayDiff, getWeekday, getDateRange, getDatesInMonth
-
-
 # Comparers
 
 @docs compareDates, compareTime
+
+
+# Utilities
+
+@docs getWeekday, getDateRange, getDatesInMonth
 
 -}
 
@@ -60,6 +60,10 @@ import Time
 -}
 type alias DateTime =
     Internal.DateTime
+
+
+
+-- Constructors
 
 
 {-| Create a `DateTime` from a time zone and posix time.
@@ -87,6 +91,10 @@ fromDateAndTime =
     Internal.fromDateAndTime
 
 
+
+-- Converters
+
+
 {-| Converts a 'DateTime' to a posix time.
 
 > toPosix (fromPosix (Time.millisToPosix 0))
@@ -107,6 +115,32 @@ toPosix =
 toMillis : DateTime -> Int
 toMillis =
     Internal.toMillis
+
+
+
+-- Accessors
+
+
+{-| Extract the calendar date from a `DateTime`.
+
+> getDate (fromPosix (Time.millisToPosix 0))
+> Date { day = Day 1, month = Jan, year = Year 1970 } : Calendar.Date
+
+-}
+getDate : DateTime -> Calendar.Date
+getDate =
+    Internal.getDate
+
+
+{-| Extract the clock time from a `DateTime`.
+
+> getTime (fromPosix (Time.millisToPosix 0))
+> Time { hour = Hour 0, millisecond = 0, minute = Minute 0, second = Second 0 } : Clock.Time
+
+-}
+getTime : DateTime -> Clock.Time
+getTime =
+    Internal.getTime
 
 
 {-| Returns the 'Year' from a 'DateTime' as an Int.
@@ -140,17 +174,6 @@ getMonth =
 getDay : DateTime -> Int
 getDay =
     Internal.getDay
-
-
-{-| Extract the weekday from a `DateTime`.
-
-> getWeekday (fromPosix (Time.millisToPosix 0))
-> Thu : Time.Weekday
-
--}
-getWeekday : DateTime -> Time.Weekday
-getWeekday =
-    Internal.getWeekday
 
 
 {-| Returns the 'Hour' from a 'DateTime' as an Int.
@@ -198,7 +221,166 @@ getMilliseconds =
 
 
 
--- NEW STUFF
+-- Incrementers
+
+
+{-| Returns a new 'DateTime' with an updated year value.
+-}
+incrementYear : DateTime -> DateTime
+incrementYear =
+    Internal.incrementYear
+
+
+{-| Returns a new 'DateTime' with an updated month value.
+-}
+incrementMonth : DateTime -> DateTime
+incrementMonth =
+    Internal.incrementMonth
+
+
+{-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
+--- if applicable.
+
+> date = fromRawParts { rawDay = 31, rawMonth = 12, rawYear = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> incrementDay date
+> DateTime { date = { day = Day 1, month = Jan, year = Year 2019 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
+>
+> date2 = fromRawParts { rawDay = 29, rawMonth = 2, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> incrementDay date2
+> DateTime { date = { day = Day 1, month = Mar, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
+>
+> date3 = fromRawParts { rawDay = 24, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> incrementDay date3
+> DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
+
+-}
+incrementDay : DateTime -> DateTime
+incrementDay =
+    Internal.incrementDay
+
+
+{-| Increments the 'Hours' in a given 'Date'. Will also increment 'Day', 'Month', 'Year' where applicable.
+-}
+incrementHours : DateTime -> DateTime
+incrementHours =
+    Internal.incrementHours
+
+
+{-| Increments the 'Minutes' in a given 'Date'. Will also increment 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+incrementMinutes : DateTime -> DateTime
+incrementMinutes =
+    Internal.incrementMinutes
+
+
+{-| Increments the 'Seconds' in a given 'Date'. Will also increment 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+incrementSeconds : DateTime -> DateTime
+incrementSeconds =
+    Internal.incrementSeconds
+
+
+{-| Increments the 'Milliseconds' in a given 'Date'. Will also increment 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+incrementMilliseconds : DateTime -> DateTime
+incrementMilliseconds =
+    Internal.incrementMilliseconds
+
+
+
+-- Decrementers
+
+
+{-| Returns a new 'DateTime' with an updated year value.
+-}
+decrementYear : DateTime -> DateTime
+decrementYear =
+    Internal.decrementYear
+
+
+{-| Returns a new 'DateTime' with an updated month value.
+-}
+decrementMonth : DateTime -> DateTime
+decrementMonth =
+    Internal.decrementMonth
+
+
+{-| Decrements the 'Day' in a given 'Date'. Will also decrement 'Month' && 'Year'
+--- if applicable.
+
+> date = fromRawParts { rawDay = 1, rawMonth = 1, rawYear = 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> decrementDay date
+> DateTime { date = { day = Day 31, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
+>
+> date2 = fromRawParts { rawDay = 1, rawMonth = 3, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> decrementDay date2
+> DateTime { date = { day = Day 29, month = Feb, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
+>
+> date3 = fromRawParts { rawDay = 26, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> decrementDay date3
+> DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
+
+-}
+decrementDay : DateTime -> DateTime
+decrementDay =
+    Internal.decrementDay
+
+
+{-| Decrements the 'Hours' in a given 'Date'. Will also decrement 'Day', 'Month', 'Year' where applicable.
+-}
+decrementHours : DateTime -> DateTime
+decrementHours =
+    Internal.decrementHours
+
+
+{-| Decrements the 'Minutes' in a given 'Date'. Will also decrement 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+decrementMinutes : DateTime -> DateTime
+decrementMinutes =
+    Internal.decrementMinutes
+
+
+{-| Decrements the 'Seconds' in a given 'Date'. Will also decrement 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+decrementSeconds : DateTime -> DateTime
+decrementSeconds =
+    Internal.decrementSeconds
+
+
+{-| Decrements the 'Milliseconds' in a given 'Date'. Will also decrement 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+decrementMilliseconds : DateTime -> DateTime
+decrementMilliseconds =
+    Internal.decrementMilliseconds
+
+
+
+-- Comparers
+
+
+compareDates : DateTime -> DateTime -> Order
+compareDates lhs rhs =
+    Internal.compareDates lhs rhs
+
+
+compareTime : DateTime -> DateTime -> Order
+compareTime lhs rhs =
+    Internal.compareTime lhs rhs
+
+
+
+-- Utilities
+
+
+{-| Extract the weekday from a `DateTime`.
+
+> getWeekday (fromPosix (Time.millisToPosix 0))
+> Thu : Time.Weekday
+
+-}
+getWeekday : DateTime -> Time.Weekday
+getWeekday =
+    Internal.getWeekday
 
 
 {-| Returns a list of Dates that belong in the current month of the 'DateTime'.
@@ -238,167 +420,3 @@ getDatesInMonth =
 getDateRange : DateTime -> DateTime -> List DateTime
 getDateRange start end =
     Internal.getDateRange start end
-
-
-{-| Returns a new 'DateTime' with an updated year value.
--}
-incrementYear : DateTime -> DateTime
-incrementYear =
-    Internal.incrementYear
-
-
-{-| Returns a new 'DateTime' with an updated year value.
--}
-decrementYear : DateTime -> DateTime
-decrementYear =
-    Internal.decrementYear
-
-
-{-| Returns a new 'DateTime' with an updated month value.
--}
-decrementMonth : DateTime -> DateTime
-decrementMonth =
-    Internal.decrementMonth
-
-
-{-| Returns a new 'DateTime' with an updated month value.
--}
-incrementMonth : DateTime -> DateTime
-incrementMonth =
-    Internal.incrementMonth
-
-
-compareDates : DateTime -> DateTime -> Order
-compareDates lhs rhs =
-    Internal.compareDates lhs rhs
-
-
-compareTime : DateTime -> DateTime -> Order
-compareTime lhs rhs =
-    Internal.compareTime lhs rhs
-
-
-
--- getDayDiff : DateTime -> DateTime -> Int
--- getDayDiff (DateTime startDate) (DateTime endDate) =
---     Calendar.getDayDiff startDate.date endDate.date
-
-
-{-| Decrements the 'Day' in a given 'Date'. Will also decrement 'Month' && 'Year'
---- if applicable.
-
-> date = fromRawParts { rawDay = 1, rawMonth = 1, rawYear = 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> decrementDay date
-> DateTime { date = { day = Day 31, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
->
-> date2 = fromRawParts { rawDay = 1, rawMonth = 3, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> decrementDay date2
-> DateTime { date = { day = Day 29, month = Feb, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
->
-> date3 = fromRawParts { rawDay = 26, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> decrementDay date3
-> DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
-
--}
-decrementDay : DateTime -> DateTime
-decrementDay =
-    Internal.decrementDay
-
-
-{-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
---- if applicable.
-
-> date = fromRawParts { rawDay = 31, rawMonth = 12, rawYear = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> incrementDay date
-> DateTime { date = { day = Day 1, month = Jan, year = Year 2019 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
->
-> date2 = fromRawParts { rawDay = 29, rawMonth = 2, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> incrementDay date2
-> DateTime { date = { day = Day 1, month = Mar, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
->
-> date3 = fromRawParts { rawDay = 24, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> incrementDay date3
-> DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
-
--}
-incrementDay : DateTime -> DateTime
-incrementDay =
-    Internal.incrementDay
-
-
-{-| Extract the calendar date from a `DateTime`.
-
-> getDate (fromPosix (Time.millisToPosix 0))
-> Date { day = Day 1, month = Jan, year = Year 1970 } : Calendar.Date
-
--}
-getDate : DateTime -> Calendar.Date
-getDate =
-    Internal.getDate
-
-
-{-| Extract the clock time from a `DateTime`.
-
-> getTime (fromPosix (Time.millisToPosix 0))
-> Time { hour = Hour 0, millisecond = 0, minute = Minute 0, second = Second 0 } : Clock.Time
-
--}
-getTime : DateTime -> Clock.Time
-getTime =
-    Internal.getTime
-
-
-{-| Increments the 'Hours' in a given 'Date'. Will also increment 'Day', 'Month', 'Year' where applicable.
--}
-incrementHours : DateTime -> DateTime
-incrementHours =
-    Internal.incrementHours
-
-
-{-| Increments the 'Minutes' in a given 'Date'. Will also increment 'Hours', 'Day', 'Month', 'Year' where applicable.
--}
-incrementMinutes : DateTime -> DateTime
-incrementMinutes =
-    Internal.incrementMinutes
-
-
-{-| Increments the 'Seconds' in a given 'Date'. Will also increment 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
--}
-incrementSeconds : DateTime -> DateTime
-incrementSeconds =
-    Internal.incrementSeconds
-
-
-{-| Increments the 'Milliseconds' in a given 'Date'. Will also increment 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
--}
-incrementMilliseconds : DateTime -> DateTime
-incrementMilliseconds =
-    Internal.incrementMilliseconds
-
-
-{-| Decrements the 'Hours' in a given 'Date'. Will also decrement 'Day', 'Month', 'Year' where applicable.
--}
-decrementHours : DateTime -> DateTime
-decrementHours =
-    Internal.decrementHours
-
-
-{-| Decrements the 'Minutes' in a given 'Date'. Will also decrement 'Hours', 'Day', 'Month', 'Year' where applicable.
--}
-decrementMinutes : DateTime -> DateTime
-decrementMinutes =
-    Internal.decrementMinutes
-
-
-{-| Decrements the 'Seconds' in a given 'Date'. Will also decrement 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
--}
-decrementSeconds : DateTime -> DateTime
-decrementSeconds =
-    Internal.decrementSeconds
-
-
-{-| Decrements the 'Milliseconds' in a given 'Date'. Will also decrement 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
--}
-decrementMilliseconds : DateTime -> DateTime
-decrementMilliseconds =
-    Internal.decrementMilliseconds
