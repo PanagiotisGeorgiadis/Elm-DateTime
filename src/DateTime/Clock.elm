@@ -6,7 +6,7 @@ module DateTime.Clock exposing
     , setHours, setMinutes, setSeconds, setMilliseconds
     , incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
-    , compareTime
+    , compare
     , midnight
     )
 
@@ -50,7 +50,7 @@ module DateTime.Clock exposing
 
 # Comparers
 
-@docs compareTime
+@docs compare
 
 
 # Constants
@@ -348,9 +348,9 @@ decrementMilliseconds =
 > LT : Order
 
 -}
-compareTime : Time -> Time -> Order
-compareTime =
-    Internal.compareTime
+compare : Time -> Time -> Order
+compare =
+    Internal.compare
 
 
 

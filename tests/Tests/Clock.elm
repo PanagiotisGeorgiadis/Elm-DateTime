@@ -39,7 +39,7 @@ suite =
         , decrementMinutesTests
         , decrementSecondsTests
         , decrementMillisecondsTests
-        , compareTimeTests
+        , compareTests
         , compareHoursTests
         , compareMinutesTests
         , compareSecondsTests
@@ -832,8 +832,8 @@ decrementMillisecondsTests =
         ]
 
 
-compareTimeTests : Test
-compareTimeTests =
+compareTests : Test
+compareTests =
     let
         ( hoursTime, hoursTime2 ) =
             ( Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
@@ -858,42 +858,42 @@ compareTimeTests =
         time =
             Clock.fromRawParts { hours = 15, minutes = 30, seconds = 45, milliseconds = 500 }
     in
-    describe "Clock.compareTime Test Suite"
+    describe "Clock.compare Test Suite"
         [ test "Lesser than test case with comparison on hours"
             (\_ ->
-                Expect.equal (Just LT) (Maybe.map2 Clock.compareTime hoursTime hoursTime2)
+                Expect.equal (Just LT) (Maybe.map2 Clock.compare hoursTime hoursTime2)
             )
         , test "Greater than test case with comparison on hours"
             (\_ ->
-                Expect.equal (Just GT) (Maybe.map2 Clock.compareTime hoursTime2 hoursTime)
+                Expect.equal (Just GT) (Maybe.map2 Clock.compare hoursTime2 hoursTime)
             )
         , test "Lesser than test case with comparison on minutes"
             (\_ ->
-                Expect.equal (Just LT) (Maybe.map2 Clock.compareTime hoursTime hoursTime2)
+                Expect.equal (Just LT) (Maybe.map2 Clock.compare hoursTime hoursTime2)
             )
         , test "Greater than test case with comparison on minutes"
             (\_ ->
-                Expect.equal (Just GT) (Maybe.map2 Clock.compareTime hoursTime2 hoursTime)
+                Expect.equal (Just GT) (Maybe.map2 Clock.compare hoursTime2 hoursTime)
             )
         , test "Lesser than test case with comparison on seconds"
             (\_ ->
-                Expect.equal (Just LT) (Maybe.map2 Clock.compareTime secondTime secondTime2)
+                Expect.equal (Just LT) (Maybe.map2 Clock.compare secondTime secondTime2)
             )
         , test "Greater than test case with comparison on seconds"
             (\_ ->
-                Expect.equal (Just GT) (Maybe.map2 Clock.compareTime secondTime2 secondTime)
+                Expect.equal (Just GT) (Maybe.map2 Clock.compare secondTime2 secondTime)
             )
         , test "Lesser than test case with comparison on milliseconds"
             (\_ ->
-                Expect.equal (Just LT) (Maybe.map2 Clock.compareTime millisecondsTime millisecondsTime2)
+                Expect.equal (Just LT) (Maybe.map2 Clock.compare millisecondsTime millisecondsTime2)
             )
         , test "Greater than test case with comparison on milliseconds"
             (\_ ->
-                Expect.equal (Just GT) (Maybe.map2 Clock.compareTime millisecondsTime2 millisecondsTime)
+                Expect.equal (Just GT) (Maybe.map2 Clock.compare millisecondsTime2 millisecondsTime)
             )
         , test "Equality test case"
             (\_ ->
-                Expect.equal (Just EQ) (Maybe.map2 Clock.compareTime time time)
+                Expect.equal (Just EQ) (Maybe.map2 Clock.compare time time)
             )
         ]
 

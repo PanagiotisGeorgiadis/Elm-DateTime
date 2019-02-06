@@ -6,11 +6,11 @@ module DateTime.Clock.Internal exposing
     , RawTime
     , Second(..)
     , Time(..)
+    , compare
     , compareHours
     , compareMilliseconds
     , compareMinutes
     , compareSeconds
-    , compareTime
     , decrementHours
     , decrementMilliseconds
     , decrementMinutes
@@ -622,8 +622,8 @@ decrementMilliseconds (Time time) =
 > LT : Order
 
 -}
-compareTime : Time -> Time -> Order
-compareTime lhs rhs =
+compare : Time -> Time -> Order
+compare lhs rhs =
     let
         ( hoursComparison, minutesComparison, secondsComparison ) =
             ( compareHours (getHours lhs) (getHours rhs)
@@ -662,7 +662,7 @@ compareTime lhs rhs =
 -}
 compareHours : Hour -> Hour -> Order
 compareHours (Hour lhs) (Hour rhs) =
-    compare lhs rhs
+    Basics.compare lhs rhs
 
 
 {-| Compare two `Minute` values.
@@ -678,7 +678,7 @@ compareHours (Hour lhs) (Hour rhs) =
 -}
 compareMinutes : Minute -> Minute -> Order
 compareMinutes (Minute lhs) (Minute rhs) =
-    compare lhs rhs
+    Basics.compare lhs rhs
 
 
 {-| Compare two `Second` values.
@@ -694,7 +694,7 @@ compareMinutes (Minute lhs) (Minute rhs) =
 -}
 compareSeconds : Second -> Second -> Order
 compareSeconds (Second lhs) (Second rhs) =
-    compare lhs rhs
+    Basics.compare lhs rhs
 
 
 {-| Compare two `Millisecond` values.
@@ -710,7 +710,7 @@ compareSeconds (Second lhs) (Second rhs) =
 -}
 compareMilliseconds : Millisecond -> Millisecond -> Order
 compareMilliseconds (Millisecond lhs) (Millisecond rhs) =
-    compare lhs rhs
+    Basics.compare lhs rhs
 
 
 

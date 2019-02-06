@@ -513,7 +513,7 @@ compareDateTimes : DateTime -> DateTime -> Order
 compareDateTimes (DateTime lhs) (DateTime rhs) =
     case Calendar.compare lhs.date rhs.date of
         EQ ->
-            Clock.compareTime lhs.time rhs.time
+            Clock.compare lhs.time rhs.time
 
         ord ->
             ord
@@ -530,7 +530,7 @@ compareDates (DateTime lhs) (DateTime rhs) =
 -}
 compareTime : DateTime -> DateTime -> Order
 compareTime (DateTime lhs) (DateTime rhs) =
-    Clock.compareTime lhs.time rhs.time
+    Clock.compare lhs.time rhs.time
 
 
 
