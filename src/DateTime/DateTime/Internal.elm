@@ -4,8 +4,9 @@ module DateTime.DateTime.Internal exposing
     , toPosix
     , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
     , getDateRange, getDatesInMonth
-    , incrementYear, incrementMonth, incrementDay
-    , decrementYear, decrementMonth, decrementDay
+    , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
+    , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
+    , rollDayForward, rollDayBackwards
     , compareDates, compareTime
     , InternalDateTime, getDate, getTime, toMillis
     )
@@ -37,17 +38,17 @@ module DateTime.DateTime.Internal exposing
 
 # Incrementers
 
-@docs incrementYear, incrementMonth, incrementDay
+@docs incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
 
 
 # Decrementers
 
-@docs decrementYear, decrementMonth, decrementDay
+@docs decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
 
 
 # Utilities
 
-@docs getDayDiff
+@docs getDayDiff, rollDayForward, rollDayBackwards
 
 
 # Comparers
@@ -411,3 +412,137 @@ fromDateAndTime date time =
         { date = date
         , time = time
         }
+
+
+{-| Increments the 'Hours' in a given 'Date'. Will also increment 'Day', 'Month', 'Year' where applicable.
+-}
+incrementHours : DateTime -> DateTime
+incrementHours (DateTime { date, time }) =
+    let
+        ( updatedTime, shouldRoll ) =
+            Clock.incrementHours time
+    in
+    DateTime
+        { date = rollDayForward shouldRoll date
+        , time = updatedTime
+        }
+
+
+{-| Increments the 'Minutes' in a given 'Date'. Will also increment 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+incrementMinutes : DateTime -> DateTime
+incrementMinutes (DateTime { date, time }) =
+    let
+        ( updatedTime, shouldRoll ) =
+            Clock.incrementMinutes time
+    in
+    DateTime
+        { date = rollDayForward shouldRoll date
+        , time = updatedTime
+        }
+
+
+{-| Increments the 'Seconds' in a given 'Date'. Will also increment 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+incrementSeconds : DateTime -> DateTime
+incrementSeconds (DateTime { date, time }) =
+    let
+        ( updatedTime, shouldRoll ) =
+            Clock.incrementSeconds time
+    in
+    DateTime
+        { date = rollDayForward shouldRoll date
+        , time = updatedTime
+        }
+
+
+{-| Increments the 'Milliseconds' in a given 'Date'. Will also increment 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+incrementMilliseconds : DateTime -> DateTime
+incrementMilliseconds (DateTime { date, time }) =
+    let
+        ( updatedTime, shouldRoll ) =
+            Clock.incrementMilliseconds time
+    in
+    DateTime
+        { date = rollDayForward shouldRoll date
+        , time = updatedTime
+        }
+
+
+{-| Decides if we should 'roll' the Calendar.Date forward due to a Clock.Time change.
+-}
+rollDayForward : Bool -> Calendar.Date -> Calendar.Date
+rollDayForward shouldRoll date =
+    if shouldRoll then
+        Calendar.incrementDay date
+
+    else
+        date
+
+
+{-| Decrements the 'Hours' in a given 'Date'. Will also decrement 'Day', 'Month', 'Year' where applicable.
+-}
+decrementHours : DateTime -> DateTime
+decrementHours (DateTime { date, time }) =
+    let
+        ( updatedTime, shouldRoll ) =
+            Clock.decrementHours time
+    in
+    DateTime
+        { date = rollDayBackwards shouldRoll date
+        , time = updatedTime
+        }
+
+
+{-| Decrements the 'Minutes' in a given 'Date'. Will also decrement 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+decrementMinutes : DateTime -> DateTime
+decrementMinutes (DateTime { date, time }) =
+    let
+        ( updatedTime, shouldRoll ) =
+            Clock.decrementMinutes time
+    in
+    DateTime
+        { date = rollDayBackwards shouldRoll date
+        , time = updatedTime
+        }
+
+
+{-| Decrements the 'Seconds' in a given 'Date'. Will also decrement 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+decrementSeconds : DateTime -> DateTime
+decrementSeconds (DateTime { date, time }) =
+    let
+        ( updatedTime, shouldRoll ) =
+            Clock.decrementSeconds time
+    in
+    DateTime
+        { date = rollDayBackwards shouldRoll date
+        , time = updatedTime
+        }
+
+
+{-| Decrements the 'Milliseconds' in a given 'Date'. Will also decrement 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+decrementMilliseconds : DateTime -> DateTime
+decrementMilliseconds (DateTime { date, time }) =
+    let
+        ( updatedTime, shouldRoll ) =
+            Clock.decrementMilliseconds time
+    in
+    DateTime
+        { date = rollDayBackwards shouldRoll date
+        , time = updatedTime
+        }
+
+
+{-| Decides if we should 'roll' the Calendar.Date backwards due to a Clock.Time change.
+-}
+rollDayBackwards : Bool -> Calendar.Date -> Calendar.Date
+rollDayBackwards shouldRoll date =
+    if shouldRoll then
+        Calendar.decrementDay date
+
+    else
+        date

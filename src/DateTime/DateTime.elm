@@ -36,12 +36,12 @@ module DateTime.DateTime exposing
 
 # Incrementers
 
-@docs incrementYear, incrementMonth, incrementDay
+@docs incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
 
 
 # Decrementers
 
-@docs decrementYear, decrementMonth, decrementDay
+@docs decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
 
 
 # Utilities
@@ -351,3 +351,59 @@ getTime =
 fromDateAndTime : Calendar.Date -> Clock.Time -> DateTime
 fromDateAndTime =
     Internal.fromDateAndTime
+
+
+{-| Increments the 'Hours' in a given 'Date'. Will also increment 'Day', 'Month', 'Year' where applicable.
+-}
+incrementHours : DateTime -> DateTime
+incrementHours =
+    Internal.incrementHours
+
+
+{-| Increments the 'Minutes' in a given 'Date'. Will also increment 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+incrementMinutes : DateTime -> DateTime
+incrementMinutes =
+    Internal.incrementMinutes
+
+
+{-| Increments the 'Seconds' in a given 'Date'. Will also increment 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+incrementSeconds : DateTime -> DateTime
+incrementSeconds =
+    Internal.incrementSeconds
+
+
+{-| Increments the 'Milliseconds' in a given 'Date'. Will also increment 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+incrementMilliseconds : DateTime -> DateTime
+incrementMilliseconds =
+    Internal.incrementMilliseconds
+
+
+{-| Decrements the 'Hours' in a given 'Date'. Will also decrement 'Day', 'Month', 'Year' where applicable.
+-}
+decrementHours : DateTime -> DateTime
+decrementHours =
+    Internal.decrementHours
+
+
+{-| Decrements the 'Minutes' in a given 'Date'. Will also decrement 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+decrementMinutes : DateTime -> DateTime
+decrementMinutes =
+    Internal.decrementMinutes
+
+
+{-| Decrements the 'Seconds' in a given 'Date'. Will also decrement 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+decrementSeconds : DateTime -> DateTime
+decrementSeconds =
+    Internal.decrementSeconds
+
+
+{-| Decrements the 'Milliseconds' in a given 'Date'. Will also decrement 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+-}
+decrementMilliseconds : DateTime -> DateTime
+decrementMilliseconds =
+    Internal.decrementMilliseconds
