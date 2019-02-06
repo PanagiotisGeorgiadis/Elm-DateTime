@@ -6,7 +6,7 @@ module DateTime.Calendar exposing
     , setDay, setMonth, setYear
     , incrementDay, incrementMonth, incrementYear
     , decrementDay, decrementMonth, decrementYear
-    , compareDates
+    , compare
     , getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear
     , months, millisInADay
     )
@@ -51,7 +51,7 @@ module DateTime.Calendar exposing
 
 # Comparers
 
-@docs compareDates
+@docs compare
 
 
 # Utilities
@@ -359,19 +359,19 @@ decrementDay =
 > date = (fromPosix (Time.millisToPosix 0)) -- 1 Jan 1970
 > laterDate = (fromPosix (Time.millisToPosix 10000000000)) -- 26 Apr 1970
 
-> compareDates date laterDate
+> compare date laterDate
 > LT : Order
 >
-> compareDates laterDate date
+> compare laterDate date
 > GT : Order
 >
-> compareDates laterDate date
+> compare laterDate date
 > EQ : Order
 
 -}
-compareDates : Date -> Date -> Order
-compareDates =
-    Internal.compareDates
+compare : Date -> Date -> Order
+compare =
+    Internal.compare
 
 
 

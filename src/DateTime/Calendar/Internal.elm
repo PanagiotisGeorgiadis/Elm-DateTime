@@ -5,7 +5,7 @@ module DateTime.Calendar.Internal exposing
     , Month
     , RawDate
     , Year(..)
-    , compareDates
+    , compare
     , compareDays
     , compareMonths
     , compareYears
@@ -832,20 +832,20 @@ decrementDay date =
 > date = (fromPosix (Time.millisToPosix 0)) -- 1 Jan 1970
 > laterDate = (fromPosix (Time.millisToPosix 10000000000)) -- 26 Apr 1970
 
-> compareDates date laterDate
+> compare date laterDate
 > LT : Order
 >
-> compareDates laterDate date
+> compare laterDate date
 > GT : Order
 >
-> compareDates laterDate date
+> compare laterDate date
 > EQ : Order
 
 -- Can be exposed
 
 -}
-compareDates : Date -> Date -> Order
-compareDates lhs rhs =
+compare : Date -> Date -> Order
+compare lhs rhs =
     let
         ( yearsComparison, monthsComparison, daysComparison ) =
             ( compareYears (getYear lhs) (getYear rhs)

@@ -27,7 +27,7 @@ suite =
     describe "Calendar Test Suite"
         [ fromPosixTests
         , fromRawYearMonthDayTests
-        , compareDatesTests
+        , compareTests
         , incrementMonthTests
         , decrementMonthTests
         , getPrecedingMonthsTests
@@ -216,8 +216,8 @@ fromRawYearMonthDayTests =
         ]
 
 
-compareDatesTests : Test
-compareDatesTests =
+compareTests : Test
+compareTests =
     let
         rawDate =
             Calendar.fromRawYearMonthDay { year = 2018, month = 11, day = 27 }
@@ -237,16 +237,16 @@ compareDatesTests =
         getDayInt =
             Calendar.dayToInt << Calendar.getDay
     in
-    describe "Calendar.compareDates Test Suite"
+    describe "Calendar.compare Test Suite"
         [ test "Compare two equal posix dates"
             (\_ ->
-                Expect.equal (Calendar.compareDates testPosixDate testPosixDate) EQ
+                Expect.equal (Calendar.compare testPosixDate testPosixDate) EQ
             )
         , test "Compare two equal raw dates"
             (\_ ->
                 case rawDate of
                     Just date ->
-                        Expect.equal (Calendar.compareDates date date) EQ
+                        Expect.equal (Calendar.compare date date) EQ
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -255,7 +255,7 @@ compareDatesTests =
             (\_ ->
                 case ( rawDate, nextDayRawDate ) of
                     ( Just date, Just nextDate ) ->
-                        Expect.equal (Calendar.compareDates date nextDate) LT
+                        Expect.equal (Calendar.compare date nextDate) LT
 
                     _ ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -264,7 +264,7 @@ compareDatesTests =
             (\_ ->
                 case ( rawDate, nextMonthRawDate ) of
                     ( Just date, Just nextDate ) ->
-                        Expect.equal (Calendar.compareDates date nextDate) LT
+                        Expect.equal (Calendar.compare date nextDate) LT
 
                     _ ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -273,7 +273,7 @@ compareDatesTests =
             (\_ ->
                 case ( rawDate, nextYearRawDate ) of
                     ( Just date, Just nextDate ) ->
-                        Expect.equal (Calendar.compareDates date nextDate) LT
+                        Expect.equal (Calendar.compare date nextDate) LT
 
                     _ ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -282,7 +282,7 @@ compareDatesTests =
             (\_ ->
                 case ( rawDate, previousDayRawDate ) of
                     ( Just date, Just previousDate ) ->
-                        Expect.equal (Calendar.compareDates date previousDate) GT
+                        Expect.equal (Calendar.compare date previousDate) GT
 
                     _ ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -291,7 +291,7 @@ compareDatesTests =
             (\_ ->
                 case ( rawDate, previousMonthRawDate ) of
                     ( Just date, Just previousDate ) ->
-                        Expect.equal (Calendar.compareDates date previousDate) GT
+                        Expect.equal (Calendar.compare date previousDate) GT
 
                     _ ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -300,7 +300,7 @@ compareDatesTests =
             (\_ ->
                 case ( rawDate, previousYearRawDate ) of
                     ( Just date, Just previousDate ) ->
-                        Expect.equal (Calendar.compareDates date previousDate) GT
+                        Expect.equal (Calendar.compare date previousDate) GT
 
                     _ ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -1063,7 +1063,7 @@ getDateRangeTest =
                             )
 
                         areDaysSorted =
-                            case Calendar.compareDates start end of
+                            case Calendar.compare start end of
                                 GT ->
                                     s == Just end && e == Just start
 

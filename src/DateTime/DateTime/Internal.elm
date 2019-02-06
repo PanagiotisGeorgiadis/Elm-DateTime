@@ -511,7 +511,7 @@ decrementMilliseconds (DateTime { date, time }) =
 -}
 compareDateTimes : DateTime -> DateTime -> Order
 compareDateTimes (DateTime lhs) (DateTime rhs) =
-    case Calendar.compareDates lhs.date rhs.date of
+    case Calendar.compare lhs.date rhs.date of
         EQ ->
             Clock.compareTime lhs.time rhs.time
 
@@ -523,7 +523,7 @@ compareDateTimes (DateTime lhs) (DateTime rhs) =
 -}
 compareDates : DateTime -> DateTime -> Order
 compareDates (DateTime lhs) (DateTime rhs) =
-    Calendar.compareDates lhs.date rhs.date
+    Calendar.compare lhs.date rhs.date
 
 
 {-| Returns the 'Order' of the 'Time' part of two DateTimes.
