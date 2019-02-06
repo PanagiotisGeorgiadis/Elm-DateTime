@@ -1,61 +1,42 @@
 module DateTime.DateTime.Internal exposing
     ( DateTime(..)
-    , fromPosix, fromRawParts, fromDateAndTime
-    , toPosix, toMillis
-    , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
-    , getDateRange, getDatesInMonth
-    , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
-    , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
-    , rollDayForward, rollDayBackwards
-    , compareDates, compareTime
-    , InternalDateTime, getDate, getTime
+    , InternalDateTime
+    , compareDates
+    , compareTime
+    , decrementDay
+    , decrementHours
+    , decrementMilliseconds
+    , decrementMinutes
+    , decrementMonth
+    , decrementSeconds
+    , decrementYear
+    , fromDateAndTime
+    , fromPosix
+    , fromRawParts
+    , getDate
+    , getDateRange
+    , getDatesInMonth
+    , getDay
+    , getHours
+    , getMilliseconds
+    , getMinutes
+    , getMonth
+    , getSeconds
+    , getTime
+    , getWeekday
+    , getYear
+    , incrementDay
+    , incrementHours
+    , incrementMilliseconds
+    , incrementMinutes
+    , incrementMonth
+    , incrementSeconds
+    , incrementYear
+    , rollDayBackwards
+    , rollDayForward
+    , toMillis
+    , toPosix
     )
-
-{-| A complete datetime type.
-
-@docs DateTime
-
-
-# Creating a `DateTime`
-
-@docs fromPosix, fromRawParts, fromDateAndTime
-
-
-# Conversions
-
-@docs toPosix, toMillis
-
-
-# Accessors
-
-@docs getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
-
-
-# Calendar Accessors
-
-@docs getDateRange, getDatesInMonth
-
-
-# Incrementers
-
-@docs incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
-
-
-# Decrementers
-
-@docs decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
-
-
-# Utilities
-
-@docs getDayDiff, rollDayForward, rollDayBackwards
-
-
-# Comparers
-
-@docs compareDates, compareTime
-
--}
 
 import Array
 import DateTime.Calendar as Calendar

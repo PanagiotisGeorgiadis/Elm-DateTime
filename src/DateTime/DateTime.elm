@@ -2,10 +2,10 @@ module DateTime.DateTime exposing
     ( DateTime
     , fromPosix, fromRawParts, fromDateAndTime
     , toPosix, toMillis
-    , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
-    , getDateRange, getDatesInMonth
-    , incrementYear, incrementMonth, incrementDay
-    , decrementYear, decrementMonth, decrementDay
+    , getDate, getYear, getMonth, getDay, getTime, getHours, getMinutes, getSeconds, getMilliseconds
+    , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
+    , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
+    , getWeekday, getDateRange, getDatesInMonth
     , compareDates, compareTime
     )
 
@@ -26,12 +26,7 @@ module DateTime.DateTime exposing
 
 # Accessors
 
-@docs getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
-
-
-# Calendar Accessors
-
-@docs getDateRange, getDatesInMonth
+@docs getDate, getYear, getMonth, getDay, getTime, getHours, getMinutes, getSeconds, getMilliseconds
 
 
 # Incrementers
@@ -46,7 +41,7 @@ module DateTime.DateTime exposing
 
 # Utilities
 
-@docs getDayDiff
+@docs getDayDiff, getWeekday, getDateRange, getDatesInMonth
 
 
 # Comparers
