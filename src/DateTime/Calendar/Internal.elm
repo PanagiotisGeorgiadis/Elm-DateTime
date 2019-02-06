@@ -96,8 +96,6 @@ type alias RawDate =
 > fromPosix (Time.millisToPosix 0)
 > Date { day = Day 1, month = Jan, year = Year 1970 } : Date
 
--- Can Be Exposed
-
 -}
 fromPosix : Time.Posix -> Date
 fromPosix posix =
@@ -119,8 +117,6 @@ Returns `Nothing` if any parts or their combination would form an invalid date.
 >
 > fromRawParts { day = 29, month = Feb, year = 2020 }
 > Just (Date { day = Day 29, month = Feb, year = Year 2020 }) : Maybe Date
-
--- Can be exposed.
 
 -}
 fromRawParts : RawDate -> Maybe Date
@@ -144,8 +140,6 @@ Returns `Nothing` if any parts or their combination would form an invalid date.
 > fromRawDay (Year 2020) Feb 29
 > Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
 
--- Internal, not to be exposed
-
 -}
 fromRawDay : Year -> Month -> Int -> Maybe Date
 fromRawDay year month day =
@@ -164,8 +158,6 @@ fromRawDay year month day =
 >
 > fromYearMonthDay (Year 2020) Feb (Day 29)
 > Just (Date { day = Day 29, month = Feb, year = Year 2020 }) : Maybe Date
-
--- Internal, not to be exposed
 
 -}
 fromYearMonthDay : Year -> Month -> Day -> Maybe Date
@@ -191,8 +183,6 @@ fromYearMonthDay y m d =
 >
 > yearFromInt -1
 > Nothing : Maybe Year
-
--- Internal use only
 
 -}
 yearFromInt : Int -> Maybe Year
@@ -220,8 +210,6 @@ yearFromInt year =
 >
 > dayFromInt (Year 2020) Feb 29
 > Just (Day 29) : Maybe Day
-
--- Internal, not to be exposed
 
 -}
 dayFromInt : Year -> Month -> Int -> Maybe Day
@@ -263,8 +251,6 @@ toMillis (Date { year, month, day }) =
 > yearToInt (getYear date)
 > 1970 : Int
 
--- Can be exposed
-
 -}
 yearToInt : Year -> Int
 yearToInt (Year year) =
@@ -278,8 +264,6 @@ yearToInt (Year year) =
 >
 > monthToInt Aug
 > 8 : Int
-
--- Can be exposed
 
 -}
 monthToInt : Month -> Int
@@ -328,8 +312,6 @@ monthToInt month =
 > dayToInt (getDay date)
 > 1 : Int
 
--- Can be exposed
-
 -}
 dayToInt : Day -> Int
 dayToInt (Day day) =
@@ -345,8 +327,6 @@ dayToInt (Day day) =
 > getYear (fromPosix (Time.millisToPosix 0))
 > Year 1970 : Year
 
--- Can be exposed
-
 -}
 getYear : Date -> Year
 getYear (Date { year }) =
@@ -358,8 +338,6 @@ getYear (Date { year }) =
 > getMonth (fromPosix (Time.millisToPosix 0))
 > Jan : Month
 
--- Can be exposed
-
 -}
 getMonth : Date -> Month
 getMonth (Date { month }) =
@@ -370,8 +348,6 @@ getMonth (Date { month }) =
 
 > getDay (fromPosix (Time.millisToPosix 0))
 > Day 1 : Day
-
--- Can be exposed
 
 -}
 getDay : Date -> Day
@@ -435,8 +411,6 @@ setDay date day =
 > incrementYear date3
 > Date { day = Day 28, month = Feb, year = Year 2020 }
 
--- Can be exposed
-
 --------------------- Note ---------------------
 --- Here we cannot rely on transforming the date
 --- to millis and adding a year because of the
@@ -482,8 +456,6 @@ incrementYear (Date date) =
 > incrementMonth (incrementMonth date)
 > Date { day = Day 28, month = Feb, year = 2019 } : Date
 
--- Can Be Exposed
-
 -}
 incrementMonth : Date -> Date
 incrementMonth (Date date) =
@@ -524,8 +496,6 @@ incrementMonth (Date date) =
 >
 > incrementMonth\_ Nov
 > Dec : Month
-
--- Internal, not to be exposed
 
 -}
 incrementMonth_ : Month -> Month
@@ -583,8 +553,6 @@ incrementMonth_ month =
 > incrementDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
 
--- Can be exposed
-
 --------------------- Note ---------------------
 --- Its safe to get the next day by using milliseconds
 --- here because we are responsible for transforming the
@@ -624,8 +592,6 @@ incrementDay date =
 > date3 = fromRawParts { day = 28, month = Feb, year 2019 }
 > decrementYear date3
 > Date { day = Day 28, month = Feb, year = Year 2018 }
-
--- Can be exposed
 
 --------------------- Note ---------------------
 --- Here we cannot rely on transforming the date
@@ -672,8 +638,6 @@ decrementYear (Date date) =
 > decrementMonth (decrementMonth date)
 > Date { day = Day 30, month = Nov, year = 2018 } : Date
 
--- Can Be Exposed
-
 -}
 decrementMonth : Date -> Date
 decrementMonth (Date date) =
@@ -714,8 +678,6 @@ decrementMonth (Date date) =
 >
 > decrementMonth\_ Dec
 > Nov : Month
-
--- Internal, not to be exposed
 
 -}
 decrementMonth_ : Month -> Month
@@ -773,8 +735,6 @@ decrementMonth_ month =
 > decrementDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
 
--- Can be exposed
-
 --------------------- Note ---------------------
 --- Its safe to get the previous day by using milliseconds
 --- here because we are responsible for transforming the
@@ -815,8 +775,6 @@ decrementDay date =
 > compare laterDate date
 > EQ : Order
 
--- Can be exposed
-
 -}
 compare : Date -> Date -> Order
 compare lhs rhs =
@@ -852,8 +810,6 @@ compare lhs rhs =
 > compareYears 2015 2015
 > EQ : Order
 
--- Internal, not to be exposed
-
 -}
 compareYears : Year -> Year -> Order
 compareYears lhs rhs =
@@ -872,8 +828,6 @@ compareYears lhs rhs =
 > compareMonths Aug Aug
 > EQ : Order
 
--- Internal, not to be exposed
-
 -}
 compareMonths : Month -> Month -> Order
 compareMonths lhs rhs =
@@ -891,8 +845,6 @@ compareMonths lhs rhs =
 >
 > compareDays (Day 15) (Day 15)
 > EQ : Order
-
--- Internal, not to be exposed
 
 -}
 compareDays : Day -> Day -> Order
@@ -930,8 +882,6 @@ compareDays lhs rhs =
 > , Date { day = Day 1, month = Mar, year = Year 2019 }
 > ]
 
--- Can be exposed
-
 -}
 getDateRange : Date -> Date -> List Date
 getDateRange startDate endDate =
@@ -955,9 +905,6 @@ getDateRange startDate endDate =
 
 
 {-| Internal helper function for getDateRange.
-
--- Internal, not to be exposed
-
 -}
 getDateRange_ : Int -> Date -> List Date -> List Date
 getDateRange_ daysCount prevDate res =
@@ -991,8 +938,6 @@ getDateRange_ daysCount prevDate res =
 > , Date { day = Day 30, month = Dec, year = Year 2018 }
 > , Date { day = Day 31, month = Dec, year = Year 2018 }
 > ]
-
--- Can be exposed
 
 -}
 getDatesInMonth : Date -> List Date
@@ -1037,8 +982,6 @@ getDayDiff startDate endDate =
 > getFollowingMonths Dec
 > []
 
--- Internal, not to be exposed
-
 -}
 getFollowingMonths : Month -> List Month
 getFollowingMonths month =
@@ -1054,8 +997,6 @@ getFollowingMonths month =
 >
 > getPrecedingMonths Jan
 > []
-
--- Internal, not to be exposed
 
 -}
 getPrecedingMonths : Month -> List Month
@@ -1074,8 +1015,6 @@ getPrecedingMonths month =
 > getWeekday date2
 > Tue : Time.Weekday
 
--- Can be exposed
-
 -}
 getWeekday : Date -> Time.Weekday
 getWeekday date =
@@ -1089,8 +1028,6 @@ getWeekday date =
 >
 > isLeapYear 2020
 > True
-
--- Can Be Exposed
 
 -}
 isLeapYear : Year -> Bool
@@ -1108,8 +1045,6 @@ isLeapYear (Year int) =
 >
 > lastDayOf (Year 2020) Feb
 > 29
-
--- Can be exposed
 
 -}
 lastDayOf : Year -> Month -> Day
@@ -1166,8 +1101,6 @@ lastDayOf year month =
 > millisSinceEpoch (Year 1971)
 > 31536000000
 
--- Internal, not to be exposed
-
 -}
 millisSinceEpoch : Year -> Int
 millisSinceEpoch (Year year) =
@@ -1201,8 +1134,6 @@ millisSinceEpoch (Year year) =
 > millisSinceStartOfTheYear (Year 2018) Time.Dec
 > 28857600000 : Int
 
--- Internal, not to be exposed
-
 -}
 millisSinceStartOfTheYear : Year -> Month -> Int
 millisSinceStartOfTheYear year month =
@@ -1224,8 +1155,6 @@ millisSinceStartOfTheYear year month =
 > millisSinceStartOfTheMonth (Day 15)
 > 1209600000 : Int
 
--- Internal, not to be exposed
-
 -}
 millisSinceStartOfTheMonth : Day -> Int
 millisSinceStartOfTheMonth day =
@@ -1235,9 +1164,6 @@ millisSinceStartOfTheMonth day =
 
 
 {-| Returns the milliseconds in a year.
-
--- Internal, not to be exposed
-
 -}
 millisInYear : Year -> Int
 millisInYear year =

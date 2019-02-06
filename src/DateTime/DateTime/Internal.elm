@@ -144,8 +144,6 @@ toMillis (DateTime { date, time }) =
 > getDate (fromPosix (Time.millisToPosix 0))
 > Date { day = Day 1, month = Jan, year = Year 1970 } : Calendar.Date
 
--- Can be exposed.
-
 -}
 getDate : DateTime -> Calendar.Date
 getDate (DateTime { date }) =
@@ -156,8 +154,6 @@ getDate (DateTime { date }) =
 
 > getTime (fromPosix (Time.millisToPosix 0))
 > { hour = Hour 0, millisecond = 0, minute = Minute 0, second = Second 0 } : Clock.Time
-
--- Can be exposed.
 
 -}
 getTime : DateTime -> Clock.Time

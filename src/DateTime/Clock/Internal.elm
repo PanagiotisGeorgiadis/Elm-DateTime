@@ -150,12 +150,12 @@ fromRawParts { hours, minutes, seconds, milliseconds } =
 
 > hoursFromInt 3
 > Just (Hour 3) : Maybe Hour
+>
 > hoursFromInt 45
 > Just (Hour 45) : Maybe Hour
+>
 > hoursFromInt 75
 > Nothing : Maybe Hour
-
--- Internal use only
 
 -}
 hoursFromInt : Int -> Maybe Hour
@@ -171,12 +171,12 @@ hoursFromInt hours =
 
 > minutesFromInt 3
 > Just (Minute 3) : Maybe Minute
+>
 > minutesFromInt 45
 > Just (Minute 45) : Maybe Minute
+>
 > minutesFromInt 75
 > Nothing : Maybe Minute
-
--- Internal use only
 
 -}
 minutesFromInt : Int -> Maybe Minute
@@ -192,12 +192,12 @@ minutesFromInt minutes =
 
 > secondsFromInt 3
 > Just (Second 3) : Maybe Second
+>
 > secondsFromInt 45
 > Just (Second 45) : Maybe Second
+>
 > secondsFromInt 75
 > Nothing : Maybe Second
-
--- Internal use only
 
 -}
 secondsFromInt : Int -> Maybe Second
@@ -217,8 +217,6 @@ secondsFromInt seconds =
 > Just (Millisecond 450) : Maybe Millisecond
 > millisecondsFromInt 1500
 > Nothing : Maybe Millisecond
-
--- Internal use only
 
 -}
 millisecondsFromInt : Int -> Maybe Millisecond
@@ -330,7 +328,7 @@ getMilliseconds (Time { milliseconds }) =
 -- Setters
 
 
-{-| Attempts to set the 'Hours' on an existing time.
+{-| Attempts to set the 'Hour' on an existing time.
 -}
 setHours : Time -> Int -> Maybe Time
 setHours time hours =
@@ -342,7 +340,7 @@ setHours time hours =
         }
 
 
-{-| Attempts to set the 'Minutes' on an existing time.
+{-| Attempts to set the 'Minute' on an existing time.
 -}
 setMinutes : Time -> Int -> Maybe Time
 setMinutes time minutes =
@@ -354,7 +352,7 @@ setMinutes time minutes =
         }
 
 
-{-| Attempts to set the 'Seconds' on an existing time.
+{-| Attempts to set the 'Second' on an existing time.
 -}
 setSeconds : Time -> Int -> Maybe Time
 setSeconds time seconds =
@@ -366,7 +364,7 @@ setSeconds time seconds =
         }
 
 
-{-| Attempts to set the 'Milliseconds' on an existing time.
+{-| Attempts to set the 'Millisecond' on an existing time.
 -}
 setMilliseconds : Time -> Int -> Maybe Time
 setMilliseconds time milliseconds =
@@ -654,11 +652,6 @@ compare lhs rhs =
 > Maybe.map2 compareHours (hoursFromInt 10) (hoursFromInt 6)
 > LT : Order
 
--- I think it could be internal use only because we don't want the consumer to
--- have any notion of 'Hour'.
-
--- Internal use only
-
 -}
 compareHours : Hour -> Hour -> Order
 compareHours (Hour lhs) (Hour rhs) =
@@ -669,11 +662,6 @@ compareHours (Hour lhs) (Hour rhs) =
 
 > Maybe.map2 compareMilliseconds (minutesFromInt 15) (minutesFromInt 15)
 > EQ : Order
-
--- I think it could be internal use only because we don't want the consumer to
--- have any notion of 'Hour'.
-
--- Internal use only
 
 -}
 compareMinutes : Minute -> Minute -> Order
@@ -686,11 +674,6 @@ compareMinutes (Minute lhs) (Minute rhs) =
 > Maybe.map2 compareSeconds (secondsFromInt 30) (secondsFromInt 45)
 > LT : Order
 
--- I think it could be internal use only because we don't want the consumer to
--- have any notion of 'Hour'.
-
--- Internal use only
-
 -}
 compareSeconds : Second -> Second -> Order
 compareSeconds (Second lhs) (Second rhs) =
@@ -701,11 +684,6 @@ compareSeconds (Second lhs) (Second rhs) =
 
 > Maybe.map2 compareMilliseconds (millisecondsFromInt 200) (millisecondsFromInt 200)
 > EQ : Order
-
--- I think it could be internal use only because we don't want the consumer to
--- have any notion of 'Hour'.
-
--- Internal use only
 
 -}
 compareMilliseconds : Millisecond -> Millisecond -> Order
