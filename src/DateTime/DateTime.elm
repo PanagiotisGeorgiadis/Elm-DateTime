@@ -6,7 +6,7 @@ module DateTime.DateTime exposing
     , setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
-    , compareDates, compareTime
+    , compareDates, compareTime, compareDateTimes
     , getWeekday, getDateRange, getDatesInMonth
     )
 
@@ -47,7 +47,7 @@ module DateTime.DateTime exposing
 
 # Comparers
 
-@docs compareDates, compareTime
+@docs compareDates, compareTime, compareDateTimes
 
 
 # Utilities
@@ -417,14 +417,25 @@ decrementMilliseconds =
 -- Comparers
 
 
+{-| Compares two DateTimes and returns their 'Order'.
+-}
+compareDateTimes : DateTime -> DateTime -> Order
+compareDateTimes =
+    Internal.compareDateTimes
+
+
+{-| Returns the 'Order' of the 'Date' part of two DateTimes.
+-}
 compareDates : DateTime -> DateTime -> Order
-compareDates lhs rhs =
-    Internal.compareDates lhs rhs
+compareDates =
+    Internal.compareDates
 
 
+{-| Returns the 'Order' of the 'Time' part of two DateTimes.
+-}
 compareTime : DateTime -> DateTime -> Order
-compareTime lhs rhs =
-    Internal.compareTime lhs rhs
+compareTime =
+    Internal.compareTime
 
 
 

@@ -1,6 +1,7 @@
 module DateTime.DateTime.Internal exposing
     ( DateTime(..)
     , InternalDateTime
+    , compareDateTimes
     , compareDates
     , compareTime
     , decrementDay
@@ -506,14 +507,26 @@ decrementMilliseconds (DateTime { date, time }) =
 -- Comparers
 
 
-{-| Returns the 'Order' of the 'Date' part of a DateTime.
+{-| Compares two DateTimes and returns their 'Order'.
+-}
+compareDateTimes : DateTime -> DateTime -> Order
+compareDateTimes (DateTime lhs) (DateTime rhs) =
+    case Calendar.compareDates lhs.date rhs.date of
+        EQ ->
+            Clock.compareTime lhs.time rhs.time
+
+        ord ->
+            ord
+
+
+{-| Returns the 'Order' of the 'Date' part of two DateTimes.
 -}
 compareDates : DateTime -> DateTime -> Order
 compareDates (DateTime lhs) (DateTime rhs) =
     Calendar.compareDates lhs.date rhs.date
 
 
-{-| Returns the 'Order' of the 'Time' part of a DateTime.
+{-| Returns the 'Order' of the 'Time' part of two DateTimes.
 -}
 compareTime : DateTime -> DateTime -> Order
 compareTime (DateTime lhs) (DateTime rhs) =
