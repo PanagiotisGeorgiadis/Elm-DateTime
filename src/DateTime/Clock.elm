@@ -75,6 +75,10 @@ type alias RawTime =
     Internal.RawTime
 
 
+
+-- Constructors
+
+
 {-| Construct a clock `Time` from raw hour, minute, second, millisecond integers.
 
 > fromRawParts { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
@@ -89,6 +93,10 @@ fromRawParts =
     Internal.fromRawParts
 
 
+
+-- Converters
+
+
 {-| Convert a `Time` to milliseconds.
 
 > Maybe.map toMillis (fromRawParts { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 })
@@ -98,6 +106,10 @@ fromRawParts =
 toMillis : Time -> Int
 toMillis =
     Internal.toMillis
+
+
+
+-- Accessors
 
 
 {-| Returns the `Hour` portion of a 'Time' as an `Int`.
@@ -142,6 +154,42 @@ getSeconds =
 getMilliseconds : Time -> Int
 getMilliseconds =
     Internal.millisecondsToInt << Internal.getMilliseconds
+
+
+
+-- Setters
+
+
+{-| Attempts to set the 'Hours' on an existing time.
+-}
+setHours : Time -> Int -> Maybe Time
+setHours =
+    Internal.setHours
+
+
+{-| Attempts to set the 'Minutes' on an existing time.
+-}
+setMinutes : Time -> Int -> Maybe Time
+setMinutes =
+    Internal.setHours
+
+
+{-| Attempts to set the 'Seconds' on an existing time.
+-}
+setSeconds : Time -> Int -> Maybe Time
+setSeconds =
+    Internal.setSeconds
+
+
+{-| Attempts to set the 'Milliseconds' on an existing time.
+-}
+setMilliseconds : Time -> Int -> Maybe Time
+setMilliseconds =
+    Internal.setMilliseconds
+
+
+
+-- Incrementers
 
 
 {-| Increments an 'Hour' inside a 'Time'.
@@ -214,6 +262,10 @@ incrementMilliseconds =
     Internal.incrementMilliseconds
 
 
+
+-- Decrementers
+
+
 {-| Decrements an 'Hour' inside a 'Time'.
 
 > time = fromRawParts { hours = 12, minutes = 15, seconds = 0, milliseconds = 0 }
@@ -284,6 +336,10 @@ decrementMilliseconds =
     Internal.decrementMilliseconds
 
 
+
+-- Comparers
+
+
 {-| Compare two `Time` values.
 
 > time = fromRawParts { hours = 12, minutes = 15, seconds = 0, milliseconds = 0 }
@@ -297,36 +353,12 @@ compareTime =
     Internal.compareTime
 
 
+
+-- Constants
+
+
 {-| Returns midnight time. To be used with caution.
 -}
 midnight : Time
 midnight =
     Internal.midnight
-
-
-{-| Attempts to set the 'Hours' on an existing time.
--}
-setHours : Time -> Int -> Maybe Time
-setHours =
-    Internal.setHours
-
-
-{-| Attempts to set the 'Minutes' on an existing time.
--}
-setMinutes : Time -> Int -> Maybe Time
-setMinutes =
-    Internal.setHours
-
-
-{-| Attempts to set the 'Seconds' on an existing time.
--}
-setSeconds : Time -> Int -> Maybe Time
-setSeconds =
-    Internal.setSeconds
-
-
-{-| Attempts to set the 'Milliseconds' on an existing time.
--}
-setMilliseconds : Time -> Int -> Maybe Time
-setMilliseconds =
-    Internal.setMilliseconds
