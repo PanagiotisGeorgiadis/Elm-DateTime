@@ -1,14 +1,14 @@
 module DateTime.DateTime.Internal exposing
     ( DateTime(..)
     , fromPosix, fromRawParts, fromDateAndTime
-    , toPosix
+    , toPosix, toMillis
     , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
     , getDateRange, getDatesInMonth
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , rollDayForward, rollDayBackwards
     , compareDates, compareTime
-    , InternalDateTime, getDate, getTime, toMillis
+    , InternalDateTime, getDate, getTime
     )
 
 {-| A complete datetime type.
@@ -23,7 +23,7 @@ module DateTime.DateTime.Internal exposing
 
 # Conversions
 
-@docs toPosix
+@docs toPosix, toMillis
 
 
 # Accessors
@@ -91,7 +91,32 @@ fromPosix timePosix =
         }
 
 
-{-| Get back a posix time.
+{-| Attempts to construct a new DateTime object from its raw constituent parts.
+-}
+fromRawParts : Calendar.RawDate -> Clock.RawTime -> Maybe DateTime
+fromRawParts rawDate rawTime =
+    Maybe.andThen
+        (\date ->
+            Maybe.andThen
+                (\t ->
+                    Just (DateTime { date = date, time = t })
+                )
+                (Clock.fromRawParts rawTime)
+        )
+        (Calendar.fromRawYearMonthDay rawDate)
+
+
+{-| Create a `DateTime` from a 'Calendar.Date' and 'Clock.Time'.
+-}
+fromDateAndTime : Calendar.Date -> Clock.Time -> DateTime
+fromDateAndTime date time =
+    DateTime
+        { date = date
+        , time = time
+        }
+
+
+{-| Converts a 'DateTime' to a posix time.
 
 > toPosix (fromPosix (Time.millisToPosix 0))
 > Posix 0 : Time.Posix
@@ -281,21 +306,6 @@ getDateRange (DateTime start) (DateTime end) =
         (Calendar.getDateRange start.date end.date)
 
 
-{-| Attempts to construct a new DateTime object from its raw constituent parts.
--}
-fromRawParts : Calendar.RawDate -> Clock.RawTime -> Maybe DateTime
-fromRawParts rawDate rawTime =
-    Maybe.andThen
-        (\date ->
-            Maybe.andThen
-                (\t ->
-                    Just (DateTime { date = date, time = t })
-                )
-                (Clock.fromRawParts rawTime)
-        )
-        (Calendar.fromRawYearMonthDay rawDate)
-
-
 {-| Returns a new 'DateTime' with an updated year value.
 -}
 incrementYear : DateTime -> DateTime
@@ -400,16 +410,6 @@ incrementDay : DateTime -> DateTime
 incrementDay (DateTime { date, time }) =
     DateTime
         { date = Calendar.incrementDay date
-        , time = time
-        }
-
-
-{-| Create a `DateTime` from a 'Date' and 'Time'.
--}
-fromDateAndTime : Calendar.Date -> Clock.Time -> DateTime
-fromDateAndTime date time =
-    DateTime
-        { date = date
         , time = time
         }
 

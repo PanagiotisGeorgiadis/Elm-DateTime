@@ -1,7 +1,7 @@
 module DateTime.DateTime exposing
     ( DateTime
     , fromPosix, fromRawParts, fromDateAndTime
-    , toPosix
+    , toPosix, toMillis
     , getYear, getMonth, getDay, getWeekday, getHours, getMinutes, getSeconds, getMilliseconds
     , getDateRange, getDatesInMonth
     , incrementYear, incrementMonth, incrementDay
@@ -21,7 +21,7 @@ module DateTime.DateTime exposing
 
 # Conversions
 
-@docs toPosix
+@docs toPosix, toMillis
 
 
 # Accessors
@@ -78,7 +78,21 @@ fromPosix =
     Internal.fromPosix
 
 
-{-| Get back a posix time.
+{-| Attempts to construct a new DateTime object from its raw constituent parts.
+-}
+fromRawParts : Calendar.RawDate -> Clock.RawTime -> Maybe DateTime
+fromRawParts rawDate rawTime =
+    Internal.fromRawParts rawDate rawTime
+
+
+{-| Create a `DateTime` from a 'Date' and 'Time'.
+-}
+fromDateAndTime : Calendar.Date -> Clock.Time -> DateTime
+fromDateAndTime =
+    Internal.fromDateAndTime
+
+
+{-| Converts a 'DateTime' to a posix time.
 
 > toPosix (fromPosix (Time.millisToPosix 0))
 > Posix 0 : Time.Posix
@@ -231,13 +245,6 @@ getDateRange start end =
     Internal.getDateRange start end
 
 
-{-| Attempts to construct a new DateTime object from its raw constituent parts.
--}
-fromRawParts : Calendar.RawDate -> Clock.RawTime -> Maybe DateTime
-fromRawParts rawDate rawTime =
-    Internal.fromRawParts rawDate rawTime
-
-
 {-| Returns a new 'DateTime' with an updated year value.
 -}
 incrementYear : DateTime -> DateTime
@@ -344,13 +351,6 @@ getDate =
 getTime : DateTime -> Clock.Time
 getTime =
     Internal.getTime
-
-
-{-| Create a `DateTime` from a 'Date' and 'Time'.
--}
-fromDateAndTime : Calendar.Date -> Clock.Time -> DateTime
-fromDateAndTime =
-    Internal.fromDateAndTime
 
 
 {-| Increments the 'Hours' in a given 'Date'. Will also increment 'Day', 'Month', 'Year' where applicable.
