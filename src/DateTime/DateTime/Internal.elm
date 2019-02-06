@@ -96,7 +96,7 @@ fromRawParts rawDate rawTime =
                 )
                 (Clock.fromRawParts rawTime)
         )
-        (Calendar.fromRawYearMonthDay rawDate)
+        (Calendar.fromRawParts rawDate)
 
 
 {-| Create a `DateTime` from a 'Calendar.Date' and 'Clock.Time'.
@@ -322,15 +322,15 @@ incrementMonth (DateTime { date, time }) =
 {-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
 --- if applicable.
 
-> date = fromRawParts { rawDay = 31, rawMonth = 12, rawYear = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> date = fromRawParts { day = 31, month = Dec, year = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
 > incrementDay date
 > DateTime { date = { day = Day 1, month = Jan, year = Year 2019 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
-> date2 = fromRawParts { rawDay = 29, rawMonth = 2, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> date2 = fromRawParts { day = 29, month = Feb, year = 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
 > incrementDay date2
 > DateTime { date = { day = Day 1, month = Mar, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
-> date3 = fromRawParts { rawDay = 24, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> date3 = fromRawParts { day = 24, month = Dec, year = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
 > incrementDay date3
 > DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 
@@ -426,15 +426,15 @@ decrementMonth (DateTime { date, time }) =
 {-| Decrements the 'Day' in a given 'Date'. Will also decrement 'Month' && 'Year'
 --- if applicable.
 
-> date = fromRawParts { rawDay = 1, rawMonth = 1, rawYear = 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> date = fromRawParts { day = 1, month = Jan, year = 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
 > decrementDay date
 > DateTime { date = { day = Day 31, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
-> date2 = fromRawParts { rawDay = 1, rawMonth = 3, rawYear 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> date2 = fromRawParts { day = 1, month = Mar, year = 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
 > decrementDay date2
 > DateTime { date = { day = Day 29, month = Feb, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 >
-> date3 = fromRawParts { rawDay = 26, rawMonth = 12, rawYear 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> date3 = fromRawParts { day = 26, month = Dec, year = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
 > decrementDay date3
 > DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
 
@@ -564,8 +564,8 @@ getDatesInMonth (DateTime { date }) =
 --- In the case of startDate > endDate the resulting list would still be
 --- a valid sorted date range list.
 
-> startDate = fromRawYearMonthDay { rawDay = 25, rawMonth = 2, rawYear = 2020 }
-> endDate = fromRawYearMonthDay { rawDay = 1, rawMonth = 3, rawYear = 2020 }
+> startDate = fromRawParts { day = 25, month = Feb, year = 2020 }
+> endDate = fromRawParts { day = 1, month = Mar, year = 2020 }
 > getDateRange startDate endDate
 > [ Date { day = Day 25, month = Feb, year = Year 2020 }
 > , Date { day = Day 26, month = Feb, year = Year 2020 }
@@ -575,8 +575,8 @@ getDatesInMonth (DateTime { date }) =
 > , Date { day = Day 1, month = Mar, year = Year 2020 }
 > ]
 >
-> startDate2 = fromRawYearMonthDay { rawDay = 25, rawMonth = 2, rawYear = 2019 }
-> endDate2 = fromRawYearMonthDay { rawDay = 1, rawMonth = 3, rawYear = 2019 }
+> startDate2 = fromRawParts { day = 25, month = Feb, year = 2019 }
+> endDate2 = fromRawParts { day = 1, month = Mar, year = 2019 }
 > getDateRange startDate2 endDate2
 > [ Date { day = Day 25, month = Feb, year = Year 2019 }
 > , Date { day = Day 26, month = Feb, year = Year 2019 }

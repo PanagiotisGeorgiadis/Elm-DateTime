@@ -17,7 +17,7 @@ module DateTime.Calendar.Internal exposing
     , decrementYear
     , fromPosix
     , fromRawDay
-    , fromRawYearMonthDay
+    , fromRawParts
     , fromYearMonthDay
     , getDateRange
     , getDateRange_
@@ -40,7 +40,6 @@ module DateTime.Calendar.Internal exposing
     , millisSinceEpoch
     , millisSinceStartOfTheMonth
     , millisSinceStartOfTheYear
-    , monthFromInt
     , monthToInt
     , months
     , setDay
@@ -83,7 +82,7 @@ type Day
 
 type alias RawDate =
     { year : Int
-    , month : Int
+    , month : Time.Month
     , day : Int
     }
 
@@ -112,28 +111,24 @@ fromPosix posix =
 {-| Construct a `Date` from its (raw) constituent parts.
 Returns `Nothing` if any parts or their combination would form an invalid date.
 
-> fromRawYearMonthDay { day = 11, month = 12, year = 2018 }
+> fromRawParts { day = 11, month = Dec, year = 2018 }
 > Just (Date { day = Day 11, month = Dec, year = Year 2018 }) : Maybe Date
 >
-> fromRawYearMonthDay { day = 29, month = 2, year = 2019 }
+> fromRawParts { day = 29, month = Feb, year = 2019 }
 > Nothing : Maybe Date
 >
-> fromRawYearMonthDay { day = 29, month = 2, year = 2020 }
-> Just (Date { day = Day 11, month = Feb, year = Year 2020 }) : Maybe Date
+> fromRawParts { day = 29, month = Feb, year = 2020 }
+> Just (Date { day = Day 29, month = Feb, year = Year 2020 }) : Maybe Date
 
 -- Can be exposed.
 
 -}
-fromRawYearMonthDay : RawDate -> Maybe Date
-fromRawYearMonthDay { year, month, day } =
+fromRawParts : RawDate -> Maybe Date
+fromRawParts { year, month, day } =
     yearFromInt year
         |> Maybe.andThen
             (\y ->
-                monthFromInt month
-                    |> Maybe.andThen
-                        (\m ->
-                            fromRawDay y m day
-                        )
+                fromRawDay y month day
             )
 
 
@@ -207,27 +202,6 @@ yearFromInt year =
 
     else
         Nothing
-
-
-{-| Attempt to construct a 'Month' from an Int value.
---- Currently the validity of the month is based on
---- the integer having a value between one and twelve. ( 1 ≥ month ≥ 12 )
-
-> monthFromInt 1
-> Just Jan : Maybe Month
->
-> monthFromInt 12
-> Just Dec : Maybe Month
->
-> monthFromInt -1
-> Nothing : Maybe Month
-
--- Internal, not to be exposed
-
--}
-monthFromInt : Int -> Maybe Month
-monthFromInt int =
-    Array.get (int - 1) months
 
 
 {-| Attempt to construct a 'Day' from an Int value.
@@ -413,9 +387,9 @@ getDay (Date date) =
 -}
 setYear : Date -> Int -> Maybe Date
 setYear date year =
-    fromRawYearMonthDay
+    fromRawParts
         { year = year
-        , month = monthToInt (getMonth date)
+        , month = getMonth date
         , day = dayToInt (getDay date)
         }
 
@@ -424,9 +398,9 @@ setYear date year =
 -}
 setMonth : Date -> Month -> Maybe Date
 setMonth date month =
-    fromRawYearMonthDay
+    fromRawParts
         { year = yearToInt (getYear date)
-        , month = monthToInt month
+        , month = month
         , day = dayToInt (getDay date)
         }
 
@@ -435,9 +409,9 @@ setMonth date month =
 -}
 setDay : Date -> Int -> Maybe Date
 setDay date day =
-    fromRawYearMonthDay
+    fromRawParts
         { year = yearToInt (getYear date)
-        , month = monthToInt (getMonth date)
+        , month = getMonth date
         , day = day
         }
 
@@ -449,15 +423,15 @@ setDay date day =
 {-| Increments the 'Year' in a given 'Date' while preserving the month and
 --- day where applicable.
 
-> date = fromRawYearMonthDay { day = 31, month = 1 year = 2019 }
+> date = fromRawParts { day = 31, month = Jan, year = 2019 }
 > incrementYear date
 > Date { day = Day 31, month = Jan, year = Year 2020 }
 >
-> date2 = fromRawYearMonthDay { day = 29, month = 2, year 2020 }
+> date2 = fromRawParts { day = 29, month = Feb, year 2020 }
 > incrementYear date2
 > Date { day = Day 28, month = Feb, year = Year 2021 }
 >
-> date3 = fromRawYearMonthDay { day = 28, month = 2, year 2019 }
+> date3 = fromRawParts { day = 28, month = Feb, year 2019 }
 > incrementYear date3
 > Date { day = Day 28, month = Feb, year = Year 2020 }
 
@@ -500,13 +474,13 @@ incrementYear (Date date) =
 --- If the day of the given date is out of bounds for the next month
 --- then we return the maxDay for that month.
 
-> date = fromRawYearMonthDay { day = 31, month = 12 year = 2018 }
+> date = fromRawParts { day = 31, month = Dec, year = 2018 }
 >
 > incrementMonth date
-> Date { day = Day 31, month = 1, year = 2019 } : Date
+> Date { day = Day 31, month = Jan, year = 2019 } : Date
 >
 > incrementMonth (incrementMonth date)
-> Date { day = Day 28, month = 28, year = 2019 } : Date
+> Date { day = Day 28, month = Feb, year = 2019 } : Date
 
 -- Can Be Exposed
 
@@ -597,15 +571,15 @@ incrementMonth_ month =
 {-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
 --- if applicable.
 
-> date = fromRawYearMonthDay { day = 31, month = 12, year = 2018 }
+> date = fromRawParts { day = 31, month = Dec, year = 2018 }
 > incrementDay date
 > Date { day = Day 1, month = Jan, year = Year 2019 }
 >
-> date2 = fromRawYearMonthDay { day = 29, month = 2, year 2020 }
+> date2 = fromRawParts { day = 29, month = Feb, year 2020 }
 > incrementDay date2
 > Date { day = Day 1, month = Mar, year = Year 2020 }
 >
-> date3 = fromRawYearMonthDay { day = 24, month = 12, year 2018 }
+> date3 = fromRawParts { day = 24, month = Dec, year 2018 }
 > incrementDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
 
@@ -639,15 +613,15 @@ incrementDay date =
 {-| Decrements the 'Year' in a given 'Date' while preserving the month and
 --- day where applicable.
 
-> date = fromRawYearMonthDay { day = 31, month = 1 year = 2019 }
+> date = fromRawParts { day = 31, month = Jan, year = 2019 }
 > decrementYear date
 > Date { day = Day 31, month = Jan, year = Year 2018 }
 >
-> date2 = fromRawYearMonthDay { day = 29, month = 2, year 2020 }
+> date2 = fromRawParts { day = 29, month = Feb, year 2020 }
 > decrementYear date2
 > Date { day = Day 28, month = Feb, year = Year 2019 }
 >
-> date3 = fromRawYearMonthDay { day = 28, month = 2, year 2019 }
+> date3 = fromRawParts { day = 28, month = Feb, year 2019 }
 > decrementYear date3
 > Date { day = Day 28, month = Feb, year = Year 2018 }
 
@@ -690,13 +664,13 @@ decrementYear (Date date) =
 --- If the day of the given date is out of bounds for the previous month then
 --- we return the maxDay for that month.
 
-> date = fromRawYearMonthDay { day = 31, month = 1 year = 2019 }
+> date = fromRawParts { day = 31, month = Jan, year = 2019 }
 >
 > decrementMonth date
-> Date { day = Day 31, month = 12, year = 2018 } : Date
+> Date { day = Day 31, month = Dec, year = 2018 } : Date
 >
 > decrementMonth (decrementMonth date)
-> Date { day = Day 30, month = 11, year = 2018 } : Date
+> Date { day = Day 30, month = Nov, year = 2018 } : Date
 
 -- Can Be Exposed
 
@@ -787,15 +761,15 @@ decrementMonth_ month =
 {-| Decrements the 'Day' in a given 'Date'. Will also decrement 'Month' && 'Year'
 --- if applicable.
 
-> date = fromRawYearMonthDay { day = 1, month = 1, year = 2019 }
+> date = fromRawParts { day = 1, month = Jan, year = 2019 }
 > decrementDay date
 > Date { day = Day 31, month = Dec, year = Year 2018 }
 >
-> date2 = fromRawYearMonthDay { day = 1, month = 3, year 2020 }
+> date2 = fromRawParts { day = 1, month = Mar, year 2020 }
 > decrementDay date2
 > Date { day = Day 29, month = Feb, year = Year 2020 }
 >
-> date3 = fromRawYearMonthDay { day = 26, month = 12, year 2018 }
+> date3 = fromRawParts { day = 26, month = Dec, year 2018 }
 > decrementDay date3
 > Date { day = Day 25, month = Dec, year = Year 2018 }
 
@@ -935,8 +909,8 @@ compareDays lhs rhs =
 --- In the case of startDate > endDate the resulting list would still be
 --- a valid sorted date range list.
 
-> startDate = fromRawYearMonthDay { day = 25, month = 2, year = 2020 }
-> endDate = fromRawYearMonthDay { day = 1, month = 3, year = 2020 }
+> startDate = fromRawParts { day = 25, month = Feb, year = 2020 }
+> endDate = fromRawParts { day = 1, month = Mar, year = 2020 }
 > getDateRange startDate endDate
 > [ Date { day = Day 25, month = Feb, year = Year 2020 }
 > , Date { day = Day 26, month = Feb, year = Year 2020 }
@@ -946,8 +920,8 @@ compareDays lhs rhs =
 > , Date { day = Day 1, month = Mar, year = Year 2020 }
 > ]
 >
-> startDate2 = fromRawYearMonthDay { day = 25, month = 2, year = 2019 }
-> endDate2 = fromRawYearMonthDay { day = 1, month = 3, year = 2019 }
+> startDate2 = fromRawParts { day = 25, month = Feb, year = 2019 }
+> endDate2 = fromRawParts { day = 1, month = Mar, year = 2019 }
 > getDateRange startDate2 endDate2
 > [ Date { day = Day 25, month = Feb, year = Year 2019 }
 > , Date { day = Day 26, month = Feb, year = Year 2019 }
@@ -1092,11 +1066,11 @@ getPrecedingMonths month =
 
 {-| Returns the weekday of a specific 'Date'
 
-> date = fromRawYearMonthDay { day = 29, month = 2, year = 2020 }
+> date = fromRawParts { day = 29, month = Feb, year = 2020 }
 > getWeekday date
 > Sat : Time.Weekday
 >
-> date2 = fromRawYearMonthDay { day = 25, month = 11, year = 2018 }
+> date2 = fromRawParts { day = 25, month = Nov, year = 2018 }
 > getWeekday date2
 > Tue : Time.Weekday
 
