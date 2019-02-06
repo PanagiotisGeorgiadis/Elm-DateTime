@@ -1260,6 +1260,20 @@ millisSinceStartOfTheMonth day =
     millisInADay * (dayToInt day - 1)
 
 
+{-| Returns the milliseconds in a year.
+
+-- Internal, not to be exposed
+
+-}
+millisInYear : Year -> Int
+millisInYear year =
+    if isLeapYear year then
+        millisInADay * 366
+
+    else
+        millisInADay * 365
+
+
 
 -- Constants
 
@@ -1282,20 +1296,6 @@ months =
         , Time.Nov
         , Time.Dec
         ]
-
-
-{-| Returns the milliseconds in a year.
-
--- Internal, not to be exposed
-
--}
-millisInYear : Year -> Int
-millisInYear year =
-    if isLeapYear year then
-        millisInADay * 366
-
-    else
-        millisInADay * 365
 
 
 {-| Returns the milliseconds in a day.
