@@ -381,8 +381,8 @@ getDay (Date date) =
 
 {-| Attempts to set the 'Year' on an existing date
 -}
-setYear : Date -> Int -> Maybe Date
-setYear date year =
+setYear : Int -> Date -> Maybe Date
+setYear year date =
     fromRawParts
         { year = year
         , month = getMonth date
@@ -392,8 +392,8 @@ setYear date year =
 
 {-| Attempts to set the 'Month' on an existing date
 -}
-setMonth : Date -> Month -> Maybe Date
-setMonth date month =
+setMonth : Month -> Date -> Maybe Date
+setMonth month date =
     fromRawParts
         { year = yearToInt (getYear date)
         , month = month
@@ -403,8 +403,8 @@ setMonth date month =
 
 {-| Attempts to set the 'Day' on an existing date
 -}
-setDay : Date -> Int -> Maybe Date
-setDay date day =
+setDay : Int -> Date -> Maybe Date
+setDay day date =
     fromRawParts
         { year = yearToInt (getYear date)
         , month = getMonth date

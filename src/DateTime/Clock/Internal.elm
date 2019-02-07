@@ -331,8 +331,8 @@ getMilliseconds (Time { milliseconds }) =
 
 {-| Attempts to set the 'Hour' on an existing time.
 -}
-setHours : Time -> Int -> Maybe Time
-setHours time hours =
+setHours : Int -> Time -> Maybe Time
+setHours hours time =
     fromRawParts
         { hours = hours
         , minutes = minutesToInt (getMinutes time)
@@ -343,8 +343,8 @@ setHours time hours =
 
 {-| Attempts to set the 'Minute' on an existing time.
 -}
-setMinutes : Time -> Int -> Maybe Time
-setMinutes time minutes =
+setMinutes : Int -> Time -> Maybe Time
+setMinutes minutes time =
     fromRawParts
         { hours = hoursToInt (getHours time)
         , minutes = minutes
@@ -355,8 +355,8 @@ setMinutes time minutes =
 
 {-| Attempts to set the 'Second' on an existing time.
 -}
-setSeconds : Time -> Int -> Maybe Time
-setSeconds time seconds =
+setSeconds : Int -> Time -> Maybe Time
+setSeconds seconds time =
     fromRawParts
         { hours = hoursToInt (getHours time)
         , minutes = minutesToInt (getMinutes time)
@@ -367,8 +367,8 @@ setSeconds time seconds =
 
 {-| Attempts to set the 'Millisecond' on an existing time.
 -}
-setMilliseconds : Time -> Int -> Maybe Time
-setMilliseconds time milliseconds =
+setMilliseconds : Int -> Time -> Maybe Time
+setMilliseconds milliseconds time =
     fromRawParts
         { hours = hoursToInt (getHours time)
         , minutes = minutesToInt (getMinutes time)

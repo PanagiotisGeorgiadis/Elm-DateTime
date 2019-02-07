@@ -170,21 +170,21 @@ getDay =
 
 {-| Attempts to set the 'Year' on an existing date
 -}
-setYear : Date -> Int -> Maybe Date
+setYear : Int -> Date -> Maybe Date
 setYear =
     Internal.setYear
 
 
 {-| Attempts to set the 'Month' on an existing date
 -}
-setMonth : Date -> Month -> Maybe Date
+setMonth : Month -> Date -> Maybe Date
 setMonth =
     Internal.setMonth
 
 
 {-| Attempts to set the 'Day' on an existing date
 -}
-setDay : Date -> Int -> Maybe Date
+setDay : Int -> Date -> Maybe Date
 setDay =
     Internal.setDay
 

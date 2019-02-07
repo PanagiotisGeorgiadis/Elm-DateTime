@@ -244,51 +244,51 @@ getMilliseconds =
 
 {-| Attempts to set the 'Year' part of a Calendar.Date in a DateTime.
 -}
-setYear : DateTime -> Int -> Maybe DateTime
-setYear dateTime =
-    Maybe.map (updateDate dateTime) << Calendar.setYear (getDate dateTime)
+setYear : Int -> DateTime -> Maybe DateTime
+setYear year dateTime =
+    Maybe.map (updateDate dateTime) <| Calendar.setYear year (getDate dateTime)
 
 
 {-| Attempts to set the 'Month' part of a Calendar.Date in a DateTime.
 -}
-setMonth : DateTime -> Time.Month -> Maybe DateTime
-setMonth dateTime =
-    Maybe.map (updateDate dateTime) << Calendar.setMonth (getDate dateTime)
+setMonth : Time.Month -> DateTime -> Maybe DateTime
+setMonth month dateTime =
+    Maybe.map (updateDate dateTime) <| Calendar.setMonth month (getDate dateTime)
 
 
 {-| Attempts to set the 'Day' part of a Calendar.Date in a DateTime.
 -}
-setDay : DateTime -> Int -> Maybe DateTime
-setDay dateTime =
-    Maybe.map (updateDate dateTime) << Calendar.setDay (getDate dateTime)
+setDay : Int -> DateTime -> Maybe DateTime
+setDay day dateTime =
+    Maybe.map (updateDate dateTime) <| Calendar.setDay day (getDate dateTime)
 
 
 {-| Attempts to set the 'Hours' part of a Clock.Time in a DateTime.
 -}
-setHours : DateTime -> Int -> Maybe DateTime
-setHours dateTime =
-    Maybe.map (updateTime dateTime) << Clock.setHours (getTime dateTime)
+setHours : Int -> DateTime -> Maybe DateTime
+setHours hours dateTime =
+    Maybe.map (updateTime dateTime) <| Clock.setHours hours (getTime dateTime)
 
 
 {-| Attempts to set the 'Minutes' part of a Clock.Time in a DateTime.
 -}
-setMinutes : DateTime -> Int -> Maybe DateTime
-setMinutes dateTime =
-    Maybe.map (updateTime dateTime) << Clock.setMinutes (getTime dateTime)
+setMinutes : Int -> DateTime -> Maybe DateTime
+setMinutes minutes dateTime =
+    Maybe.map (updateTime dateTime) <| Clock.setMinutes minutes (getTime dateTime)
 
 
 {-| Attempts to set the 'Seconds' part of a Clock.Time in a DateTime.
 -}
-setSeconds : DateTime -> Int -> Maybe DateTime
-setSeconds dateTime =
-    Maybe.map (updateTime dateTime) << Clock.setSeconds (getTime dateTime)
+setSeconds : Int -> DateTime -> Maybe DateTime
+setSeconds seconds dateTime =
+    Maybe.map (updateTime dateTime) <| Clock.setSeconds seconds (getTime dateTime)
 
 
 {-| Attempts to set the 'Milliseconds' part of a Clock.Time in a DateTime.
 -}
-setMilliseconds : DateTime -> Int -> Maybe DateTime
-setMilliseconds dateTime =
-    Maybe.map (updateTime dateTime) << Clock.setMilliseconds (getTime dateTime)
+setMilliseconds : Int -> DateTime -> Maybe DateTime
+setMilliseconds milliseconds dateTime =
+    Maybe.map (updateTime dateTime) <| Clock.setMilliseconds milliseconds (getTime dateTime)
 
 
 

@@ -168,28 +168,28 @@ getMilliseconds =
 
 {-| Attempts to set the 'Hour' on an existing time.
 -}
-setHours : Time -> Int -> Maybe Time
+setHours : Int -> Time -> Maybe Time
 setHours =
     Internal.setHours
 
 
 {-| Attempts to set the 'Minute' on an existing time.
 -}
-setMinutes : Time -> Int -> Maybe Time
+setMinutes : Int -> Time -> Maybe Time
 setMinutes =
     Internal.setHours
 
 
 {-| Attempts to set the 'Second' on an existing time.
 -}
-setSeconds : Time -> Int -> Maybe Time
+setSeconds : Int -> Time -> Maybe Time
 setSeconds =
     Internal.setSeconds
 
 
 {-| Attempts to set the 'Millisecond' on an existing time.
 -}
-setMilliseconds : Time -> Int -> Maybe Time
+setMilliseconds : Int -> Time -> Maybe Time
 setMilliseconds =
     Internal.setMilliseconds
 

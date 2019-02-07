@@ -1389,7 +1389,7 @@ setYearTest =
                     Just date ->
                         Expect.equal
                             (Calendar.fromRawParts { year = 2024, month = Feb, day = 29 })
-                            (Calendar.setYear date 2024)
+                            (Calendar.setYear 2024 date)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -1398,7 +1398,7 @@ setYearTest =
             (\_ ->
                 case initialDate of
                     Just date ->
-                        Expect.equal Nothing (Calendar.setYear date 2019)
+                        Expect.equal Nothing (Calendar.setYear 2019 date)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -1407,7 +1407,7 @@ setYearTest =
             (\_ ->
                 case initialDate of
                     Just date ->
-                        Expect.equal Nothing (Calendar.setYear date 0)
+                        Expect.equal Nothing (Calendar.setYear 0 date)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -1428,7 +1428,7 @@ setMonthTest =
                     Just date ->
                         Expect.equal
                             (Calendar.fromRawParts { year = 2020, month = Aug, day = 31 })
-                            (Calendar.setMonth date Aug)
+                            (Calendar.setMonth Aug date)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -1437,7 +1437,7 @@ setMonthTest =
             (\_ ->
                 case initialDate of
                     Just date ->
-                        Expect.equal Nothing (Calendar.setMonth date Feb)
+                        Expect.equal Nothing (Calendar.setMonth Feb date)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -1458,7 +1458,7 @@ setDayTest =
                     Just date ->
                         Expect.equal
                             (Calendar.fromRawParts { year = 2020, month = Feb, day = 29 })
-                            (Calendar.setDay date 29)
+                            (Calendar.setDay 29 date)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -1467,7 +1467,7 @@ setDayTest =
             (\_ ->
                 case initialDate of
                     Just date ->
-                        Expect.equal Nothing (Calendar.setDay date 30)
+                        Expect.equal Nothing (Calendar.setDay 30 date)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw parts"

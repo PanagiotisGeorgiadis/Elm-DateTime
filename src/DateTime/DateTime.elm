@@ -232,49 +232,49 @@ getMilliseconds =
 
 {-| Attempts to set the 'Year' part of a Calendar.Date in a DateTime.
 -}
-setYear : DateTime -> Int -> Maybe DateTime
+setYear : Int -> DateTime -> Maybe DateTime
 setYear =
     Internal.setYear
 
 
 {-| Attempts to set the 'Month' part of a Calendar.Date in a DateTime.
 -}
-setMonth : DateTime -> Time.Month -> Maybe DateTime
+setMonth : Time.Month -> DateTime -> Maybe DateTime
 setMonth =
     Internal.setMonth
 
 
 {-| Attempts to set the 'Day' part of a Calendar.Date in a DateTime.
 -}
-setDay : DateTime -> Int -> Maybe DateTime
+setDay : Int -> DateTime -> Maybe DateTime
 setDay =
     Internal.setDay
 
 
 {-| Attempts to set the 'Hours' part of a Clock.Time in a DateTime.
 -}
-setHours : DateTime -> Int -> Maybe DateTime
+setHours : Int -> DateTime -> Maybe DateTime
 setHours =
     Internal.setHours
 
 
 {-| Attempts to set the 'Minutes' part of a Clock.Time in a DateTime.
 -}
-setMinutes : DateTime -> Int -> Maybe DateTime
+setMinutes : Int -> DateTime -> Maybe DateTime
 setMinutes =
     Internal.setMinutes
 
 
 {-| Attempts to set the 'Seconds' part of a Clock.Time in a DateTime.
 -}
-setSeconds : DateTime -> Int -> Maybe DateTime
+setSeconds : Int -> DateTime -> Maybe DateTime
 setSeconds =
     Internal.setSeconds
 
 
 {-| Attempts to set the 'Milliseconds' part of a Clock.Time in a DateTime.
 -}
-setMilliseconds : DateTime -> Int -> Maybe DateTime
+setMilliseconds : Int -> DateTime -> Maybe DateTime
 setMilliseconds =
     Internal.setMilliseconds
 
