@@ -9,6 +9,7 @@ import Time exposing (Month(..), Weekday(..))
 
 testDateMillis : Int
 testDateMillis =
+    -- Tue Nov 27 2018 00:00:00 GMT+0000 (Greenwich Mean Time)
     1543276800000
 
 
@@ -27,28 +28,32 @@ suite =
     describe "Calendar Test Suite"
         [ fromPosixTests
         , fromRawPartsTests
-        , compareTests
-        , incrementMonthTests
-        , decrementMonthTests
-        , getPrecedingMonthsTests
-        , getFollowingMonthsTest
-        , isLeapYearTest
-        , lastDayOfTest
-        , incrementYearTest
-        , decrementYearTest
-        , toPosixTest
-        , getWeekdayTest
-        , getDatesInMonthTest
-        , incrementDayTest
-        , decrementDayTest
-        , getDateRangeTest
+        , fromRawDayTest
+        , fromYearMonthDayTest
         , yearFromIntTest
         , dayFromIntTest
-        , fromYearMonthDayTest
-        , compareDaysTest
-        , compareMonthsTest
+        , toPosixTest
+        , setYearTest
+        , setMonthTest
+        , setDayTest
+        , incrementYearTest
+        , incrementMonthTests
+        , incrementDayTest
+        , decrementYearTest
+        , decrementMonthTests
+        , decrementDayTest
+        , compareTests
         , compareYearsTest
-        , fromRawDayTest
+        , compareMonthsTest
+        , compareDaysTest
+        , getDateRangeTest
+        , getDatesInMonthTest
+        , getDayDiffTest
+        , getFollowingMonthsTest
+        , getPrecedingMonthsTests
+        , getWeekdayTest
+        , isLeapYearTest
+        , lastDayOfTest
         , millisSinceEpochTest
         , millisSinceStartOfTheYearTest
         , millisSinceStartOfTheMonthTest
@@ -1370,53 +1375,196 @@ millisSinceStartOfTheMonthTest =
         ]
 
 
+setYearTest : Test
+setYearTest =
+    let
+        initialDate =
+            Calendar.fromRawParts { year = 2020, month = Feb, day = 29 }
+    in
+    describe "Calendar.setYear Test Suite"
+        [ test "Testing for a valid date."
+            (\_ ->
+                case initialDate of
+                    Just date ->
+                        Expect.equal
+                            (Calendar.fromRawParts { year = 2024, month = Feb, day = 29 })
+                            (Calendar.setYear date 2024)
 
--- NEW TODO: Implement the tests for the following functions + cases.
-{-
-   yearFromInt  -- DONE
-   monthFromInt -- DONE
-   dayFromInt   -- DONE
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw parts"
+            )
+        , test "Testing for an invalid date."
+            (\_ ->
+                case initialDate of
+                    Just date ->
+                        Expect.equal Nothing (Calendar.setYear date 2019)
 
-   fromYearMonthDay -- DONE
-   compareDays      -- DONE
-   compareMonths    -- DONE
-   compareYears     -- DONE
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw parts"
+            )
+        , test "Testing for a valid date but an invalid year."
+            (\_ ->
+                case initialDate of
+                    Just date ->
+                        Expect.equal Nothing (Calendar.setYear date 0)
 
-   fromRawDay       -- DONE
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw parts"
+            )
+        ]
 
-   incrementMonth_     -- TODO ??? NOPE since they are internal and they are part of incrementMonth
-   decrementMonth_ -- TODO ??? NOPE since they are internal and they are part of decrementMonth
 
-   millisInYear      -- TODO ??? NOPE
+setMonthTest : Test
+setMonthTest =
+    let
+        initialDate =
+            Calendar.fromRawParts { year = 2020, month = Jan, day = 31 }
+    in
+    describe "Calendar.setMonth Test Suite"
+        [ test "Testing for a valid date."
+            (\_ ->
+                case initialDate of
+                    Just date ->
+                        Expect.equal
+                            (Calendar.fromRawParts { year = 2020, month = Aug, day = 31 })
+                            (Calendar.setMonth date Aug)
 
-   millisSinceEpoch           -- DONE
-   millisSinceStartOfTheYear  -- DONE
-   millisSinceStartOfTheMonth -- DONE
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw parts"
+            )
+        , test "Testing for an invalid date."
+            (\_ ->
+                case initialDate of
+                    Just date ->
+                        Expect.equal Nothing (Calendar.setMonth date Feb)
 
--}
-{- Implement the tests for the following functions:
-   yearFromInt  -- Not to be exposed
-   monthFromInt -- Not to be exposed
-   dayFromInt   -- Not to be exposed
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw parts"
+            )
+        ]
 
-   incrementMonth     -- DONE
-   decrementMonth -- DONE
 
-   previousMonthsInTheYear -- Rename to getPrecedingMonths ? -- DONE
-   nextMonthsInTheYear     -- Implement ? Rename to followingMonthsInYear ? -- DONE
-   setYear ??
-   setMonth ??
-   setDay ??
-   isLeapYear  -- DONE
-   lastDayOf   -- DONE
+setDayTest : Test
+setDayTest =
+    let
+        initialDate =
+            Calendar.fromRawParts { year = 2020, month = Feb, day = 28 }
+    in
+    describe "Calendar.setDay Test Suite"
+        [ test "Testing for a valid date."
+            (\_ ->
+                case initialDate of
+                    Just date ->
+                        Expect.equal
+                            (Calendar.fromRawParts { year = 2020, month = Feb, day = 29 })
+                            (Calendar.setDay date 29)
 
-   incrementYear ?? -- DONE
-   decrementYear ?? -- DONE
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw parts"
+            )
+        , test "Testing for an invalid date."
+            (\_ ->
+                case initialDate of
+                    Just date ->
+                        Expect.equal Nothing (Calendar.setDay date 30)
 
-   toPosix ??  -- DONE
-   getWeekday  -- DONE
-   getMonthDates ?? Rename it to getDatesInMonth ? -- DONE
-   nextDay      -- DONE
-   previousDay  -- DONE
-   getDateRange -- DONE
--}
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw parts"
+            )
+        ]
+
+
+getDayDiffTest : Test
+getDayDiffTest =
+    describe "Calendar.getDayDiff Test Suite"
+        [ test "Testing with lower and higher."
+            (\_ ->
+                let
+                    ( now, past ) =
+                        ( Calendar.fromRawParts { year = 2019, month = Feb, day = 7 }
+                        , Calendar.fromRawParts { year = 2019, month = Jan, day = 7 }
+                        )
+                in
+                case ( past, now ) of
+                    ( Just past_, Just now_ ) ->
+                        Expect.equal 31 (Calendar.getDayDiff past_ now_)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing with reversed parameters."
+            (\_ ->
+                let
+                    ( now, past ) =
+                        ( Calendar.fromRawParts { year = 2019, month = Feb, day = 7 }
+                        , Calendar.fromRawParts { year = 2019, month = Jan, day = 7 }
+                        )
+                in
+                case ( now, past ) of
+                    ( Just now_, Just past_ ) ->
+                        Expect.equal -31 (Calendar.getDayDiff now_ past_)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing a year in the past difference."
+            (\_ ->
+                let
+                    ( now, aYearInThePast ) =
+                        ( Calendar.fromRawParts { year = 2019, month = Feb, day = 7 }
+                        , Calendar.fromRawParts { year = 2018, month = Feb, day = 7 }
+                        )
+                in
+                case ( now, aYearInThePast ) of
+                    ( Just now_, Just past ) ->
+                        Expect.equal -365 (Calendar.getDayDiff now_ past)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing a year in the future difference."
+            (\_ ->
+                let
+                    ( now, aYearInTheFuture ) =
+                        ( Calendar.fromRawParts { year = 2019, month = Feb, day = 7 }
+                        , Calendar.fromRawParts { year = 2020, month = Feb, day = 7 }
+                        )
+                in
+                case ( now, aYearInTheFuture ) of
+                    ( Just now_, Just future ) ->
+                        Expect.equal 365 (Calendar.getDayDiff now_ future)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing a year in the future of a leap year."
+            (\_ ->
+                let
+                    ( leapYear, aYearInTheFuture ) =
+                        ( Calendar.fromRawParts { year = 2020, month = Feb, day = 7 }
+                        , Calendar.fromRawParts { year = 2021, month = Feb, day = 7 }
+                        )
+                in
+                case ( leapYear, aYearInTheFuture ) of
+                    ( Just now, Just future ) ->
+                        Expect.equal 366 (Calendar.getDayDiff now future)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing a year in the past of a leap year."
+            (\_ ->
+                let
+                    ( leapYear, aYearInThePast ) =
+                        ( Calendar.fromRawParts { year = 2020, month = Mar, day = 7 }
+                        , Calendar.fromRawParts { year = 2019, month = Mar, day = 7 }
+                        )
+                in
+                case ( leapYear, aYearInThePast ) of
+                    ( Just now, Just past ) ->
+                        Expect.equal -366 (Calendar.getDayDiff now past)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        ]
