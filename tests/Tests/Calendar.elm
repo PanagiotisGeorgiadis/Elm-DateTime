@@ -155,7 +155,7 @@ fromRawPartsTests =
         , test "Valid 29th of February date construction from raw components"
             (\_ ->
                 let
-                    date =
+                    rawDate =
                         Calendar.fromRawParts { year = 2020, month = Feb, day = 29 }
                 in
                 case rawDate of
@@ -167,7 +167,7 @@ fromRawPartsTests =
                                 , getYearInt date
                                 )
                         in
-                        Expect.true "Created wrong date from raw components." ( day == 29, month == Feb, year == 2020 )
+                        Expect.true "Created wrong date from raw components." (day == 29 && month == Feb && year == 2020)
 
                     Nothing ->
                         Expect.fail "Couldn't create date from raw components"
