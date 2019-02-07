@@ -7,7 +7,7 @@ module DateTime.Calendar exposing
     , incrementDay, incrementMonth, incrementYear
     , decrementDay, decrementMonth, decrementYear
     , compare
-    , getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
+    , getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, sort
     , months, millisInADay
     )
 
@@ -56,7 +56,7 @@ module DateTime.Calendar exposing
 
 # Utilities
 
-@docs getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
+@docs getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, sort
 
 
 # Constants
@@ -435,6 +435,36 @@ getDatesInMonth =
 getDayDiff : Date -> Date -> Int
 getDayDiff =
     Internal.getDayDiff
+
+
+{-| Gets the list of the following months from the given month.
+--- It doesn't include the given month in the resulting list.
+
+> getFollowingMonths Aug
+> [ Sep, Oct, Nov, Dec ]
+>
+> getFollowingMonths Dec
+> []
+
+-}
+getFollowingMonths : Month -> List Month
+getFollowingMonths =
+    Internal.getFollowingMonths
+
+
+{-| Gets the list of the preceding months from the given month.
+--- It doesn't include the given month in the resulting list.
+
+> getPrecedingMonths Aug
+> [ Jan, Feb, Mar, Apr, May, Jun, Jul ]
+>
+> getPrecedingMonths Jan
+> []
+
+-}
+getPrecedingMonths : Month -> List Month
+getPrecedingMonths =
+    Internal.getPrecedingMonths
 
 
 {-| Returns the weekday of a specific 'Date'

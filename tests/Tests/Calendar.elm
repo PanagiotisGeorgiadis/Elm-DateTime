@@ -419,29 +419,29 @@ getPrecedingMonthsTests =
     in
     describe "Calendar.getPrecedingMonths Test Suite"
         [ test "Jan as the given month"
-            (\_ -> Expect.equal (testFn Jan) (expectedMonths 0))
+            (\_ -> Expect.equalLists (testFn Jan) (expectedMonths 0))
         , test "Feb as the given month"
-            (\_ -> Expect.equal (testFn Feb) (expectedMonths 1))
+            (\_ -> Expect.equalLists (testFn Feb) (expectedMonths 1))
         , test "Mar as the given month"
-            (\_ -> Expect.equal (testFn Mar) (expectedMonths 2))
+            (\_ -> Expect.equalLists (testFn Mar) (expectedMonths 2))
         , test "Apr as the given month"
-            (\_ -> Expect.equal (testFn Apr) (expectedMonths 3))
+            (\_ -> Expect.equalLists (testFn Apr) (expectedMonths 3))
         , test "May as the given month"
-            (\_ -> Expect.equal (testFn May) (expectedMonths 4))
+            (\_ -> Expect.equalLists (testFn May) (expectedMonths 4))
         , test "Jun as the given month"
-            (\_ -> Expect.equal (testFn Jun) (expectedMonths 5))
+            (\_ -> Expect.equalLists (testFn Jun) (expectedMonths 5))
         , test "Jul as the given month"
-            (\_ -> Expect.equal (testFn Jul) (expectedMonths 6))
+            (\_ -> Expect.equalLists (testFn Jul) (expectedMonths 6))
         , test "Aug as the given month"
-            (\_ -> Expect.equal (testFn Aug) (expectedMonths 7))
+            (\_ -> Expect.equalLists (testFn Aug) (expectedMonths 7))
         , test "Sep as the given month"
-            (\_ -> Expect.equal (testFn Sep) (expectedMonths 8))
+            (\_ -> Expect.equalLists (testFn Sep) (expectedMonths 8))
         , test "Oct as the given month"
-            (\_ -> Expect.equal (testFn Oct) (expectedMonths 9))
+            (\_ -> Expect.equalLists (testFn Oct) (expectedMonths 9))
         , test "Nov as the given month"
-            (\_ -> Expect.equal (testFn Nov) (expectedMonths 10))
+            (\_ -> Expect.equalLists (testFn Nov) (expectedMonths 10))
         , test "Dec as the given month"
-            (\_ -> Expect.equal (testFn Dec) (expectedMonths 11))
+            (\_ -> Expect.equalLists (testFn Dec) (expectedMonths 11))
         ]
 
 
@@ -457,29 +457,29 @@ getFollowingMonthsTest =
     in
     describe "Calendar.getFollowingMonths Test Suite"
         [ test "Jan as the given month"
-            (\_ -> Expect.equal (testFn Jan) (expectedMonths 11))
+            (\_ -> Expect.equalLists (testFn Jan) (expectedMonths 11))
         , test "Feb as the given month"
-            (\_ -> Expect.equal (testFn Feb) (expectedMonths 10))
+            (\_ -> Expect.equalLists (testFn Feb) (expectedMonths 10))
         , test "Mar as the given month"
-            (\_ -> Expect.equal (testFn Mar) (expectedMonths 9))
+            (\_ -> Expect.equalLists (testFn Mar) (expectedMonths 9))
         , test "Apr as the given month"
-            (\_ -> Expect.equal (testFn Apr) (expectedMonths 8))
+            (\_ -> Expect.equalLists (testFn Apr) (expectedMonths 8))
         , test "May as the given month"
-            (\_ -> Expect.equal (testFn May) (expectedMonths 7))
+            (\_ -> Expect.equalLists (testFn May) (expectedMonths 7))
         , test "Jun as the given month"
-            (\_ -> Expect.equal (testFn Jun) (expectedMonths 6))
+            (\_ -> Expect.equalLists (testFn Jun) (expectedMonths 6))
         , test "Jul as the given month"
-            (\_ -> Expect.equal (testFn Jul) (expectedMonths 5))
+            (\_ -> Expect.equalLists (testFn Jul) (expectedMonths 5))
         , test "Aug as the given month"
-            (\_ -> Expect.equal (testFn Aug) (expectedMonths 4))
+            (\_ -> Expect.equalLists (testFn Aug) (expectedMonths 4))
         , test "Sep as the given month"
-            (\_ -> Expect.equal (testFn Sep) (expectedMonths 3))
+            (\_ -> Expect.equalLists (testFn Sep) (expectedMonths 3))
         , test "Oct as the given month"
-            (\_ -> Expect.equal (testFn Oct) (expectedMonths 2))
+            (\_ -> Expect.equalLists (testFn Oct) (expectedMonths 2))
         , test "Nov as the given month"
-            (\_ -> Expect.equal (testFn Nov) (expectedMonths 1))
+            (\_ -> Expect.equalLists (testFn Nov) (expectedMonths 1))
         , test "Dec as the given month"
-            (\_ -> Expect.equal (testFn Dec) (expectedMonths 0))
+            (\_ -> Expect.equalLists (testFn Dec) (expectedMonths 0))
         ]
 
 
