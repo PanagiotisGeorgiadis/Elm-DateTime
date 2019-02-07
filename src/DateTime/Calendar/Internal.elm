@@ -7,7 +7,7 @@ module DateTime.Calendar.Internal exposing
     , incrementYear, incrementMonth, incrementDay
     , decrementYear, decrementMonth, decrementDay
     , compare, compareYears, compareMonths, compareDays
-    , getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, lastDayOf, millisInYear
+    , getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, lastDayOf, millisInYear, sort
     , months, millisInADay
     , millisSinceEpoch, millisSinceStartOfTheYear, millisSinceStartOfTheMonth
     )
@@ -57,7 +57,7 @@ module DateTime.Calendar.Internal exposing
 
 # Utilities
 
-@docs getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, lastDayOf, millisInYear
+@docs getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, lastDayOf, millisInYear, sort
 
 
 # Constants
@@ -1192,6 +1192,13 @@ millisInYear year =
 
     else
         millisInADay * 365
+
+
+{-| Sorts a List of Dates.
+-}
+sort : List Date -> List Date
+sort =
+    List.sortBy toMillis
 
 
 

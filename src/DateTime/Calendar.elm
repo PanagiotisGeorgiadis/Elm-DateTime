@@ -7,7 +7,7 @@ module DateTime.Calendar exposing
     , incrementDay, incrementMonth, incrementYear
     , decrementDay, decrementMonth, decrementYear
     , compare
-    , getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear
+    , getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
     , months, millisInADay
     )
 
@@ -56,7 +56,7 @@ module DateTime.Calendar exposing
 
 # Utilities
 
-@docs getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear
+@docs getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
 
 
 # Constants
@@ -465,6 +465,13 @@ getWeekday =
 isLeapYear : Date -> Bool
 isLeapYear =
     Internal.isLeapYear << Internal.getYear
+
+
+{-| Sorts a List of Dates.
+-}
+sort : List Date -> List Date
+sort =
+    Internal.sort
 
 
 

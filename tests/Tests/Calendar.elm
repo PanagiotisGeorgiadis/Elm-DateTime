@@ -57,6 +57,7 @@ suite =
         , millisSinceEpochTest
         , millisSinceStartOfTheYearTest
         , millisSinceStartOfTheMonthTest
+        , sortTest
         ]
 
 
@@ -1566,5 +1567,45 @@ getDayDiffTest =
 
                     _ ->
                         Expect.fail "Couldn't create dates from raw parts"
+            )
+        ]
+
+
+sortTest : Test
+sortTest =
+    let
+        defaultDate =
+            Calendar.fromPosix (Time.millisToPosix 0)
+
+        datesList =
+            List.map (Maybe.withDefault defaultDate)
+                [ Calendar.fromRawParts { year = 2019, month = Feb, day = 7 }
+                , Calendar.fromRawParts { year = 2018, month = Jan, day = 8 }
+                , Calendar.fromRawParts { year = 2021, month = Mar, day = 9 }
+                , Calendar.fromRawParts { year = 2005, month = Aug, day = 10 }
+                , Calendar.fromRawParts { year = 1995, month = Sep, day = 7 }
+                ]
+
+        sortedList =
+            List.map (Maybe.withDefault defaultDate)
+                [ Calendar.fromRawParts { year = 1995, month = Sep, day = 7 }
+                , Calendar.fromRawParts { year = 2005, month = Aug, day = 10 }
+                , Calendar.fromRawParts { year = 2018, month = Jan, day = 8 }
+                , Calendar.fromRawParts { year = 2019, month = Feb, day = 7 }
+                , Calendar.fromRawParts { year = 2021, month = Mar, day = 9 }
+                ]
+    in
+    describe "Calendar.sort Test Suite"
+        [ test "Testing with unsorted list."
+            (\_ ->
+                Expect.equalLists sortedList (Calendar.sort datesList)
+            )
+        , test "Testing with sorted list."
+            (\_ ->
+                Expect.equalLists sortedList (Calendar.sort sortedList)
+            )
+        , test "Testing with a reversed list."
+            (\_ ->
+                Expect.equalLists sortedList (Calendar.sort (List.reverse sortedList))
             )
         ]
