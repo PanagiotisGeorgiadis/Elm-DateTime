@@ -26,11 +26,15 @@ suite =
     describe "Clock Test Suite"
         [ fromPosixTests
         , fromRawPartsTests
-        , toMillisTests
         , hoursFromIntTests
         , minutesFromIntTests
         , secondsFromIntTests
         , millisecondsFromIntTests
+        , toMillisTests
+        , setHoursTests
+        , setMinutesTests
+        , setSecondsTests
+        , setMillisecondsTests
         , incrementHoursTests
         , incrementMinutesTests
         , incrementSecondsTests
@@ -44,6 +48,7 @@ suite =
         , compareMinutesTests
         , compareSecondsTests
         , compareMillisecondsTests
+        , sortTests
         ]
 
 
@@ -990,5 +995,143 @@ compareMillisecondsTests =
         , test "Equality test case"
             (\_ ->
                 Expect.equal (Just EQ) (Maybe.map2 Clock.compareMilliseconds (Maybe.map Clock.getMilliseconds time) (Maybe.map Clock.getMilliseconds time))
+            )
+        ]
+
+
+setHoursTests : Test
+setHoursTests =
+    let
+        initial =
+            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
+    in
+    describe "Clock.setHours Test Suite"
+        [ test "Testing a valid updating of hours."
+            (\_ ->
+                let
+                    expected =
+                        Clock.fromRawParts { hours = 23, minutes = 0, seconds = 0, milliseconds = 0 }
+                in
+                Expect.equal expected (Maybe.andThen (\t -> Clock.setHours t 23) initial)
+            )
+        , test "Testing an invalid updating of hours."
+            (\_ ->
+                Expect.equal Nothing (Maybe.andThen (\t -> Clock.setHours t 24) initial)
+            )
+        ]
+
+
+setMinutesTests : Test
+setMinutesTests =
+    let
+        initial =
+            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
+    in
+    describe "Clock.setMinutes Test Suite"
+        [ test "Testing a valid updating of minutes."
+            (\_ ->
+                let
+                    expected =
+                        Clock.fromRawParts { hours = 15, minutes = 30, seconds = 0, milliseconds = 0 }
+                in
+                Expect.equal expected (Maybe.andThen (\t -> Clock.setMinutes t 30) initial)
+            )
+        , test "Testing an invalid updating of minutes."
+            (\_ ->
+                Expect.equal Nothing (Maybe.andThen (\t -> Clock.setMinutes t 60) initial)
+            )
+        ]
+
+
+setSecondsTests : Test
+setSecondsTests =
+    let
+        initial =
+            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
+    in
+    describe "Clock.setSeconds Test Suite"
+        [ test "Testing a valid updating of seconds."
+            (\_ ->
+                let
+                    expected =
+                        Clock.fromRawParts { hours = 15, minutes = 0, seconds = 30, milliseconds = 0 }
+                in
+                Expect.equal expected (Maybe.andThen (\t -> Clock.setSeconds t 30) initial)
+            )
+        , test "Testing an invalid updating of seconds."
+            (\_ ->
+                Expect.equal Nothing (Maybe.andThen (\t -> Clock.setSeconds t 60) initial)
+            )
+        ]
+
+
+setMillisecondsTests : Test
+setMillisecondsTests =
+    let
+        initial =
+            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
+    in
+    describe "Clock.setMilliseconds Test Suite"
+        [ test "Testing a valid updating of seconds."
+            (\_ ->
+                let
+                    expected =
+                        Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 500 }
+                in
+                Expect.equal expected (Maybe.andThen (\t -> Clock.setMilliseconds t 500) initial)
+            )
+        , test "Testing an invalid updating of seconds."
+            (\_ ->
+                Expect.equal Nothing (Maybe.andThen (\t -> Clock.setMilliseconds t 1000) initial)
+            )
+        ]
+
+
+sortTests : Test
+sortTests =
+    let
+        defaultTime =
+            Clock.fromPosix (Time.millisToPosix 0)
+
+        clocks =
+            List.map (Maybe.withDefault defaultTime)
+                [ Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 14, minutes = 0, seconds = 0, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 14, minutes = 0, seconds = 59, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 14, minutes = 0, seconds = 1, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 16, minutes = 0, seconds = 0, milliseconds = 150 }
+                , Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 12, minutes = 15, seconds = 15, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 12, minutes = 15, seconds = 20, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 1 }
+                ]
+
+        sortedList =
+            List.map (Maybe.withDefault defaultTime)
+                [ Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 1 }
+                , Clock.fromRawParts { hours = 12, minutes = 15, seconds = 15, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 12, minutes = 15, seconds = 20, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 14, minutes = 0, seconds = 0, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 14, minutes = 0, seconds = 1, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 14, minutes = 0, seconds = 59, milliseconds = 0 }
+                , Clock.fromRawParts { hours = 16, minutes = 0, seconds = 0, milliseconds = 150 }
+                ]
+    in
+    describe "Clock.sort Test Suite"
+        [ test "Testing with unsorted list."
+            (\_ ->
+                Expect.equalLists sortedList (Clock.sort clocks)
+            )
+        , test "Testing with sorted list."
+            (\_ ->
+                Expect.equalLists sortedList (Clock.sort sortedList)
+            )
+        , test "Testing with a reversed list."
+            (\_ ->
+                Expect.equalLists sortedList (Clock.sort (List.reverse sortedList))
             )
         ]

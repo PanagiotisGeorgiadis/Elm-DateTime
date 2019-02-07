@@ -38,6 +38,7 @@ module DateTime.Clock.Internal exposing
     , setMilliseconds
     , setMinutes
     , setSeconds
+    , sort
     , toMillis
     )
 
@@ -689,6 +690,15 @@ compareSeconds (Second lhs) (Second rhs) =
 compareMilliseconds : Millisecond -> Millisecond -> Order
 compareMilliseconds (Millisecond lhs) (Millisecond rhs) =
     Basics.compare lhs rhs
+
+
+
+-- Utilities
+
+
+sort : List Time -> List Time
+sort =
+    List.sortBy toMillis
 
 
 

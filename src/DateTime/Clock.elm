@@ -7,6 +7,7 @@ module DateTime.Clock exposing
     , incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compare
+    , sort
     , midnight
     )
 
@@ -51,6 +52,11 @@ module DateTime.Clock exposing
 # Comparers
 
 @docs compare
+
+
+# Utilities
+
+@docs sort
 
 
 # Constants
@@ -351,6 +357,15 @@ decrementMilliseconds =
 compare : Time -> Time -> Order
 compare =
     Internal.compare
+
+
+
+-- Utilities
+
+
+sort : List Time -> List Time
+sort =
+    Internal.sort
 
 
 
