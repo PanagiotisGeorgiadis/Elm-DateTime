@@ -13,7 +13,6 @@ module DateTime.Calendar.Internal exposing
     , dayToInt
     , decrementDay
     , decrementMonth
-    , decrementMonth_
     , decrementYear
     , fromPosix
     , fromRawDay
@@ -31,7 +30,6 @@ module DateTime.Calendar.Internal exposing
     , getYear
     , incrementDay
     , incrementMonth
-    , incrementMonth_
     , incrementYear
     , isLeapYear
     , lastDayOf
@@ -42,6 +40,8 @@ module DateTime.Calendar.Internal exposing
     , millisSinceStartOfTheYear
     , monthToInt
     , months
+    , rollMonthBackwards
+    , rollMonthForward
     , setDay
     , setMonth
     , setYear
@@ -461,7 +461,7 @@ incrementMonth : Date -> Date
 incrementMonth (Date date) =
     let
         updatedMonth =
-            incrementMonth_ date.month
+            rollMonthForward date.month
 
         updatedYear =
             case updatedMonth of
@@ -491,15 +491,15 @@ incrementMonth (Date date) =
 
 {-| Gets next month from the given month.
 
-> incrementMonth\_ Dec
+> rollMonthForward Dec
 > Jan : Month
 >
-> incrementMonth\_ Nov
+> rollMonthForward Nov
 > Dec : Month
 
 -}
-incrementMonth_ : Month -> Month
-incrementMonth_ month =
+rollMonthForward : Month -> Month
+rollMonthForward month =
     case month of
         Time.Jan ->
             Time.Feb
@@ -643,7 +643,7 @@ decrementMonth : Date -> Date
 decrementMonth (Date date) =
     let
         updatedMonth =
-            decrementMonth_ date.month
+            rollMonthBackwards date.month
 
         updatedYear =
             case updatedMonth of
@@ -673,15 +673,15 @@ decrementMonth (Date date) =
 
 {-| Gets next month from the given month.
 
-> decrementMonth\_ Jan
+> rollMonthBackwards Jan
 > Dec : Month
 >
-> decrementMonth\_ Dec
+> rollMonthBackwards Dec
 > Nov : Month
 
 -}
-decrementMonth_ : Month -> Month
-decrementMonth_ month =
+rollMonthBackwards : Month -> Month
+rollMonthBackwards month =
     case month of
         Time.Jan ->
             Time.Dec
