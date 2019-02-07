@@ -4,7 +4,7 @@ import Array
 import DateTime.Calendar.Internal as Calendar
 import Expect exposing (Expectation)
 import Test exposing (Test, describe, test)
-import Time exposing (Month(..))
+import Time exposing (Month(..), Weekday(..))
 
 
 testDateMillis : Int
@@ -57,60 +57,39 @@ suite =
 
 fromPosixTests : Test
 fromPosixTests =
+    let
+        fromPosixMillis =
+            Calendar.fromPosix << Time.millisToPosix
+    in
     describe "Calendar.fromPosix Test Suite"
         [ test "Millisecond to date to millisecond validation"
             (\_ ->
                 let
-                    posixDateMillis =
-                        Calendar.toPosix testPosixDate
-
-                    posixMillis =
-                        Time.millisToPosix testDateMillis
+                    ( posixDateMillis, posixMillis ) =
+                        ( Calendar.toPosix testPosixDate
+                        , Time.millisToPosix testDateMillis
+                        )
                 in
                 Expect.equal posixDateMillis posixMillis
             )
         , test "Millisecond to date validation"
             (\_ ->
-                let
-                    date =
-                        Calendar.fromPosix (Time.millisToPosix testDateMillis)
-                in
-                Expect.equal testPosixDate date
+                Expect.equal testPosixDate (fromPosixMillis testDateMillis)
             )
         , test "Valid date construction from millis and millis + 12 hours"
             (\_ ->
-                let
-                    twelveHourMillis =
-                        millisInAnHour * 12
-
-                    futureDate =
-                        Calendar.fromPosix (Time.millisToPosix (testDateMillis + twelveHourMillis))
-                in
-                Expect.equal testPosixDate futureDate
+                Expect.equal testPosixDate <|
+                    fromPosixMillis (testDateMillis + (millisInAnHour * 12))
             )
         , test "Valid date construction from millis and millis + 24 hours"
             (\_ ->
-                let
-                    oneDayMillis =
-                        millisInAnHour * 24
-
-                    futureDate =
-                        Calendar.fromPosix (Time.millisToPosix (testDateMillis + oneDayMillis))
-                in
-                Expect.notEqual testPosixDate futureDate
+                Expect.notEqual testPosixDate <|
+                    fromPosixMillis (testDateMillis + (millisInAnHour * 24))
             )
         , test "Valid date construction from raw components"
             (\_ ->
-                let
-                    rawDate =
-                        Calendar.fromRawParts { year = 2018, month = Nov, day = 27 }
-                in
-                case rawDate of
-                    Just date ->
-                        Expect.equal testPosixDate date
-
-                    Nothing ->
-                        Expect.fail "Couldn't create date from raw parts"
+                Expect.equal (Just testPosixDate)
+                    (Calendar.fromRawParts { year = 2018, month = Nov, day = 27 })
             )
         ]
 
@@ -126,16 +105,8 @@ fromRawPartsTests =
     describe "Calendar.fromRawParts Test Suite"
         [ test "Valid date construction by raw parts"
             (\_ ->
-                let
-                    rawDate =
-                        Calendar.fromRawParts { year = 2018, month = Nov, day = 27 }
-                in
-                case rawDate of
-                    Just date ->
-                        Expect.equal testPosixDate date
-
-                    Nothing ->
-                        Expect.fail "Couldn't create date from raw components"
+                Expect.equal (Just testPosixDate) <|
+                    Calendar.fromRawParts { year = 2018, month = Nov, day = 27 }
             )
         , test "Valid date on start of the year from raw parts"
             (\_ ->
@@ -173,19 +144,13 @@ fromRawPartsTests =
             )
         , test "Invalid date construction from invalid year passed in raw components"
             (\_ ->
-                let
-                    date =
-                        Calendar.fromRawParts { year = 0, month = Nov, day = 27 }
-                in
-                Expect.equal date Nothing
+                Expect.equal Nothing <|
+                    Calendar.fromRawParts { year = 0, month = Nov, day = 27 }
             )
         , test "Invalid date construction from invalid day passed in raw components"
             (\_ ->
-                let
-                    date =
-                        Calendar.fromRawParts { year = 2018, month = Nov, day = 31 }
-                in
-                Expect.equal date Nothing
+                Expect.equal Nothing <|
+                    Calendar.fromRawParts { year = 2018, month = Nov, day = 31 }
             )
         , test "Valid 29th of February date construction from raw components"
             (\_ ->
@@ -193,15 +158,24 @@ fromRawPartsTests =
                     date =
                         Calendar.fromRawParts { year = 2020, month = Feb, day = 29 }
                 in
-                Expect.notEqual date Nothing
+                case rawDate of
+                    Just date ->
+                        let
+                            ( day, month, year ) =
+                                ( getDayInt date
+                                , Calendar.getMonth date
+                                , getYearInt date
+                                )
+                        in
+                        Expect.true "Created wrong date from raw components." ( day == 29, month == Feb, year == 2020 )
+
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw components"
             )
         , test "Invalid 29th of February date construction from raw components"
             (\_ ->
-                let
-                    date =
-                        Calendar.fromRawParts { year = 2019, month = Feb, day = 29 }
-                in
-                Expect.equal date Nothing
+                Expect.equal Nothing <|
+                    Calendar.fromRawParts { year = 2019, month = Feb, day = 29 }
             )
         ]
 
@@ -435,33 +409,33 @@ getPrecedingMonthsTests =
             Calendar.getPrecedingMonths
 
         expectedMonths count =
-            List.take count (Array.toList <| Calendar.months)
+            List.take count (Array.toList Calendar.months)
     in
     describe "Calendar.getPrecedingMonths Test Suite"
         [ test "Jan as the given month"
-            (\_ -> Expect.equal (testFn Time.Jan) (expectedMonths 0))
+            (\_ -> Expect.equal (testFn Jan) (expectedMonths 0))
         , test "Feb as the given month"
-            (\_ -> Expect.equal (testFn Time.Feb) (expectedMonths 1))
+            (\_ -> Expect.equal (testFn Feb) (expectedMonths 1))
         , test "Mar as the given month"
-            (\_ -> Expect.equal (testFn Time.Mar) (expectedMonths 2))
+            (\_ -> Expect.equal (testFn Mar) (expectedMonths 2))
         , test "Apr as the given month"
-            (\_ -> Expect.equal (testFn Time.Apr) (expectedMonths 3))
+            (\_ -> Expect.equal (testFn Apr) (expectedMonths 3))
         , test "May as the given month"
-            (\_ -> Expect.equal (testFn Time.May) (expectedMonths 4))
+            (\_ -> Expect.equal (testFn May) (expectedMonths 4))
         , test "Jun as the given month"
-            (\_ -> Expect.equal (testFn Time.Jun) (expectedMonths 5))
+            (\_ -> Expect.equal (testFn Jun) (expectedMonths 5))
         , test "Jul as the given month"
-            (\_ -> Expect.equal (testFn Time.Jul) (expectedMonths 6))
+            (\_ -> Expect.equal (testFn Jul) (expectedMonths 6))
         , test "Aug as the given month"
-            (\_ -> Expect.equal (testFn Time.Aug) (expectedMonths 7))
+            (\_ -> Expect.equal (testFn Aug) (expectedMonths 7))
         , test "Sep as the given month"
-            (\_ -> Expect.equal (testFn Time.Sep) (expectedMonths 8))
+            (\_ -> Expect.equal (testFn Sep) (expectedMonths 8))
         , test "Oct as the given month"
-            (\_ -> Expect.equal (testFn Time.Oct) (expectedMonths 9))
+            (\_ -> Expect.equal (testFn Oct) (expectedMonths 9))
         , test "Nov as the given month"
-            (\_ -> Expect.equal (testFn Time.Nov) (expectedMonths 10))
+            (\_ -> Expect.equal (testFn Nov) (expectedMonths 10))
         , test "Dec as the given month"
-            (\_ -> Expect.equal (testFn Time.Dec) (expectedMonths 11))
+            (\_ -> Expect.equal (testFn Dec) (expectedMonths 11))
         ]
 
 
@@ -472,33 +446,34 @@ getFollowingMonthsTest =
             Calendar.getFollowingMonths
 
         expectedMonths validMonths =
-            List.take validMonths <| List.drop (12 - validMonths) (Array.toList <| Calendar.months)
+            List.take validMonths <|
+                List.drop (12 - validMonths) (Array.toList Calendar.months)
     in
     describe "Calendar.getFollowingMonths Test Suite"
         [ test "Jan as the given month"
-            (\_ -> Expect.equal (testFn Time.Jan) (expectedMonths 11))
+            (\_ -> Expect.equal (testFn Jan) (expectedMonths 11))
         , test "Feb as the given month"
-            (\_ -> Expect.equal (testFn Time.Feb) (expectedMonths 10))
+            (\_ -> Expect.equal (testFn Feb) (expectedMonths 10))
         , test "Mar as the given month"
-            (\_ -> Expect.equal (testFn Time.Mar) (expectedMonths 9))
+            (\_ -> Expect.equal (testFn Mar) (expectedMonths 9))
         , test "Apr as the given month"
-            (\_ -> Expect.equal (testFn Time.Apr) (expectedMonths 8))
+            (\_ -> Expect.equal (testFn Apr) (expectedMonths 8))
         , test "May as the given month"
-            (\_ -> Expect.equal (testFn Time.May) (expectedMonths 7))
+            (\_ -> Expect.equal (testFn May) (expectedMonths 7))
         , test "Jun as the given month"
-            (\_ -> Expect.equal (testFn Time.Jun) (expectedMonths 6))
+            (\_ -> Expect.equal (testFn Jun) (expectedMonths 6))
         , test "Jul as the given month"
-            (\_ -> Expect.equal (testFn Time.Jul) (expectedMonths 5))
+            (\_ -> Expect.equal (testFn Jul) (expectedMonths 5))
         , test "Aug as the given month"
-            (\_ -> Expect.equal (testFn Time.Aug) (expectedMonths 4))
+            (\_ -> Expect.equal (testFn Aug) (expectedMonths 4))
         , test "Sep as the given month"
-            (\_ -> Expect.equal (testFn Time.Sep) (expectedMonths 3))
+            (\_ -> Expect.equal (testFn Sep) (expectedMonths 3))
         , test "Oct as the given month"
-            (\_ -> Expect.equal (testFn Time.Oct) (expectedMonths 2))
+            (\_ -> Expect.equal (testFn Oct) (expectedMonths 2))
         , test "Nov as the given month"
-            (\_ -> Expect.equal (testFn Time.Nov) (expectedMonths 1))
+            (\_ -> Expect.equal (testFn Nov) (expectedMonths 1))
         , test "Dec as the given month"
-            (\_ -> Expect.equal (testFn Time.Dec) (expectedMonths 0))
+            (\_ -> Expect.equal (testFn Dec) (expectedMonths 0))
         ]
 
 
@@ -808,7 +783,7 @@ getWeekdayTest =
     describe "Calendar.getWeekday Test Suite"
         [ test "Testing with the given date being 27th of November 2018"
             (\_ ->
-                Expect.equal (Calendar.getWeekday testPosixDate) Time.Tue
+                Expect.equal (Calendar.getWeekday testPosixDate) Tue
             )
         , test "Testing with the given date being 29th of February 2020"
             (\_ ->
@@ -818,7 +793,7 @@ getWeekdayTest =
                 in
                 case rawDate of
                     Just date ->
-                        Expect.equal (Calendar.getWeekday date) Time.Sat
+                        Expect.equal (Calendar.getWeekday date) Sat
 
                     _ ->
                         Expect.fail "Couldn't create date from raw parts"
@@ -1153,7 +1128,7 @@ yearFromIntTest =
     describe "Calendar.yearFromInt Test Suite"
         [ test "Testing with a valid year integer"
             (\_ ->
-                Expect.equal (Just (Calendar.Year 2018)) (Calendar.yearFromInt 2018)
+                Expect.equal (Just 2018) (Maybe.map Calendar.yearToInt (Calendar.yearFromInt 2018))
             )
         , test "Testing with an invalid year integer"
             (\_ ->
@@ -1167,19 +1142,23 @@ dayFromIntTest =
     describe "Calendar.dayFromInt Test Suite"
         [ test "Testing for the valid date of 25th of December 2018"
             (\_ ->
-                Expect.equal (Just (Calendar.Day 25)) (Calendar.dayFromInt (Calendar.Year 2018) Time.Dec 25)
+                Expect.equal (Just (Calendar.Day 25)) (Calendar.dayFromInt (Calendar.Year 2018) Dec 25)
             )
         , test "Testing for the valid date of 29th of February 2020"
             (\_ ->
-                Expect.equal (Just (Calendar.Day 29)) (Calendar.dayFromInt (Calendar.Year 2020) Time.Feb 29)
+                Expect.equal (Just (Calendar.Day 29)) (Calendar.dayFromInt (Calendar.Year 2020) Feb 29)
             )
         , test "Testing for the invalid date of 29th of February 2019"
             (\_ ->
-                Expect.equal Nothing (Calendar.dayFromInt (Calendar.Year 2019) Time.Feb 29)
+                Expect.equal Nothing (Calendar.dayFromInt (Calendar.Year 2019) Feb 29)
             )
-        , test "Testing with an invalid day integer"
+        , test "Testing with an invalid day integer (lower threshold)"
             (\_ ->
-                Expect.equal Nothing (Calendar.dayFromInt (Calendar.Year 2018) Time.Dec 0)
+                Expect.equal Nothing (Calendar.dayFromInt (Calendar.Year 2018) Dec 0)
+            )
+        , test "Testing with an invalid day integer (high threshold)"
+            (\_ ->
+                Expect.equal Nothing (Calendar.dayFromInt (Calendar.Year 2018) Dec 32)
             )
         ]
 
@@ -1190,41 +1169,31 @@ fromYearMonthDayTest =
         [ test "Testing for a valid date of 25th of December 2018"
             (\_ ->
                 let
-                    ( day, month, year ) =
+                    ( day, year ) =
                         ( Calendar.Day 25
-                        , Time.Dec
                         , Calendar.Year 2018
                         )
                 in
                 Expect.equal
-                    (Just (Calendar.Date { day = day, month = month, year = year }))
-                    (Calendar.fromYearMonthDay year month day)
+                    (Just (Calendar.Date { day = day, month = Dec, year = year }))
+                    (Calendar.fromYearMonthDay year Dec day)
             )
         , test "Testing for the valid date of 29th of February 2020"
             (\_ ->
                 let
-                    ( day, month, year ) =
+                    ( day, year ) =
                         ( Calendar.Day 29
-                        , Time.Feb
                         , Calendar.Year 2020
                         )
                 in
                 Expect.equal
-                    (Just (Calendar.Date { day = day, month = month, year = year }))
-                    (Calendar.fromYearMonthDay year month day)
+                    (Just (Calendar.Date { day = day, month = Feb, year = year }))
+                    (Calendar.fromYearMonthDay year Feb day)
             )
         , test "Testing for the invalid date of 29th of February 2019"
             (\_ ->
-                let
-                    ( day, month, year ) =
-                        ( Calendar.Day 29
-                        , Time.Feb
-                        , Calendar.Year 2019
-                        )
-                in
-                Expect.equal
-                    Nothing
-                    (Calendar.fromYearMonthDay year month day)
+                Expect.equal Nothing
+                    (Calendar.fromYearMonthDay (Calendar.Year 2019) Feb (Calendar.Day 29))
             )
         ]
 
@@ -1258,15 +1227,15 @@ compareMonthsTest =
     describe "Calendar.compareMonths Test Suite"
         [ test "Comparing January and December"
             (\_ ->
-                Expect.equal LT (Calendar.compareMonths Time.Jan Time.Dec)
+                Expect.equal LT (Calendar.compareMonths Jan Dec)
             )
         , test "Comparing December and January"
             (\_ ->
-                Expect.equal GT (Calendar.compareMonths Time.Dec Time.Jan)
+                Expect.equal GT (Calendar.compareMonths Dec Jan)
             )
         , test "Comparing January and January"
             (\_ ->
-                Expect.equal EQ (Calendar.compareMonths Time.Jan Time.Jan)
+                Expect.equal EQ (Calendar.compareMonths Jan Jan)
             )
         ]
 
@@ -1300,42 +1269,19 @@ fromRawDayTest =
     describe "Calendar.fromRawDay Test Suite"
         [ test "Testing for a valid date of 25th of December 2018"
             (\_ ->
-                let
-                    ( day, month, year ) =
-                        ( Calendar.Day 25
-                        , Time.Dec
-                        , Calendar.Year 2018
-                        )
-                in
                 Expect.equal
-                    (Just (Calendar.Date { day = day, month = month, year = year }))
-                    (Calendar.fromRawDay year month 25)
+                    (Calendar.fromRawParts { day = 25, month = Dec, year = 2018 })
+                    (Calendar.fromRawDay (Calendar.Year 2018) Dec 25)
             )
         , test "Testing for the valid date of 29th of February 2020"
             (\_ ->
-                let
-                    ( day, month, year ) =
-                        ( Calendar.Day 29
-                        , Time.Feb
-                        , Calendar.Year 2020
-                        )
-                in
                 Expect.equal
-                    (Just (Calendar.Date { day = day, month = month, year = year }))
-                    (Calendar.fromRawDay year month 29)
+                    (Calendar.fromRawParts { day = 29, month = Feb, year = 2020 })
+                    (Calendar.fromRawDay (Calendar.Year 2020) Feb 29)
             )
         , test "Testing for the invalid date of 29th of February 2019"
             (\_ ->
-                let
-                    ( day, month, year ) =
-                        ( Calendar.Day 29
-                        , Time.Feb
-                        , Calendar.Year 2019
-                        )
-                in
-                Expect.equal
-                    Nothing
-                    (Calendar.fromRawDay year month 29)
+                Expect.equal Nothing (Calendar.fromRawDay (Calendar.Year 2019) Feb 29)
             )
         ]
 
@@ -1377,18 +1323,18 @@ millisSinceStartOfTheYearTest =
     describe "Calendar.millisSinceStartOfTheYear Test Suite"
         [ test "Testing for January of 1970"
             (\_ ->
-                Expect.equal 0 (Calendar.millisSinceStartOfTheYear (Calendar.Year 2018) Time.Jan)
+                Expect.equal 0 (Calendar.millisSinceStartOfTheYear (Calendar.Year 2018) Jan)
             )
         , test "Testing for December of 2018"
             (\_ ->
-                Expect.equal 28857600000 (Calendar.millisSinceStartOfTheYear (Calendar.Year 2018) Time.Dec)
+                Expect.equal 28857600000 (Calendar.millisSinceStartOfTheYear (Calendar.Year 2018) Dec)
             )
         , test "Testing for March of non leap years from 1900 - 2020"
             (\_ ->
                 Expect.equalLists nonLeapYearsExpectation
                     (List.map
                         (\year ->
-                            Calendar.millisSinceStartOfTheYear year Time.Mar
+                            Calendar.millisSinceStartOfTheYear year Mar
                         )
                         nonLeapYears
                     )
@@ -1398,7 +1344,7 @@ millisSinceStartOfTheYearTest =
                 Expect.equalLists leapYearsExpectation
                     (List.map
                         (\year ->
-                            Calendar.millisSinceStartOfTheYear year Time.Mar
+                            Calendar.millisSinceStartOfTheYear year Mar
                         )
                         leapYears
                     )
