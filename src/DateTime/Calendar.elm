@@ -66,8 +66,8 @@ module DateTime.Calendar exposing
 -}
 
 import Array exposing (Array)
-import DateTime.Calendar.Internal as Internal exposing (Day, Month, Year)
-import Time
+import DateTime.Calendar.Internal as Internal
+import Time exposing (Month)
 
 
 {-| A full (Gregorian) calendar date.
@@ -462,9 +462,9 @@ getWeekday =
 > True
 
 -}
-isLeapYear : Year -> Bool
+isLeapYear : Date -> Bool
 isLeapYear =
-    Internal.isLeapYear
+    Internal.isLeapYear << Internal.getYear
 
 
 

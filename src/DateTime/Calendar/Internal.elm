@@ -1,55 +1,75 @@
 module DateTime.Calendar.Internal exposing
-    ( Date(..)
-    , Day(..)
-    , InternalDate
-    , Month
-    , RawDate
-    , Year(..)
-    , compare
-    , compareDays
-    , compareMonths
-    , compareYears
-    , dayFromInt
-    , dayToInt
-    , decrementDay
-    , decrementMonth
-    , decrementYear
-    , fromPosix
-    , fromRawDay
-    , fromRawParts
-    , fromYearMonthDay
-    , getDateRange
-    , getDateRange_
-    , getDatesInMonth
-    , getDay
-    , getDayDiff
-    , getFollowingMonths
-    , getMonth
-    , getPrecedingMonths
-    , getWeekday
-    , getYear
-    , incrementDay
-    , incrementMonth
-    , incrementYear
-    , isLeapYear
-    , lastDayOf
-    , millisInADay
-    , millisInYear
-    , millisSinceEpoch
-    , millisSinceStartOfTheMonth
-    , millisSinceStartOfTheYear
-    , monthToInt
-    , months
-    , rollMonthBackwards
-    , rollMonthForward
-    , setDay
-    , setMonth
-    , setYear
-    , toMillis
-    , toPosix
-    , yearFromInt
-    , yearToInt
+    ( Date(..), Year(..), Month, Day(..), RawDate
+    , fromPosix, fromRawParts, fromRawDay, fromYearMonthDay, yearFromInt, dayFromInt
+    , toPosix, toMillis, yearToInt, monthToInt, dayToInt
+    , getYear, getMonth, getDay
+    , setYear, setMonth, setDay
+    , incrementYear, incrementMonth, incrementDay
+    , decrementYear, decrementMonth, decrementDay
+    , compare, compareYears, compareMonths, compareDays
+    , getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, lastDayOf, millisInYear
+    , months, millisInADay
+    , millisSinceEpoch, millisSinceStartOfTheYear, millisSinceStartOfTheMonth
     )
+
+{-| A calendar date.
+
+
+# Type definition
+
+@docs Date, InternalDate, Year, Month, Day, RawDate
+
+
+# Creating values
+
+@docs fromPosix, fromRawParts, fromRawDay, fromYearMonthDay, yearFromInt, dayFromInt
+
+
+# Converters
+
+@docs toPosix, toMillis, yearToInt, monthToInt, dayToInt
+
+
+# Accessors
+
+@docs getYear, getMonth, getDay
+
+
+# Setters
+
+@docs setYear, setMonth, setDay
+
+
+# Incrementers
+
+@docs incrementYear, incrementMonth, incrementDay
+
+
+# Decrementers
+
+@docs decrementYear, decrementMonth, decrementDay
+
+
+# Comparers
+
+@docs compare, compareYears, compareMonths, compareDays
+
+
+# Utilities
+
+@docs getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, lastDayOf, millisInYear
+
+
+# Constants
+
+@docs months, millisInADay
+
+
+# Exposed for Testing Purposes
+
+@docs millisSinceEpoch, millisSinceStartOfTheYear, millisSinceStartOfTheMonth
+
+-}
 
 import Array exposing (Array)
 import Time
