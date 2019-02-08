@@ -1,10 +1,11 @@
 module Tests.DateTime exposing (suite)
 
 import DateTime.Calendar.Internal as Calendar
+import DateTime.Clock.Internal as Clock
 import DateTime.DateTime.Internal as DateTime
 import Expect exposing (Expectation)
 import Test exposing (Test, describe, test)
-import Time
+import Time exposing (Month(..), Weekday(..))
 
 
 testDateMillis : Int
@@ -31,6 +32,7 @@ suite : Test
 suite =
     describe "DateTime Test Suite"
         [ fromPosixTests
+        , sortTests
 
         -- , daysSinceEpochTests
         ]
@@ -54,7 +56,7 @@ fromPosixTests =
             )
         , test "Month validation"
             (\_ ->
-                Expect.equal Time.Dec (DateTime.getMonth date)
+                Expect.equal Dec (DateTime.getMonth date)
             )
         , test "Day validation"
             (\_ ->
@@ -62,7 +64,7 @@ fromPosixTests =
             )
         , test "Weekday validation"
             (\_ ->
-                Expect.equal Time.Fri (DateTime.getWeekday date)
+                Expect.equal Fri (DateTime.getWeekday date)
             )
         , test "Hours validation"
             (\_ ->
@@ -94,7 +96,7 @@ fromPosixTests =
             )
         , test "Negative timestamp Month validation"
             (\_ ->
-                Expect.equal Time.Aug (DateTime.getMonth negativeDate)
+                Expect.equal Aug (DateTime.getMonth negativeDate)
             )
         , test "Negative timestamp Day validation"
             (\_ ->
@@ -102,7 +104,7 @@ fromPosixTests =
             )
         , test "Negative timestamp Weekday validation"
             (\_ ->
-                Expect.equal Time.Sat (DateTime.getWeekday negativeDate)
+                Expect.equal Sat (DateTime.getWeekday negativeDate)
             )
         , test "Negative timestamp Hours validation"
             (\_ ->
@@ -152,3 +154,109 @@ fromPosixTests =
 --                 Expect.equal 17892 (DateTime.daysSinceEpoch dateTime)
 --             )
 --         ]
+
+
+sortTests : Test
+sortTests =
+    let
+        defaultDateTime =
+            DateTime.fromPosix (Time.millisToPosix 0)
+
+        ( rawDate, rawMidnight ) =
+            ( { year = 2019, month = Aug, day = 26 }
+            , { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+            )
+    in
+    describe "DateTime.sort Test Suite"
+        [ test "Testing date sorting"
+            (\_ ->
+                let
+                    dateTimeList =
+                        List.map (Maybe.withDefault defaultDateTime)
+                            [ DateTime.fromRawParts { year = 2019, month = Feb, day = 5 } rawMidnight
+                            , DateTime.fromRawParts { year = 1995, month = Jan, day = 26 } rawMidnight
+                            , DateTime.fromRawParts { year = 2017, month = Mar, day = 17 } rawMidnight
+                            , DateTime.fromRawParts { year = 1895, month = Feb, day = 20 } rawMidnight
+                            , DateTime.fromRawParts { year = 2018, month = Aug, day = 15 } rawMidnight
+                            , DateTime.fromRawParts { year = 1650, month = Feb, day = 10 } rawMidnight
+                            ]
+
+                    sortedList =
+                        List.map (Maybe.withDefault defaultDateTime)
+                            [ DateTime.fromRawParts { year = 1650, month = Feb, day = 10 } rawMidnight
+                            , DateTime.fromRawParts { year = 1895, month = Feb, day = 20 } rawMidnight
+                            , DateTime.fromRawParts { year = 1995, month = Jan, day = 26 } rawMidnight
+                            , DateTime.fromRawParts { year = 2017, month = Mar, day = 17 } rawMidnight
+                            , DateTime.fromRawParts { year = 2018, month = Aug, day = 15 } rawMidnight
+                            , DateTime.fromRawParts { year = 2019, month = Feb, day = 5 } rawMidnight
+                            ]
+                in
+                Expect.equalLists sortedList (DateTime.sort dateTimeList)
+            )
+        , test "Testing time sorting"
+            (\_ ->
+                let
+                    dateTimeList =
+                        List.map (Maybe.withDefault defaultDateTime)
+                            [ DateTime.fromRawParts rawDate { hours = 16, minutes = 15, seconds = 0, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 4, minutes = 35, seconds = 45, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 16, minutes = 15, seconds = 10, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 21, minutes = 20, seconds = 15, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 12, minutes = 15, seconds = 10, milliseconds = 150 }
+                            , DateTime.fromRawParts rawDate { hours = 23, minutes = 59, seconds = 59, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 8, minutes = 59, seconds = 59, milliseconds = 999 }
+                            , DateTime.fromRawParts rawDate { hours = 23, minutes = 59, seconds = 59, milliseconds = 250 }
+                            , DateTime.fromRawParts rawDate { hours = 22, minutes = 30, seconds = 40, milliseconds = 500 }
+                            , DateTime.fromRawParts rawDate { hours = 16, minutes = 15, seconds = 10, milliseconds = 150 }
+                            ]
+
+                    sortedList =
+                        List.map (Maybe.withDefault defaultDateTime)
+                            [ DateTime.fromRawParts rawDate { hours = 4, minutes = 35, seconds = 45, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 8, minutes = 59, seconds = 59, milliseconds = 999 }
+                            , DateTime.fromRawParts rawDate { hours = 12, minutes = 15, seconds = 10, milliseconds = 150 }
+                            , DateTime.fromRawParts rawDate { hours = 16, minutes = 15, seconds = 0, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 16, minutes = 15, seconds = 10, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 16, minutes = 15, seconds = 10, milliseconds = 150 }
+                            , DateTime.fromRawParts rawDate { hours = 21, minutes = 20, seconds = 15, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 22, minutes = 30, seconds = 40, milliseconds = 500 }
+                            , DateTime.fromRawParts rawDate { hours = 23, minutes = 59, seconds = 59, milliseconds = 0 }
+                            , DateTime.fromRawParts rawDate { hours = 23, minutes = 59, seconds = 59, milliseconds = 250 }
+                            ]
+                in
+                Expect.equalLists sortedList (DateTime.sort dateTimeList)
+            )
+        , test "Testing dateTime sorting"
+            (\_ ->
+                let
+                    dateTimeList =
+                        List.map (Maybe.withDefault defaultDateTime)
+                            [ DateTime.fromRawParts { year = 2018, month = Aug, day = 15 } { hours = 16, minutes = 15, seconds = 0, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 1895, month = Feb, day = 20 } { hours = 4, minutes = 35, seconds = 45, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 1995, month = Jan, day = 26 } { hours = 16, minutes = 15, seconds = 10, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 2017, month = Mar, day = 17 } { hours = 21, minutes = 20, seconds = 15, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 2019, month = Feb, day = 5 } { hours = 12, minutes = 15, seconds = 10, milliseconds = 150 }
+                            , DateTime.fromRawParts { year = 2017, month = Mar, day = 17 } { hours = 23, minutes = 59, seconds = 59, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 1895, month = Feb, day = 20 } { hours = 8, minutes = 59, seconds = 59, milliseconds = 999 }
+                            , DateTime.fromRawParts { year = 1650, month = Feb, day = 10 } { hours = 23, minutes = 59, seconds = 59, milliseconds = 250 }
+                            , DateTime.fromRawParts { year = 2013, month = Jun, day = 13 } { hours = 22, minutes = 30, seconds = 40, milliseconds = 500 }
+                            , DateTime.fromRawParts { year = 1995, month = Jan, day = 26 } { hours = 16, minutes = 15, seconds = 10, milliseconds = 150 }
+                            ]
+
+                    sortedList =
+                        List.map (Maybe.withDefault defaultDateTime)
+                            [ DateTime.fromRawParts { year = 1650, month = Feb, day = 10 } { hours = 23, minutes = 59, seconds = 59, milliseconds = 250 }
+                            , DateTime.fromRawParts { year = 1895, month = Feb, day = 20 } { hours = 4, minutes = 35, seconds = 45, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 1895, month = Feb, day = 20 } { hours = 8, minutes = 59, seconds = 59, milliseconds = 999 }
+                            , DateTime.fromRawParts { year = 1995, month = Jan, day = 26 } { hours = 16, minutes = 15, seconds = 10, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 1995, month = Jan, day = 26 } { hours = 16, minutes = 15, seconds = 10, milliseconds = 150 }
+                            , DateTime.fromRawParts { year = 2013, month = Jun, day = 13 } { hours = 22, minutes = 30, seconds = 40, milliseconds = 500 }
+                            , DateTime.fromRawParts { year = 2017, month = Mar, day = 17 } { hours = 21, minutes = 20, seconds = 15, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 2017, month = Mar, day = 17 } { hours = 23, minutes = 59, seconds = 59, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 2018, month = Aug, day = 15 } { hours = 16, minutes = 15, seconds = 0, milliseconds = 0 }
+                            , DateTime.fromRawParts { year = 2019, month = Feb, day = 5 } { hours = 12, minutes = 15, seconds = 10, milliseconds = 150 }
+                            ]
+                in
+                Expect.equalLists sortedList (DateTime.sort dateTimeList)
+            )
+        ]

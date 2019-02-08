@@ -490,3 +490,10 @@ getDatesInMonth =
 getDateRange : DateTime -> DateTime -> List DateTime
 getDateRange start end =
     Internal.getDateRange start end
+
+
+{-| Sorts a List of 'DateTime' based on their posix timestamps.
+-}
+sort : List DateTime -> List DateTime
+sort =
+    Internal.sort

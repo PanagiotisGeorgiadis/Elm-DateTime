@@ -1200,7 +1200,7 @@ millisInYear year =
         millisInADay * 365
 
 
-{-| Sorts a List of Dates.
+{-| Sorts a List of Date based on their posix timestamps.
 -}
 sort : List Date -> List Date
 sort =

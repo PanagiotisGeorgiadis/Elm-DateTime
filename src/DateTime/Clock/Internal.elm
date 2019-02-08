@@ -696,6 +696,8 @@ compareMilliseconds (Millisecond lhs) (Millisecond rhs) =
 -- Utilities
 
 
+{-| Sorts a List of 'Time' based on their representation in milliseconds.
+-}
 sort : List Time -> List Time
 sort =
     List.sortBy toMillis

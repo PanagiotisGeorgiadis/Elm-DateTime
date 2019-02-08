@@ -42,6 +42,7 @@ module DateTime.DateTime.Internal exposing
     , setMonth
     , setSeconds
     , setYear
+    , sort
     , toMillis
     , toPosix
     )
@@ -592,6 +593,13 @@ getDateRange (DateTime start) (DateTime end) =
                 }
         )
         (Calendar.getDateRange start.date end.date)
+
+
+{-| Sorts a List of 'DateTime' based on their posix timestamps.
+-}
+sort : List DateTime -> List DateTime
+sort =
+    List.sortBy toMillis
 
 
 {-| Helper function that decides if we should 'roll' the Calendar.Date forward due to a Clock.Time change.
