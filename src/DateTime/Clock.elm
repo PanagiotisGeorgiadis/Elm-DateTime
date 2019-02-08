@@ -177,7 +177,7 @@ setHours =
 -}
 setMinutes : Int -> Time -> Maybe Time
 setMinutes =
-    Internal.setHours
+    Internal.setMinutes
 
 
 {-| Attempts to set the 'Second' on an existing time.
