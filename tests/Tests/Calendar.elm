@@ -1389,32 +1389,19 @@ setYearTest =
     describe "Calendar.setYear Test Suite"
         [ test "Testing for a valid date."
             (\_ ->
-                case initialDate of
-                    Just date ->
-                        Expect.equal
-                            (Calendar.fromRawParts { year = 2024, month = Feb, day = 29 })
-                            (Calendar.setYear 2024 date)
-
-                    Nothing ->
-                        Expect.fail "Couldn't create date from raw parts"
+                Expect.equal
+                    (Calendar.fromRawParts { year = 2024, month = Feb, day = 29 })
+                    (Maybe.andThen (Calendar.setYear 2024) initialDate)
             )
         , test "Testing for an invalid date."
             (\_ ->
-                case initialDate of
-                    Just date ->
-                        Expect.equal Nothing (Calendar.setYear 2019 date)
-
-                    Nothing ->
-                        Expect.fail "Couldn't create date from raw parts"
+                Expect.equal Nothing <|
+                    Maybe.andThen (Calendar.setYear 2019) initialDate
             )
         , test "Testing for a valid date but an invalid year."
             (\_ ->
-                case initialDate of
-                    Just date ->
-                        Expect.equal Nothing (Calendar.setYear 0 date)
-
-                    Nothing ->
-                        Expect.fail "Couldn't create date from raw parts"
+                Expect.equal Nothing <|
+                    Maybe.andThen (Calendar.setYear 0) initialDate
             )
         ]
 
@@ -1426,25 +1413,16 @@ setMonthTest =
             Calendar.fromRawParts { year = 2020, month = Jan, day = 31 }
     in
     describe "Calendar.setMonth Test Suite"
-        [ test "Testing for a valid date."
+        [ test "Testing for a valid month."
             (\_ ->
-                case initialDate of
-                    Just date ->
-                        Expect.equal
-                            (Calendar.fromRawParts { year = 2020, month = Aug, day = 31 })
-                            (Calendar.setMonth Aug date)
-
-                    Nothing ->
-                        Expect.fail "Couldn't create date from raw parts"
+                Expect.equal
+                    (Calendar.fromRawParts { year = 2020, month = Aug, day = 31 })
+                    (Maybe.andThen (Calendar.setMonth Aug) initialDate)
             )
-        , test "Testing for an invalid date."
+        , test "Testing for an invalid month."
             (\_ ->
-                case initialDate of
-                    Just date ->
-                        Expect.equal Nothing (Calendar.setMonth Feb date)
-
-                    Nothing ->
-                        Expect.fail "Couldn't create date from raw parts"
+                Expect.equal Nothing <|
+                    Maybe.andThen (Calendar.setMonth Feb) initialDate
             )
         ]
 
@@ -1456,25 +1434,16 @@ setDayTest =
             Calendar.fromRawParts { year = 2020, month = Feb, day = 28 }
     in
     describe "Calendar.setDay Test Suite"
-        [ test "Testing for a valid date."
+        [ test "Testing for a valid day."
             (\_ ->
-                case initialDate of
-                    Just date ->
-                        Expect.equal
-                            (Calendar.fromRawParts { year = 2020, month = Feb, day = 29 })
-                            (Calendar.setDay 29 date)
-
-                    Nothing ->
-                        Expect.fail "Couldn't create date from raw parts"
+                Expect.equal
+                    (Calendar.fromRawParts { year = 2020, month = Feb, day = 29 })
+                    (Maybe.andThen (Calendar.setDay 29) initialDate)
             )
-        , test "Testing for an invalid date."
+        , test "Testing for an invalid day."
             (\_ ->
-                case initialDate of
-                    Just date ->
-                        Expect.equal Nothing (Calendar.setDay 30 date)
-
-                    Nothing ->
-                        Expect.fail "Couldn't create date from raw parts"
+                Expect.equal Nothing <|
+                    Maybe.andThen (Calendar.setDay 30) initialDate
             )
         ]
 

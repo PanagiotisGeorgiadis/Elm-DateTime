@@ -1008,15 +1008,14 @@ setHoursTests =
     describe "Clock.setHours Test Suite"
         [ test "Testing a valid updating of hours."
             (\_ ->
-                let
-                    expected =
-                        Clock.fromRawParts { hours = 23, minutes = 0, seconds = 0, milliseconds = 0 }
-                in
-                Expect.equal expected (Maybe.andThen (Clock.setHours 23) initial)
+                Expect.equal
+                    (Clock.fromRawParts { hours = 23, minutes = 0, seconds = 0, milliseconds = 0 })
+                    (Maybe.andThen (Clock.setHours 23) initial)
             )
         , test "Testing an invalid updating of hours."
             (\_ ->
-                Expect.equal Nothing (Maybe.andThen (Clock.setHours 24) initial)
+                Expect.equal Nothing <|
+                    Maybe.andThen (Clock.setHours 24) initial
             )
         ]
 
@@ -1030,15 +1029,14 @@ setMinutesTests =
     describe "Clock.setMinutes Test Suite"
         [ test "Testing a valid updating of minutes."
             (\_ ->
-                let
-                    expected =
-                        Clock.fromRawParts { hours = 15, minutes = 30, seconds = 0, milliseconds = 0 }
-                in
-                Expect.equal expected (Maybe.andThen (Clock.setMinutes 30) initial)
+                Expect.equal
+                    (Clock.fromRawParts { hours = 15, minutes = 30, seconds = 0, milliseconds = 0 })
+                    (Maybe.andThen (Clock.setMinutes 30) initial)
             )
         , test "Testing an invalid updating of minutes."
             (\_ ->
-                Expect.equal Nothing (Maybe.andThen (Clock.setMinutes 60) initial)
+                Expect.equal Nothing <|
+                    Maybe.andThen (Clock.setMinutes 60) initial
             )
         ]
 
@@ -1052,15 +1050,14 @@ setSecondsTests =
     describe "Clock.setSeconds Test Suite"
         [ test "Testing a valid updating of seconds."
             (\_ ->
-                let
-                    expected =
-                        Clock.fromRawParts { hours = 15, minutes = 0, seconds = 30, milliseconds = 0 }
-                in
-                Expect.equal expected (Maybe.andThen (Clock.setSeconds 30) initial)
+                Expect.equal
+                    (Clock.fromRawParts { hours = 15, minutes = 0, seconds = 30, milliseconds = 0 })
+                    (Maybe.andThen (Clock.setSeconds 30) initial)
             )
         , test "Testing an invalid updating of seconds."
             (\_ ->
-                Expect.equal Nothing (Maybe.andThen (Clock.setSeconds 60) initial)
+                Expect.equal Nothing <|
+                    Maybe.andThen (Clock.setSeconds 60) initial
             )
         ]
 
@@ -1074,15 +1071,14 @@ setMillisecondsTests =
     describe "Clock.setMilliseconds Test Suite"
         [ test "Testing a valid updating of seconds."
             (\_ ->
-                let
-                    expected =
-                        Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 500 }
-                in
-                Expect.equal expected (Maybe.andThen (Clock.setMilliseconds 500) initial)
+                Expect.equal
+                    (Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 500 })
+                    (Maybe.andThen (Clock.setMilliseconds 500) initial)
             )
         , test "Testing an invalid updating of seconds."
             (\_ ->
-                Expect.equal Nothing (Maybe.andThen (Clock.setMilliseconds 1000) initial)
+                Expect.equal Nothing <|
+                    Maybe.andThen (Clock.setMilliseconds 1000) initial
             )
         ]
 
