@@ -7,7 +7,7 @@ module DateTime.DateTime exposing
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compare, compareDates, compareTime
-    , getWeekday, getDateRange, getDatesInMonth
+    , getWeekday, getDateRange, getDatesInMonth, sort
     )
 
 {-| A complete datetime type.
@@ -52,7 +52,7 @@ module DateTime.DateTime exposing
 
 # Utilities
 
-@docs getWeekday, getDateRange, getDatesInMonth
+@docs getWeekday, getDateRange, getDatesInMonth, sort
 
 -}
 
@@ -455,7 +455,7 @@ getWeekday =
 
 {-| Returns a list of Dates that belong in the current month of the 'DateTime'.
 -}
-getDatesInMonth : DateTime -> List DateTime
+getDatesInMonth : DateTime -> Clock.Time -> List DateTime
 getDatesInMonth =
     Internal.getDatesInMonth
 
@@ -467,29 +467,29 @@ getDatesInMonth =
 
 > startDate = fromRawParts { day = 25, month = Feb, year = 2020 }
 > endDate = fromRawParts { day = 1, month = Mar, year = 2020 }
-> getDateRange startDate endDate
-> [ Date { day = Day 25, month = Feb, year = Year 2020 }
-> , Date { day = Day 26, month = Feb, year = Year 2020 }
-> , Date { day = Day 27, month = Feb, year = Year 2020 }
-> , Date { day = Day 28, month = Feb, year = Year 2020 }
-> , Date { day = Day 29, month = Feb, year = Year 2020 }
-> , Date { day = Day 1, month = Mar, year = Year 2020 }
+> getDateRange startDate endDate Clock.midnight
+> [ Date { day = Day 25, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> , Date { day = Day 26, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> , Date { day = Day 27, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> , Date { day = Day 28, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> , Date { day = Day 29, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> , Date { day = Day 1, month = Mar, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
 > ]
 >
 > startDate2 = fromRawParts { day = 25, month = Feb, year = 2019 }
 > endDate2 = fromRawParts { day = 1, month = Mar, year = 2019 }
-> getDateRange startDate2 endDate2
-> [ Date { day = Day 25, month = Feb, year = Year 2019 }
-> , Date { day = Day 26, month = Feb, year = Year 2019 }
-> , Date { day = Day 27, month = Feb, year = Year 2019 }
-> , Date { day = Day 28, month = Feb, year = Year 2019 }
-> , Date { day = Day 1, month = Mar, year = Year 2019 }
+> getDateRange startDate2 endDate2 Clock.midnight
+> [ Date { day = Day 25, month = Feb, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> , Date { day = Day 26, month = Feb, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> , Date { day = Day 27, month = Feb, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> , Date { day = Day 28, month = Feb, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+> , Date { day = Day 1, month = Mar, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
 > ]
 
 -}
-getDateRange : DateTime -> DateTime -> List DateTime
-getDateRange start end =
-    Internal.getDateRange start end
+getDateRange : DateTime -> DateTime -> Clock.Time -> List DateTime
+getDateRange =
+    Internal.getDateRange
 
 
 {-| Sorts a List of 'DateTime' based on their posix timestamps.

@@ -544,11 +544,11 @@ getWeekday (DateTime dateTime) =
 
 {-| Returns a list of Dates that belong in the current month of the 'DateTime'.
 -}
-getDatesInMonth : DateTime -> List DateTime
-getDatesInMonth (DateTime { date }) =
+getDatesInMonth : DateTime -> Clock.Time -> List DateTime
+getDatesInMonth (DateTime { date }) time =
     List.map
         (\date_ ->
-            DateTime { date = date_, time = Clock.midnight }
+            DateTime { date = date_, time = time }
         )
         (Calendar.getDatesInMonth date)
 
@@ -580,14 +580,11 @@ getDatesInMonth (DateTime { date }) =
 > ]
 
 -}
-getDateRange : DateTime -> DateTime -> List DateTime
-getDateRange (DateTime start) (DateTime end) =
+getDateRange : DateTime -> DateTime -> Clock.Time -> List DateTime
+getDateRange (DateTime start) (DateTime end) time =
     List.map
         (\date ->
-            DateTime
-                { date = date
-                , time = Clock.midnight
-                }
+            DateTime { date = date, time = time }
         )
         (Calendar.getDateRange start.date end.date)
 
