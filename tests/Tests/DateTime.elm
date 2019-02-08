@@ -40,17 +40,17 @@ fromPosixTests : Test
 fromPosixTests =
     let
         date =
-            -- This timestamp is equivalent to Fri Dec 21 2018 15:45:30 GMT+0000
+            -- This timestamp is equivalent to Fri Dec 21 2018 15:45:30.000 GMT+0000
             DateTime.fromPosix (Time.millisToPosix 1545407130000)
+
+        negativeDate =
+            -- This timestamp is equivalent to Sat Aug 26 1950 00:00:00.000 GMT+0000
+            DateTime.fromPosix (Time.millisToPosix -610675200000)
     in
-    describe "Clock.fromPosix Test Suite"
+    describe "DateTime.fromPosix Test Suite"
         [ test "Year validation"
             (\_ ->
                 Expect.equal 2018 (DateTime.getYear date)
-            )
-        , test "Month Int validation"
-            (\_ ->
-                Expect.equal 12 (Calendar.monthToInt <| DateTime.getMonth date)
             )
         , test "Month validation"
             (\_ ->
@@ -87,6 +87,38 @@ fromPosixTests =
                         DateTime.fromPosix (Time.millisToPosix (1545407130000 + 500))
                 in
                 Expect.equal 500 (DateTime.getMilliseconds date_)
+            )
+        , test "Negative timestamp Year validation"
+            (\_ ->
+                Expect.equal 1950 (DateTime.getYear negativeDate)
+            )
+        , test "Negative timestamp Month validation"
+            (\_ ->
+                Expect.equal Time.Aug (DateTime.getMonth negativeDate)
+            )
+        , test "Negative timestamp Day validation"
+            (\_ ->
+                Expect.equal 26 (DateTime.getDay negativeDate)
+            )
+        , test "Negative timestamp Weekday validation"
+            (\_ ->
+                Expect.equal Time.Sat (DateTime.getWeekday negativeDate)
+            )
+        , test "Negative timestamp Hours validation"
+            (\_ ->
+                Expect.equal 0 (DateTime.getHours negativeDate)
+            )
+        , test "Negative timestamp Minutes validation"
+            (\_ ->
+                Expect.equal 0 (DateTime.getMinutes negativeDate)
+            )
+        , test "Negative timestamp Seconds validation"
+            (\_ ->
+                Expect.equal 0 (DateTime.getSeconds negativeDate)
+            )
+        , test "Negative timestamp Milliseconds validation"
+            (\_ ->
+                Expect.equal 0 (DateTime.getMilliseconds negativeDate)
             )
         ]
 
