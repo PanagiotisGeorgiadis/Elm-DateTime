@@ -89,15 +89,12 @@ fromPosix timePosix =
 -}
 fromRawParts : Calendar.RawDate -> Clock.RawTime -> Maybe DateTime
 fromRawParts rawDate rawTime =
-    Maybe.andThen
-        (\date ->
-            Maybe.andThen
-                (\t ->
-                    Just (DateTime { date = date, time = t })
-                )
-                (Clock.fromRawParts rawTime)
+    Maybe.map2
+        (\date time ->
+            DateTime (InternalDateTime date time)
         )
         (Calendar.fromRawParts rawDate)
+        (Clock.fromRawParts rawTime)
 
 
 {-| Create a `DateTime` from a 'Calendar.Date' and 'Clock.Time'.

@@ -121,30 +121,14 @@ fromPosix posix =
 -}
 fromRawParts : RawTime -> Maybe Time
 fromRawParts { hours, minutes, seconds, milliseconds } =
-    hoursFromInt hours
-        |> Maybe.andThen
-            (\hours_ ->
-                minutesFromInt minutes
-                    |> Maybe.andThen
-                        (\minutes_ ->
-                            secondsFromInt seconds
-                                |> Maybe.andThen
-                                    (\seconds_ ->
-                                        millisecondsFromInt milliseconds
-                                            |> Maybe.andThen
-                                                (\millis ->
-                                                    Just
-                                                        (Time
-                                                            { hours = hours_
-                                                            , minutes = minutes_
-                                                            , seconds = seconds_
-                                                            , milliseconds = millis
-                                                            }
-                                                        )
-                                                )
-                                    )
-                        )
-            )
+    Maybe.map4
+        (\h m s mm ->
+            Time (InternalTime h m s mm)
+        )
+        (hoursFromInt hours)
+        (minutesFromInt minutes)
+        (secondsFromInt seconds)
+        (millisecondsFromInt milliseconds)
 
 
 {-| Attempt to construct a `Hour` from an `Int`.

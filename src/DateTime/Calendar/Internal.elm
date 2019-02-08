@@ -141,11 +141,7 @@ Returns `Nothing` if any parts or their combination would form an invalid date.
 -}
 fromRawParts : RawDate -> Maybe Date
 fromRawParts { year, month, day } =
-    yearFromInt year
-        |> Maybe.andThen
-            (\y ->
-                fromRawDay y month day
-            )
+    Maybe.andThen (\y -> fromRawDay y month day) (yearFromInt year)
 
 
 {-| Construct a `Date` from its constituent Year and Month by using its raw day.
