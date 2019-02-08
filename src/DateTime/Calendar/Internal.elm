@@ -1125,23 +1125,29 @@ lastDayOf year month =
 millisSinceEpoch : Year -> Int
 millisSinceEpoch (Year year) =
     let
-        -- year - 1 because we want the milliseconds
-        -- in the start of the target year in order to add
-        -- the months + days + hours + minues + secs if we want to.
-        years_ =
-            List.range 1970 (year - 1)
+        epochYear =
+            1970
+
+        getTotalMillis =
+            List.sum << List.map millisInYear << List.filterMap yearFromInt
     in
-    List.foldl
-        (\y result ->
-            let
-                yearMillis =
-                    Maybe.withDefault 0 <|
-                        Maybe.map millisInYear (yearFromInt y)
-            in
-            result + yearMillis
-        )
-        0
-        years_
+    if year >= 1970 then
+        -- We chose (year - 1) here because we want the milliseconds
+        -- in the start of the target year in order to add
+        -- the months + days + hours + minutes + secs + millis if we want to.
+        getTotalMillis (List.range epochYear (year - 1))
+
+    else
+        -- We chose (epochYear - 1) here because we want to
+        -- get the total milliseconds of all the previous years,
+        -- including the target year which we'll then add
+        -- the months + days + hours + minutes + secs + millis in millis
+        -- in order to get the desired outcome.
+        -- Example: Target date = 26 Aug 1950.
+        -- totalMillis from 1/1/1950 - 1/1/1969 = -631152000000
+        -- 26 Aug date millis = 20476800000
+        -- Resulting millis will be = -631152000000 + 20476800000 == -610675200000 == 26 Aug 1950
+        Basics.negate <| getTotalMillis (List.range year (epochYear - 1))
 
 
 {-| Returns the month milliseconds since the start of a given year.

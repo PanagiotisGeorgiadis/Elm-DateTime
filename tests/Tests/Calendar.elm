@@ -1305,7 +1305,11 @@ millisSinceEpochTest =
             )
         , test "Testing for year 1969"
             (\_ ->
-                Expect.equal 0 (Calendar.millisSinceEpoch (Calendar.Year 1969))
+                Expect.equal -31536000000 (Calendar.millisSinceEpoch (Calendar.Year 1969))
+            )
+        , test "Testing for year 1950"
+            (\_ ->
+                Expect.equal -631152000000 (Calendar.millisSinceEpoch (Calendar.Year 1950))
             )
         ]
 
@@ -1584,11 +1588,15 @@ sortTest =
                 , Calendar.fromRawParts { year = 2021, month = Mar, day = 9 }
                 , Calendar.fromRawParts { year = 2005, month = Aug, day = 10 }
                 , Calendar.fromRawParts { year = 1995, month = Sep, day = 7 }
+                , Calendar.fromRawParts { year = 1969, month = Mar, day = 8 }
+                , Calendar.fromRawParts { year = 1940, month = Apr, day = 10 }
                 ]
 
         sortedList =
             List.map (Maybe.withDefault defaultDate)
-                [ Calendar.fromRawParts { year = 1995, month = Sep, day = 7 }
+                [ Calendar.fromRawParts { year = 1940, month = Apr, day = 10 }
+                , Calendar.fromRawParts { year = 1969, month = Mar, day = 8 }
+                , Calendar.fromRawParts { year = 1995, month = Sep, day = 7 }
                 , Calendar.fromRawParts { year = 2005, month = Aug, day = 10 }
                 , Calendar.fromRawParts { year = 2018, month = Jan, day = 8 }
                 , Calendar.fromRawParts { year = 2019, month = Feb, day = 7 }
