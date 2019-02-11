@@ -61,23 +61,21 @@ suite =
         , setMinutesTests
         , setSecondsTests
         , setMillisecondsTests
+        , incrementYearTests
+        , incrementMonthTests
+        , incrementDayTests
+        , incrementHoursTests
+        , incrementMinutesTests
+        , incrementSecondsTests
+        , incrementMillisecondsTests
+        , decrementYearTests
+        , decrementMonthTests
+        , decrementDayTests
+        , decrementHoursTests
+        , decrementMinutesTests
+        , decrementSecondsTests
+        , decrementMillisecondsTests
 
-        --
-        -- , incrementYearTests -- TODO
-        -- , incrementMonthTests -- TODO
-        -- , incrementDayTests -- TODO
-        -- , incrementHoursTests -- TODO
-        -- , incrementMinutesTests -- TODO
-        -- , incrementSecondsTests -- TODO
-        -- , incrementMillisecondsTests -- TODO
-        --
-        -- , decrementYearTests -- TODO
-        -- , decrementMonthTests -- TODO
-        -- , decrementDayTests -- TODO
-        -- , decrementHoursTests -- TODO
-        -- , decrementMinutesTests -- TODO
-        -- , decrementSecondsTests -- TODO
-        -- , decrementMillisecondsTests -- TODO
         --
         -- , compareTests -- TODO
         -- , compareDatesTests -- TODO
@@ -418,6 +416,702 @@ setMillisecondsTests =
             (\_ ->
                 Expect.equal Nothing <|
                     Maybe.andThen (DateTime.setMilliseconds 1000) initial
+            )
+        ]
+
+
+incrementYearTests : Test
+incrementYearTests =
+    let
+        rawHours =
+            { hours = 23, minutes = 15, seconds = 45, milliseconds = 250 }
+    in
+    describe "DateTime.incrementYear Test Suite"
+        [ test "Incrementing the year with an initial DateTime of 11th of February 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Feb, day = 11 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 11 } rawHours)
+                    (Maybe.map DateTime.incrementYear dateTime)
+            )
+        , test "Incrementing the year with an initial DateTime of 29th of February 2020 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2021, month = Feb, day = 28 } rawHours)
+                    (Maybe.map DateTime.incrementYear dateTime)
+            )
+        , test "Incrementing the year with an initial DateTime of 28th of February 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 28 } rawHours)
+                    (Maybe.map DateTime.incrementYear dateTime)
+            )
+        ]
+
+
+incrementMonthTests : Test
+incrementMonthTests =
+    let
+        rawHours =
+            { hours = 23, minutes = 15, seconds = 45, milliseconds = 250 }
+    in
+    describe "DateTime.incrementMonth Test Suite"
+        [ test "Incrementing the month with an initial DateTime of 12th of December 2018 23:15:45.250 (Checking month and year increment)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2018, month = Dec, day = 12 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Jan, day = 12 } rawHours)
+                    (Maybe.map DateTime.incrementMonth dateTime)
+            )
+        , test "Incrementing the month with an initial DateTime of 15th of June 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Jun, day = 15 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Jul, day = 15 } rawHours)
+                    (Maybe.map DateTime.incrementMonth dateTime)
+            )
+        , test "Incrementing the month with an initial DateTime of 31st of January 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Jan, day = 31 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours)
+                    (Maybe.map DateTime.incrementMonth dateTime)
+            )
+        , test "Incrementing the month with an initial DateTime of 31st of January 2020 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Jan, day = 31 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } rawHours)
+                    (Maybe.map DateTime.incrementMonth dateTime)
+            )
+        ]
+
+
+incrementDayTests : Test
+incrementDayTests =
+    let
+        rawHours =
+            { hours = 23, minutes = 15, seconds = 45, milliseconds = 250 }
+    in
+    describe "DateTime.incrementDay Test Suite"
+        [ test "Incrementing the day with an initial DateTime of 31st of December 2018 23:15:45.250 (Checking day, month and year increment)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } rawHours)
+                    (Maybe.map DateTime.incrementDay dateTime)
+            )
+        , test "Incrementing the day with an initial DateTime of 28th of February 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } rawHours)
+                    (Maybe.map DateTime.incrementDay dateTime)
+            )
+        , test "Incrementing the day with an initial DateTime of 28th of February 2020 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } rawHours)
+                    (Maybe.map DateTime.incrementDay dateTime)
+            )
+        , test "Incrementing the day with an initial DateTime of 12th of September 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Sep, day = 12 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Sep, day = 13 } rawHours)
+                    (Maybe.map DateTime.incrementDay dateTime)
+            )
+        ]
+
+
+incrementHoursTests : Test
+incrementHoursTests =
+    let
+        ( rawHours, expectedRawHours ) =
+            ( { hours = 23, minutes = 15, seconds = 45, milliseconds = 250 }
+            , { hours = 0, minutes = 15, seconds = 45, milliseconds = 250 }
+            )
+    in
+    describe "DateTime.incrementHours Test Suite"
+        [ test "Incrementing the hours with an initial DateTime of 31st of December 2018 23:15:45.250 (Checking hours, day, month and year increment)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } expectedRawHours)
+                    (Maybe.map DateTime.incrementHours dateTime)
+            )
+        , test "Incrementing the hours with an initial DateTime of 28th of February 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } expectedRawHours)
+                    (Maybe.map DateTime.incrementHours dateTime)
+            )
+        , test "Incrementing the hours with an initial DateTime of 28th of February 2020 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } expectedRawHours)
+                    (Maybe.map DateTime.incrementHours dateTime)
+            )
+        , test "Incrementing the hours with an initial DateTime of 15th of January 2020 15:45:25.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 45, seconds = 25, milliseconds = 250 }
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 16, minutes = 45, seconds = 25, milliseconds = 250 })
+                    (Maybe.map DateTime.incrementHours dateTime)
+            )
+        ]
+
+
+incrementMinutesTests : Test
+incrementMinutesTests =
+    let
+        ( rawHours, expectedRawHours ) =
+            ( { hours = 23, minutes = 59, seconds = 15, milliseconds = 250 }
+            , { hours = 0, minutes = 0, seconds = 15, milliseconds = 250 }
+            )
+    in
+    describe "DateTime.incrementMinutes Test Suite"
+        [ test "Incrementing the minutes with an initial DateTime of 31st of December 2018 23:59:15.250 (Checking minutes, hours, day, month and year increment)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } expectedRawHours)
+                    (Maybe.map DateTime.incrementMinutes dateTime)
+            )
+        , test "Incrementing the minutes with an initial DateTime of 28th of February 2019 23:59:15.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } expectedRawHours)
+                    (Maybe.map DateTime.incrementMinutes dateTime)
+            )
+        , test "Incrementing the minutes with an initial DateTime of 28th of February 2020 23:59:15.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } expectedRawHours)
+                    (Maybe.map DateTime.incrementMinutes dateTime)
+            )
+        , test "Incrementing the minutes with an initial DateTime of 15th of January 2020 15:45:25.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 45, seconds = 25, milliseconds = 250 }
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 46, seconds = 25, milliseconds = 250 })
+                    (Maybe.map DateTime.incrementMinutes dateTime)
+            )
+        ]
+
+
+incrementSecondsTests : Test
+incrementSecondsTests =
+    let
+        ( rawHours, expectedRawHours ) =
+            ( { hours = 23, minutes = 59, seconds = 59, milliseconds = 250 }
+            , { hours = 0, minutes = 0, seconds = 0, milliseconds = 250 }
+            )
+    in
+    describe "DateTime.incrementSeconds Test Suite"
+        [ test "Incrementing the seconds with an initial DateTime of 31st of December 2018 23:59:59.250 (Checking seconds, minutes, hours, day, month and year increment)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } expectedRawHours)
+                    (Maybe.map DateTime.incrementSeconds dateTime)
+            )
+        , test "Incrementing the seconds with an initial DateTime of 28th of February 2019 23:59:59.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } expectedRawHours)
+                    (Maybe.map DateTime.incrementSeconds dateTime)
+            )
+        , test "Incrementing the seconds with an initial DateTime of 28th of February 2020 23:59:59.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } expectedRawHours)
+                    (Maybe.map DateTime.incrementSeconds dateTime)
+            )
+        , test "Incrementing the seconds with an initial DateTime of 15th of January 2020 15:45:59.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 45, seconds = 59, milliseconds = 250 }
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 46, seconds = 0, milliseconds = 250 })
+                    (Maybe.map DateTime.incrementSeconds dateTime)
+            )
+        ]
+
+
+incrementMillisecondsTests : Test
+incrementMillisecondsTests =
+    let
+        ( rawHours, expectedRawHours ) =
+            ( { hours = 23, minutes = 59, seconds = 59, milliseconds = 999 }
+            , { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+            )
+    in
+    describe "DateTime.incrementMilliseconds Test Suite"
+        [ test "Incrementing the milliseconds with an initial DateTime of 31st of December 2018 23:59:59.999 (Checking milliseconds, seconds, minutes, hours, day, month and year increment)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } expectedRawHours)
+                    (Maybe.map DateTime.incrementMilliseconds dateTime)
+            )
+        , test "Incrementing the milliseconds with an initial DateTime of 28th of February 2019 23:59:59.999"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } expectedRawHours)
+                    (Maybe.map DateTime.incrementMilliseconds dateTime)
+            )
+        , test "Incrementing the milliseconds with an initial DateTime of 28th of February 2020 23:59:59.999"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } expectedRawHours)
+                    (Maybe.map DateTime.incrementMilliseconds dateTime)
+            )
+        , test "Incrementing the milliseconds with an initial DateTime of 15th of January 2020 15:45:59.999"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 45, seconds = 59, milliseconds = 999 }
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 46, seconds = 0, milliseconds = 0 })
+                    (Maybe.map DateTime.incrementMilliseconds dateTime)
+            )
+        ]
+
+
+decrementYearTests : Test
+decrementYearTests =
+    let
+        rawHours =
+            { hours = 23, minutes = 15, seconds = 45, milliseconds = 250 }
+    in
+    describe "DateTime.decrementYear Test Suite"
+        [ test "Decrementing the year with an initial DateTime of 11th of February 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Feb, day = 11 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2018, month = Feb, day = 11 } rawHours)
+                    (Maybe.map DateTime.decrementYear dateTime)
+            )
+        , test "Decrementing the year with an initial DateTime of 29th of February 2020 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours)
+                    (Maybe.map DateTime.decrementYear dateTime)
+            )
+        , test "Decrementing the year with an initial DateTime of 28th of February 2021 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2021, month = Feb, day = 28 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 28 } rawHours)
+                    (Maybe.map DateTime.decrementYear dateTime)
+            )
+        ]
+
+
+decrementMonthTests : Test
+decrementMonthTests =
+    let
+        rawHours =
+            { hours = 23, minutes = 15, seconds = 45, milliseconds = 250 }
+    in
+    describe "DateTime.decrementMonth Test Suite"
+        [ test "Decrementing the month with an initial DateTime as 12th of January 2018 23:15:45.250 (Checking month and year decrement)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2018, month = Jan, day = 12 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2017, month = Dec, day = 12 } rawHours)
+                    (Maybe.map DateTime.decrementMonth dateTime)
+            )
+        , test "Decrementing the month with an initial DateTime as 15th of June 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Jun, day = 15 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = May, day = 15 } rawHours)
+                    (Maybe.map DateTime.decrementMonth dateTime)
+            )
+        , test "Decrementing the month with an initial DateTime as 31st of March 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Mar, day = 31 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours)
+                    (Maybe.map DateTime.decrementMonth dateTime)
+            )
+        , test "Decrementing the month with an initial DateTime as 31st of March 2020 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Mar, day = 31 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } rawHours)
+                    (Maybe.map DateTime.decrementMonth dateTime)
+            )
+        ]
+
+
+decrementDayTests : Test
+decrementDayTests =
+    let
+        rawHours =
+            { hours = 23, minutes = 15, seconds = 45, milliseconds = 250 }
+    in
+    describe "DateTime.decrementDay Test Suite"
+        [ test "Decrementing the day with an initial DateTime of 1st of January 2019 23:15:45.250 (Checking day, month and year decrement)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } rawHours)
+                    (Maybe.map DateTime.decrementDay dateTime)
+            )
+        , test "Decrementing the day with an initial DateTime of 1st of March 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } rawHours)
+                    (Maybe.map DateTime.decrementDay dateTime)
+            )
+        , test "Decrementing the day with an initial DateTime of 1st of March 2020 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } rawHours)
+                    (Maybe.map DateTime.decrementDay dateTime)
+            )
+        , test "Decrementing the day with an initial DateTime of 12th of September 2019 23:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Sep, day = 12 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Sep, day = 11 } rawHours)
+                    (Maybe.map DateTime.decrementDay dateTime)
+            )
+        ]
+
+
+decrementHoursTests : Test
+decrementHoursTests =
+    let
+        ( rawHours, expectedRawHours ) =
+            ( { hours = 0, minutes = 15, seconds = 45, milliseconds = 250 }
+            , { hours = 23, minutes = 15, seconds = 45, milliseconds = 250 }
+            )
+    in
+    describe "DateTime.decrementHours Test Suite"
+        [ test "Decrementing the hours with an initial DateTime as 1st of January 2019 00:15:45.250 (Checking hours, day, month and year decrement)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } expectedRawHours)
+                    (Maybe.map DateTime.decrementHours dateTime)
+            )
+        , test "Decrementing the hours with an initial DateTime as 1st of March 2019 00:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } expectedRawHours)
+                    (Maybe.map DateTime.decrementHours dateTime)
+            )
+        , test "Decrementing the hours with an initial DateTime as 1st of March 2020 00:15:45.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } expectedRawHours)
+                    (Maybe.map DateTime.decrementHours dateTime)
+            )
+        , test "Decrementing the hours with an initial DateTime as 15th of January 2020 16:45:25.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 16, minutes = 45, seconds = 25, milliseconds = 250 }
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 45, seconds = 25, milliseconds = 250 })
+                    (Maybe.map DateTime.decrementHours dateTime)
+            )
+        ]
+
+
+decrementMinutesTests : Test
+decrementMinutesTests =
+    let
+        ( rawHours, expectedRawHours ) =
+            ( { hours = 0, minutes = 0, seconds = 15, milliseconds = 250 }
+            , { hours = 23, minutes = 59, seconds = 15, milliseconds = 250 }
+            )
+    in
+    describe "DateTime.decrementMinutes Test Suite"
+        [ test "Decrementing the minutes with an initial DateTime of 1st of January 2019 00:00:15.250 (Checking minutes, hours, day, month and year decrement)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } expectedRawHours)
+                    (Maybe.map DateTime.decrementMinutes dateTime)
+            )
+        , test "Decrementing the minutes with an initial DateTime of 1st of March 2019 00:00:15.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } expectedRawHours)
+                    (Maybe.map DateTime.decrementMinutes dateTime)
+            )
+        , test "Decrementing the minutes with an initial DateTime of 1st of March 2020 00:00:15.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } expectedRawHours)
+                    (Maybe.map DateTime.decrementMinutes dateTime)
+            )
+        , test "Decrementing the minutes with an initial DateTime of 15th of January 2020 15:45:25.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 45, seconds = 25, milliseconds = 250 }
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 44, seconds = 25, milliseconds = 250 })
+                    (Maybe.map DateTime.decrementMinutes dateTime)
+            )
+        ]
+
+
+decrementSecondsTests : Test
+decrementSecondsTests =
+    let
+        ( rawHours, expectedRawHours ) =
+            ( { hours = 0, minutes = 0, seconds = 0, milliseconds = 250 }
+            , { hours = 23, minutes = 59, seconds = 59, milliseconds = 250 }
+            )
+    in
+    describe "DateTime.decrementSeconds Test Suite"
+        [ test "Decrementing the seconds with an initial DateTime of 1st of January 2019 00:00:00.250 (Checking seconds, minutes, hours, day, month and year decrement)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } expectedRawHours)
+                    (Maybe.map DateTime.decrementSeconds dateTime)
+            )
+        , test "Decrementing the seconds with an initial DateTime of 1st of March 2019 00:00:00.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } expectedRawHours)
+                    (Maybe.map DateTime.decrementSeconds dateTime)
+            )
+        , test "Decrementing the seconds with an initial DateTime of 1st of March 2020 00:00:00.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } expectedRawHours)
+                    (Maybe.map DateTime.decrementSeconds dateTime)
+            )
+        , test "Decrementing the seconds with an initial DateTime of 15th of January 2020 15:45:59.250"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 45, seconds = 59, milliseconds = 250 }
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 45, seconds = 58, milliseconds = 250 })
+                    (Maybe.map DateTime.decrementSeconds dateTime)
+            )
+        ]
+
+
+decrementMillisecondsTests : Test
+decrementMillisecondsTests =
+    let
+        ( rawHours, expectedRawHours ) =
+            ( { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+            , { hours = 23, minutes = 59, seconds = 59, milliseconds = 999 }
+            )
+    in
+    describe "DateTime.decrementMilliseconds Test Suite"
+        [ test "Decrementing the milliseconds with an initial DateTime of 1st of January 2019 00:00:00.000 (Checking milliseconds, seconds, minutes, hours, day, month and year decrement)"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Jan, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2018, month = Dec, day = 31 } expectedRawHours)
+                    (Maybe.map DateTime.decrementMilliseconds dateTime)
+            )
+        , test "Decrementing the milliseconds with an initial DateTime of 1st of March 2019 00:00:00.000"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2019, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2019, month = Feb, day = 28 } expectedRawHours)
+                    (Maybe.map DateTime.decrementMilliseconds dateTime)
+            )
+        , test "Decrementing the milliseconds with an initial DateTime of 1st of March 2020 00:00:00.000"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Mar, day = 1 } rawHours
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } expectedRawHours)
+                    (Maybe.map DateTime.decrementMilliseconds dateTime)
+            )
+        , test "Decrementing the milliseconds with an initial DateTime of 15th of January 2020 16:00:00.000"
+            (\_ ->
+                let
+                    dateTime =
+                        DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 16, minutes = 0, seconds = 0, milliseconds = 0 }
+                in
+                Expect.equal
+                    (DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 59, seconds = 59, milliseconds = 999 })
+                    (Maybe.map DateTime.decrementMilliseconds dateTime)
             )
         ]
 
