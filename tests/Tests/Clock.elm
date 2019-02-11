@@ -31,6 +31,18 @@ suite =
         , secondsFromIntTests
         , millisecondsFromIntTests
         , toMillisTests
+
+        --
+        -- , hoursToIntTests -- There is nothing to test here.
+        -- , minutesToIntTests -- There is nothing to test here.
+        -- , secondsToIntTests -- There is nothing to test here.
+        -- , millisecondsToIntTests -- There is nothing to test here.
+        --
+        -- , getHoursTests -- There is nothing to test here.
+        -- , getMinutesTests -- There is nothing to test here.
+        -- , getSecondsTests -- There is nothing to test here.
+        -- , getMillisecondsTests -- There is nothing to test here.
+        --
         , setHoursTests
         , setMinutesTests
         , setSecondsTests

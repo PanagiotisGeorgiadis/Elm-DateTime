@@ -1,51 +1,66 @@
 module DateTime.DateTime.Internal exposing
     ( DateTime(..)
-    , InternalDateTime
-    , compare
-    , compareDates
-    , compareTime
-    , decrementDay
-    , decrementHours
-    , decrementMilliseconds
-    , decrementMinutes
-    , decrementMonth
-    , decrementSeconds
-    , decrementYear
-    , fromDateAndTime
-    , fromPosix
-    , fromRawParts
-    , getDate
-    , getDateRange
-    , getDatesInMonth
-    , getDay
-    , getHours
-    , getMilliseconds
-    , getMinutes
-    , getMonth
-    , getSeconds
-    , getTime
-    , getWeekday
-    , getYear
-    , incrementDay
-    , incrementHours
-    , incrementMilliseconds
-    , incrementMinutes
-    , incrementMonth
-    , incrementSeconds
-    , incrementYear
-    , rollDayBackwards
-    , rollDayForward
-    , setDay
-    , setHours
-    , setMilliseconds
-    , setMinutes
-    , setMonth
-    , setSeconds
-    , setYear
-    , sort
-    , toMillis
-    , toPosix
+    , fromPosix, fromRawParts, fromDateAndTime
+    , toPosix, toMillis
+    , getDate, getTime, getYear, getMonth, getDay, getHours, getMinutes, getSeconds, getMilliseconds
+    , setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
+    , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
+    , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
+    , compare, compareDates, compareTime
+    , getWeekday, getDateRange, getDatesInMonth, sort
+    , rollDayBackwards, rollDayForward
     )
+
+{-| A complete datetime type.
+
+@docs DateTime
+
+
+# Creating a `DateTime`
+
+@docs fromPosix, fromRawParts, fromDateAndTime
+
+
+# Conversions
+
+@docs toPosix, toMillis
+
+
+# Accessors
+
+@docs getDate, getTime, getYear, getMonth, getDay, getHours, getMinutes, getSeconds, getMilliseconds
+
+
+# Setters
+
+@docs setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
+
+
+# Incrementers
+
+@docs incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
+
+
+# Decrementers
+
+@docs decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
+
+
+# Comparers
+
+@docs compare, compareDates, compareTime
+
+
+# Utilities
+
+@docs getWeekday, getDateRange, getDatesInMonth, sort
+
+
+# Exposed for Testing Purposes
+
+@docs rollDayBackwards, rollDayForward
+
+-}
 
 import Array
 import DateTime.Calendar as Calendar

@@ -9,7 +9,8 @@ module DateTime.Calendar.Internal exposing
     , compare, compareYears, compareMonths, compareDays
     , getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, lastDayOf, millisInYear, sort
     , months, millisInADay
-    , Year(..), Month, Day(..), millisSinceEpoch, millisSinceStartOfTheYear, millisSinceStartOfTheMonth
+    , Year(..), Month, Day(..)
+    , millisSinceEpoch, millisSinceStartOfTheYear, millisSinceStartOfTheMonth
     )
 
 {-| A calendar date.
@@ -67,7 +68,8 @@ module DateTime.Calendar.Internal exposing
 
 # Exposed for Testing Purposes
 
-@docs Year, Month, Day, millisSinceEpoch, millisSinceStartOfTheYear, millisSinceStartOfTheMonth
+@docs Year, Month, Day
+@docs millisSinceEpoch, millisSinceStartOfTheYear, millisSinceStartOfTheMonth
 
 -}
 

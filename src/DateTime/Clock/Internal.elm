@@ -1,46 +1,83 @@
 module DateTime.Clock.Internal exposing
-    ( Hour(..)
-    , InternalTime
-    , Millisecond(..)
-    , Minute(..)
-    , RawTime
-    , Second(..)
-    , Time(..)
-    , compare
-    , compareHours
-    , compareMilliseconds
-    , compareMinutes
-    , compareSeconds
-    , decrementHours
-    , decrementMilliseconds
-    , decrementMinutes
-    , decrementSeconds
-    , fromPosix
+    ( Time(..), RawTime
     , fromRawParts
-    , getHours
-    , getMilliseconds
-    , getMinutes
-    , getSeconds
-    , hoursFromInt
-    , hoursToInt
-    , incrementHours
-    , incrementMilliseconds
-    , incrementMinutes
-    , incrementSeconds
-    , midnight
-    , millisecondsFromInt
-    , millisecondsToInt
-    , minutesFromInt
-    , minutesToInt
-    , secondsFromInt
-    , secondsToInt
-    , setHours
-    , setMilliseconds
-    , setMinutes
-    , setSeconds
-    , sort
     , toMillis
+    , getHours, getMinutes, getSeconds, getMilliseconds
+    , setHours, setMinutes, setSeconds, setMilliseconds
+    , incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
+    , decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
+    , compare
+    , sort
+    , midnight
+    , Hour(..), Minute(..), Second(..), Millisecond(..)
+    , fromPosix
+    , hoursFromInt, minutesFromInt, secondsFromInt, millisecondsFromInt
+    , hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
+    , compareHours, compareMinutes, compareSeconds, compareMilliseconds
     )
+
+{-| A clock time.
+
+
+# Type definition
+
+@docs Time, RawTime
+
+
+# Creating values
+
+@docs fromRawParts
+
+
+# Conversions
+
+@docs toMillis
+
+
+# Accessors
+
+@docs getHours, getMinutes, getSeconds, getMilliseconds
+
+
+# Setters
+
+@docs setHours, setMinutes, setSeconds, setMilliseconds
+
+
+# Incrementers
+
+@docs incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
+
+
+# Decrementers
+
+@docs decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
+
+
+# Comparers
+
+@docs compare
+
+
+# Utilities
+
+@docs sort
+
+
+# Constants
+
+@docs midnight
+
+
+# Exposed for Testing Purposes
+
+@docs Hour, Minute, Second, Millisecond
+@docs fromPosix
+@docs hoursFromInt, minutesFromInt, secondsFromInt, millisecondsFromInt
+@docs hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
+@docs compareHours, compareMinutes, compareSeconds, compareMilliseconds
+
+-}
 
 import Time as Time_
 

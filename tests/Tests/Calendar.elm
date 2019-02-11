@@ -33,6 +33,18 @@ suite =
         , yearFromIntTest
         , dayFromIntTest
         , toPosixTest
+
+        --
+        -- , toMillisTest -- There is nothing to test here.
+        --
+        -- , yearToIntTest -- There is nothing to test here.
+        -- , monthToIntTest -- There is nothing to test here.
+        -- , dayToIntTest -- There is nothing to test here.
+        --
+        -- , getYearTest -- There is nothing to test here.
+        -- , getMonthTest -- There is nothing to test here.
+        -- , getDayTest -- There is nothing to test here.
+        --
         , setYearTest
         , setMonthTest
         , setDayTest
@@ -57,6 +69,8 @@ suite =
         , millisSinceEpochTest
         , millisSinceStartOfTheYearTest
         , millisSinceStartOfTheMonthTest
+
+        -- , millisInYear -- There is nothing to test here.
         , sortTest
         ]
 
