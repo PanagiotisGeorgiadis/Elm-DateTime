@@ -78,11 +78,9 @@ suite =
         , compareTests
         , compareDatesTests
         , compareTimeTests
-
-        -- , getWeekdayTests -- TODO
-        -- , getDatesInMonthTests -- TODO
-        -- , getDateRangeTests -- TODO
-        --
+        , getWeekdayTests
+        , getDatesInMonthTests
+        , getDateRangeTests
         , sortTests
         ]
 
@@ -1232,6 +1230,150 @@ compareTimeTests =
                     Maybe.map2 DateTime.compareTime
                         (DateTime.fromRawParts { year = 2020, month = Nov, day = 15 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
                         (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 0, seconds = 45, milliseconds = 0 })
+            )
+        ]
+
+
+getWeekdayTests : Test
+getWeekdayTests =
+    describe "DateTime.getWeekday Test Suite"
+        [ test "Getting the weekday from 11th of February 2019."
+            (\_ ->
+                Expect.equal (Just Mon) <|
+                    Maybe.map DateTime.getWeekday
+                        (DateTime.fromRawParts { year = 2019, month = Feb, day = 11 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Getting the weekday from 29th of February 2020."
+            (\_ ->
+                Expect.equal (Just Sat) <|
+                    Maybe.map DateTime.getWeekday
+                        (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Getting the weekday from 1st of March 2020."
+            (\_ ->
+                Expect.equal (Just Sun) <|
+                    Maybe.map DateTime.getWeekday
+                        (DateTime.fromRawParts { year = 2020, month = Mar, day = 1 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        ]
+
+
+getDatesInMonthTests : Test
+getDatesInMonthTests =
+    let
+        defaultDate =
+            DateTime.fromPosix (Time.millisToPosix 0)
+    in
+    describe "DateTime.getDatesInMonth Test Suite"
+        [ test "Getting the dates in August 2019."
+            (\_ ->
+                let
+                    expectedDates =
+                        List.map (Maybe.withDefault defaultDate) <|
+                            List.map
+                                (\day ->
+                                    DateTime.fromRawParts { year = 2019, month = Aug, day = day } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
+                                )
+                                (List.range 1 31)
+
+                    dates =
+                        Maybe.withDefault [] <|
+                            Maybe.map2 DateTime.getDatesInMonth
+                                (DateTime.fromRawParts { year = 2019, month = Aug, day = 1 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 })
+                                (Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+                in
+                Expect.equalLists expectedDates dates
+            )
+        , test "Getting the dates in February 2019."
+            (\_ ->
+                let
+                    expectedDates =
+                        List.map (Maybe.withDefault defaultDate) <|
+                            List.map
+                                (\day ->
+                                    DateTime.fromRawParts { year = 2019, month = Feb, day = day } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
+                                )
+                                (List.range 1 28)
+
+                    dates =
+                        Maybe.withDefault [] <|
+                            Maybe.map2 DateTime.getDatesInMonth
+                                (DateTime.fromRawParts { year = 2019, month = Feb, day = 1 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 })
+                                (Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+                in
+                Expect.equalLists expectedDates dates
+            )
+        , test "Getting the dates in February 2020."
+            (\_ ->
+                let
+                    expectedDates =
+                        List.map (Maybe.withDefault defaultDate) <|
+                            List.map
+                                (\day ->
+                                    DateTime.fromRawParts { year = 2020, month = Feb, day = day } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
+                                )
+                                (List.range 1 29)
+
+                    dates =
+                        Maybe.withDefault [] <|
+                            Maybe.map2 DateTime.getDatesInMonth
+                                (DateTime.fromRawParts { year = 2020, month = Feb, day = 1 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 })
+                                (Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+                in
+                Expect.equalLists expectedDates dates
+            )
+        ]
+
+
+getDateRangeTests : Test
+getDateRangeTests =
+    let
+        defaultDate =
+            DateTime.fromPosix (Time.millisToPosix 0)
+
+        constructDate day month year =
+            Maybe.withDefault defaultDate <|
+                DateTime.fromRawParts { year = year, month = month, day = day } midnightRawParts
+    in
+    describe "DateTime.getDateRange Test Suite"
+        [ test "Getting a date range from 25th of February 2019 to 2nd of March 2019"
+            (\_ ->
+                let
+                    ( start, end ) =
+                        ( constructDate 25 Feb 2019
+                        , constructDate 2 Mar 2019
+                        )
+
+                    expected =
+                        [ constructDate 25 Feb 2019
+                        , constructDate 26 Feb 2019
+                        , constructDate 27 Feb 2019
+                        , constructDate 28 Feb 2019
+                        , constructDate 1 Mar 2019
+                        , constructDate 2 Mar 2019
+                        ]
+                in
+                Expect.equalLists expected (DateTime.getDateRange start end Clock.midnight)
+            )
+        , test "Getting a date range from 25th of February 2020 to 2nd of March 2020"
+            (\_ ->
+                let
+                    ( start, end ) =
+                        ( constructDate 25 Feb 2020
+                        , constructDate 2 Mar 2020
+                        )
+
+                    expected =
+                        [ constructDate 25 Feb 2020
+                        , constructDate 26 Feb 2020
+                        , constructDate 27 Feb 2020
+                        , constructDate 28 Feb 2020
+                        , constructDate 29 Feb 2020
+                        , constructDate 1 Mar 2020
+                        , constructDate 2 Mar 2020
+                        ]
+                in
+                Expect.equalLists expected (DateTime.getDateRange start end Clock.midnight)
             )
         ]
 
