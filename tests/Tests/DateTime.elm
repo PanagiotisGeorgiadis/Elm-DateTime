@@ -75,11 +75,10 @@ suite =
         , decrementMinutesTests
         , decrementSecondsTests
         , decrementMillisecondsTests
+        , compareTests
+        , compareDatesTests
+        , compareTimeTests
 
-        --
-        -- , compareTests -- TODO
-        -- , compareDatesTests -- TODO
-        -- , compareTimeTests -- TODO
         -- , getWeekdayTests -- TODO
         -- , getDatesInMonthTests -- TODO
         -- , getDateRangeTests -- TODO
@@ -1112,6 +1111,127 @@ decrementMillisecondsTests =
                 Expect.equal
                     (DateTime.fromRawParts { year = 2020, month = Jan, day = 15 } { hours = 15, minutes = 59, seconds = 59, milliseconds = 999 })
                     (Maybe.map DateTime.decrementMilliseconds dateTime)
+            )
+        ]
+
+
+compareTests : Test
+compareTests =
+    describe "DateTime.compare Test Suite"
+        [ test "Comparing 15th November 2018 21:00:00.000 with 24th October 2019 21:00:00.000"
+            (\_ ->
+                Expect.equal (Just LT) <|
+                    Maybe.map2 DateTime.compare
+                        (DateTime.fromRawParts { year = 2018, month = Nov, day = 15 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2019, month = Oct, day = 24 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Comparing 24th October 2019 21:00:00.000 with 15th November 2018 21:00:00.000"
+            (\_ ->
+                Expect.equal (Just GT) <|
+                    Maybe.map2 DateTime.compare
+                        (DateTime.fromRawParts { year = 2019, month = Oct, day = 24 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2018, month = Nov, day = 15 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Comparing two equal dates"
+            (\_ ->
+                Expect.equal (Just EQ) <|
+                    Maybe.map2 DateTime.compare
+                        (DateTime.fromRawParts { year = 2019, month = Oct, day = 24 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2019, month = Oct, day = 24 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Comparing 24th of October 2019 21:00:00.000 with 24th of October 2019 22:00:00.000"
+            (\_ ->
+                Expect.equal (Just LT) <|
+                    Maybe.map2 DateTime.compare
+                        (DateTime.fromRawParts { year = 2019, month = Oct, day = 24 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2019, month = Oct, day = 24 } { hours = 22, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Comparing 24th of October 2019 21:45:56.000 with 24th of October 2019 21:45:55.000"
+            (\_ ->
+                Expect.equal (Just GT) <|
+                    Maybe.map2 DateTime.compare
+                        (DateTime.fromRawParts { year = 2019, month = Oct, day = 24 } { hours = 21, minutes = 45, seconds = 56, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2019, month = Oct, day = 24 } { hours = 21, minutes = 45, seconds = 55, milliseconds = 0 })
+            )
+        , test "Comparing 24th of October 2019 21:45:56.000 with 25th of October 1870 21:45:55.000"
+            (\_ ->
+                Expect.equal (Just GT) <|
+                    Maybe.map2 DateTime.compare
+                        (DateTime.fromRawParts { year = 2019, month = Oct, day = 24 } { hours = 21, minutes = 45, seconds = 55, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 1870, month = Oct, day = 25 } { hours = 21, minutes = 45, seconds = 56, milliseconds = 0 })
+            )
+        ]
+
+
+compareDatesTests : Test
+compareDatesTests =
+    let
+        ( lower, higher ) =
+            ( DateTime.fromRawParts { year = 2019, month = Aug, day = 25 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+            , DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+            )
+    in
+    describe "DateTime.compareDates Test Suite"
+        [ test "Comparing 25th of August 2019 21:00:00.000 with 26th of August 2019 21:00:00.000"
+            (\_ ->
+                Expect.equal (Just LT) <|
+                    Maybe.map2 DateTime.compareDates lower higher
+            )
+        , test "Comparing 26th of August 2019 21:00:00.000 with 25th of August 2019 21:00:00.000"
+            (\_ ->
+                Expect.equal (Just GT) <|
+                    Maybe.map2 DateTime.compareDates higher lower
+            )
+        , test "Comparing 26th of August 2019 21:00:00.000 with 26th of August 2019 21:00:00.000"
+            (\_ ->
+                Expect.equal (Just EQ) <|
+                    Maybe.map2 DateTime.compareDates higher higher
+            )
+        , test "Comparing 26th of August 2019 21:00:00.000 with 26th of August 2019 21:45:30.000"
+            (\_ ->
+                Expect.equal (Just EQ) <|
+                    Maybe.map2 DateTime.compareDates higher (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 45, seconds = 30, milliseconds = 0 })
+            )
+        ]
+
+
+compareTimeTests : Test
+compareTimeTests =
+    describe "DateTime.compareTime Test Suite"
+        [ test "Comparing 26th of August 2019 21:00:00.000 with 26th of August 2019 21:45:00.000"
+            (\_ ->
+                Expect.equal (Just LT) <|
+                    Maybe.map2 DateTime.compareTime
+                        (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 45, seconds = 0, milliseconds = 0 })
+            )
+        , test "Comparing 26th of August 2019 21:45:00.000 with 26th of August 2019 21:00:00.000"
+            (\_ ->
+                Expect.equal (Just GT) <|
+                    Maybe.map2 DateTime.compareTime
+                        (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 45, seconds = 0, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Comparing 26th of August 2019 21:00:00.000 with 26th of August 2019 21:00:00.000"
+            (\_ ->
+                Expect.equal (Just EQ) <|
+                    Maybe.map2 DateTime.compareTime
+                        (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Comparing 15th of November 2020 21:00:00.000 with 26th of August 2019 21:00:00.000"
+            (\_ ->
+                Expect.equal (Just EQ) <|
+                    Maybe.map2 DateTime.compareTime
+                        (DateTime.fromRawParts { year = 2020, month = Nov, day = 15 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Comparing 15th of November 2020 21:00:00.000 with 26th of August 2019 21:00:45.000"
+            (\_ ->
+                Expect.equal (Just LT) <|
+                    Maybe.map2 DateTime.compareTime
+                        (DateTime.fromRawParts { year = 2020, month = Nov, day = 15 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
+                        (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 0, seconds = 45, milliseconds = 0 })
             )
         ]
 
