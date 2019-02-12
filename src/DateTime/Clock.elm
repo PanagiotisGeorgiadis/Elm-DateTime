@@ -78,7 +78,11 @@ type alias Time =
 {-| An 'abstract' representation of Time and its constituent parts based on Integers.
 -}
 type alias RawTime =
-    Internal.RawTime
+    { hours : Int
+    , minutes : Int
+    , seconds : Int
+    , milliseconds : Int
+    }
 
 
 

@@ -79,7 +79,10 @@ type alias Date =
 {-| The raw representation of a date.
 -}
 type alias RawDate =
-    Internal.RawDate
+    { year : Int
+    , month : Time.Month
+    , day : Int
+    }
 
 
 
