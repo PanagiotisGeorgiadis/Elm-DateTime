@@ -76,6 +76,8 @@ type alias Date =
     Internal.Date
 
 
+{-| The raw representation of a date.
+-}
 type alias RawDate =
     Internal.RawDate
 

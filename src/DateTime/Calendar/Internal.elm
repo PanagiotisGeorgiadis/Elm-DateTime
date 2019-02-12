@@ -90,18 +90,26 @@ type alias InternalDate =
     }
 
 
+{-| A calendar year.
+-}
 type Year
     = Year Int
 
 
+{-| A calendar month.
+-}
 type alias Month =
     Time.Month
 
 
+{-| A calendar day.
+-}
 type Day
     = Day Int
 
 
+{-| The raw representation of a date.
+-}
 type alias RawDate =
     { year : Int
     , month : Time.Month

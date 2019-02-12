@@ -98,18 +98,26 @@ type alias InternalTime =
     }
 
 
+{-| A clock hour
+-}
 type Hour
     = Hour Int
 
 
+{-| A clock minute
+-}
 type Minute
     = Minute Int
 
 
+{-| A clock second
+-}
 type Second
     = Second Int
 
 
+{-| A clock millisecond
+-}
 type Millisecond
     = Millisecond Int
 
