@@ -70,7 +70,7 @@ import DateTime.Calendar.Internal as Internal
 import Time exposing (Month)
 
 
-{-| A full (Gregorian) calendar date.
+{-| A full ([Gregorian](https://en.wikipedia.org/wiki/Gregorian_calendar)) calendar date.
 -}
 type alias Date =
     Internal.Date
@@ -99,13 +99,13 @@ function located in the [elm/time](https://package.elm-lang.org/packages/elm/tim
     fromPosix (Time.millisToPosix 1566795954000)
     -- Date { day = Day 26, month = Aug, year = Year 2019 }
 
-    fromPosix (Time.millisToPosix 1566774000000)
+    fromPosix (Time.millisToPosix 1566777600000)
     -- Date { day = Day 26, month = Aug, year = Year 2019 }
 
 Notice that in the second and third examples the timestamps that are used are different but the resulting [Dates](DateTime-Calendar#Date) are identical.
-This is because the Calendar module doesn't have any knowledge of `Time` which means that if we attempt to convert both of these dates back [toMillis](DateTime-Calendar#toMillis)
-they will result in the same milliseconds. Be really cautious when using the fromPosix function. It is recommended using this [fromPosix](DateTime-DateTime#fromPosix) function if you need to
-preserve both `Date` and `Time`.
+This is because the [Calendar](DateTime-Calendar) module doesn't have any knowledge of `Time` which means that if we attempt to convert both of these dates back [toMillis](DateTime-Calendar#toMillis)
+they will result in the same milliseconds. It is recommended using the [fromPosix](DateTime-DateTime#fromPosix) function provided in the [DateTime](DateTime-DateTime)
+module if you need to preserve both `Date` and `Time`.
 
 -}
 fromPosix : Time.Posix -> Date
@@ -135,9 +135,9 @@ fromRawParts =
 {-| Transforms a [Date](DateTime-Calendar#Date) into milliseconds.
 
     date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map toMillis date -- Just 1577232000000 : Maybe Int
+    Maybe.map toMillis date -- Just 1577232000000
 
-    toMillis <| fromPosix (Time.millisToPosix 1566795954000) -- 1566777600000 : Int
+    toMillis <| fromPosix (Time.millisToPosix 1566795954000) -- 1566777600000
 
 Notice that transforming a **date** to milliseconds will always get you midnight hours.
 The first example above will return a timestamp that equals to **Wed 25th of December 2019 00:00:00.000**
@@ -152,9 +152,9 @@ toMillis =
 
 {-| Convert a given [Month](https://package.elm-lang.org/packages/elm/time/latest/Time#Month) to an integer starting from 1.
 
-    monthToInt Jan -- 1 : Int
+    monthToInt Jan -- 1
 
-    monthToInt Aug -- 8 : Int
+    monthToInt Aug -- 8
 
 -}
 monthToInt : Month -> Int
@@ -169,7 +169,7 @@ monthToInt =
 {-| Extract the `Year` part of a [Date](DateTime-Calendar#Date).
 
     date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map getYear date -- Just 2019 : Maybe Int
+    Maybe.map getYear date -- Just 2019
 
 -}
 getYear : Date -> Int
@@ -180,7 +180,7 @@ getYear =
 {-| Extract the `Month` part of a [Date](DateTime-Calendar#Date).
 
     date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map getMonth date -- Just Dec : Maybe Month
+    Maybe.map getMonth date -- Just Dec
 
 -}
 getMonth : Date -> Month
@@ -191,7 +191,7 @@ getMonth =
 {-| Extract the `Day` part of a [Date](DateTime-Calendar#Date).
 
     date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map getDay date -- Just 25 : Maybe Int
+    Maybe.map getDay date -- Just 25
 
 -}
 getDay : Date -> Int
@@ -492,16 +492,11 @@ isLeapYear =
 
 {-| Sorts incrementally a list of [Dates](DateTime-Calendar#Date).
 
-    future =
-        fromRawParts { day = 25, month = Dec, year = 2020 }
+    past = fromRawParts { day = 26, month = Aug, year = 1920 }
+    epoch = fromRawParts { day = 1, month = Jan, year = 1970 }
+    future = fromRawParts { day = 25, month = Dec, year = 2020 }
 
-    epoch =
-        fromRawParts { day = 1, month = Jan, year = 1970 }
-
-    past =
-        fromRawParts { day = 26, month = Aug, year = 1920 }
-
-    sort (List.filterMap [ future, past, epoch ])
+    sort (List.filterMap identity [ future, past, epoch ])
     -- [ Date { day = Day 26, month = Aug, year = Year 1920 }
     -- , Date { day = Day 1, month = Jan, year = Year 1970 }
     -- , Date { day = Day 25, month = Dec, year = Year 2020 }
