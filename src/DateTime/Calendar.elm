@@ -468,7 +468,7 @@ getPrecedingMonths =
 {-| Returns the weekday of a specific [Date](DateTime-Calendar#Date).
 
     date = fromRawParts { day = 26, month = Aug, year = 2019 }
-    getWeekday date -- Just Mon
+    Maybe.map getWeekday date -- Just Mon
 
 -}
 getWeekday : Date -> Time.Weekday
