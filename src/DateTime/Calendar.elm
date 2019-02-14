@@ -100,13 +100,13 @@ You can construct a `Posix` time from milliseconds using the [millisToPosix](htt
 function located in the [elm/time](https://package.elm-lang.org/packages/elm/time/latest/) package.
 
     fromPosix (Time.millisToPosix 0)
-    -- Date { day = Day 1, month = Jan, year = Year 1970 }
+    -- Date { day = Day 1, month = Jan, year = Year 1970 } : Date
 
     fromPosix (Time.millisToPosix 1566795954000)
-    -- Date { day = Day 26, month = Aug, year = Year 2019 }
+    -- Date { day = Day 26, month = Aug, year = Year 2019 } : Date
 
     fromPosix (Time.millisToPosix 1566777600000)
-    -- Date { day = Day 26, month = Aug, year = Year 2019 }
+    -- Date { day = Day 26, month = Aug, year = Year 2019 } : Date
 
 Notice that in the second and third examples the timestamps that are used are different but the resulting [Dates](DateTime-Calendar#Date) are identical.
 This is because the [Calendar](DateTime-Calendar) module doesn't have any knowledge of `Time` which means that if we attempt to convert both of these dates back [toMillis](DateTime-Calendar#toMillis)
@@ -123,10 +123,10 @@ fromPosix =
 Returns `Nothing` if any parts or their combination would form an invalid date.
 
     fromRawParts { day = 25, month = Dec, year = 2019 }
-    -- Just (Date { day = Day 25, month = Dec, year = Year 2019 })
+    -- Just (Date { day = Day 25, month = Dec, year = Year 2019 }) : Maybe Date
 
     fromRawParts { day = 29, month = Feb, year = 2019 }
-    -- Nothing
+    -- Nothing : Maybe Date
 
 -}
 fromRawParts : RawDate -> Maybe Date
@@ -141,11 +141,11 @@ fromRawParts =
 {-| Transforms a [Date](DateTime-Calendar#Date) into milliseconds.
 
     date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map toMillis date
-    -- Just 1577232000000
+    Maybe.map toMillis date -- Just 1577232000000 == 25 Dec 2019 00:00:00.000
 
-    want = 1566795954000
-    got = toMillis (fromPosix (Time.millisToPosix want))
+    want = 1566795954000 -- 26 Aug 2019 05:05:54.000
+    got = toMillis (fromPosix (Time.millisToPosix want)) -- 1566777600000 == 26 Aug 2019 00:00:00.000
+
     want == got -- False
 
 Notice that transforming a **date** to milliseconds will always get you midnight hours.
@@ -161,9 +161,9 @@ toMillis =
 
 {-| Convert a given [Month](https://package.elm-lang.org/packages/elm/time/latest/Time#Month) to an integer starting from 1.
 
-    monthToInt Jan -- 1
+    monthToInt Jan -- 1 : Int
 
-    monthToInt Aug -- 8
+    monthToInt Aug -- 8 : Int
 
 -}
 monthToInt : Month -> Int
@@ -177,8 +177,8 @@ monthToInt =
 
 {-| Extract the `Year` part of a [Date](DateTime-Calendar#Date).
 
-    -- date == 25th December 2019
-    getYear date -- 2019
+    -- date == 25 Dec 2019
+    getYear date -- 2019 : Int
 
 -}
 getYear : Date -> Int
@@ -188,8 +188,8 @@ getYear =
 
 {-| Extract the `Month` part of a [Date](DateTime-Calendar#Date).
 
-    date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map getMonth date -- Just Dec
+    -- date == 25 Dec 2019
+    getMonth date -- Dec : Month
 
 -}
 getMonth : Date -> Month
@@ -199,8 +199,8 @@ getMonth =
 
 {-| Extract the `Day` part of a [Date](DateTime-Calendar#Date).
 
-    date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map getDay date -- Just 25
+    -- date == 25 Dec 2019
+    getDay date -- 25 : Int
 
 -}
 getDay : Date -> Int
@@ -214,10 +214,10 @@ getDay =
 
 {-| Attempts to set the `Year` part of a [Date](DateTime-Calendar#Date).
 
-    date = fromRawParts { day = 29, month = Feb, year = 2020 }
+    -- date == 29 Feb 2020
+    setYear 2024 date -- Just (29 Feb 2024) : Maybe Date
 
-    Maybe.andThen (setYear 2024) date -- Just (Date { day = Day 29, month = Feb, year = Year 2024 })
-    Maybe.andThen (setYear 2019) date -- Nothing
+    setYear 2019 date -- Nothing : Maybe Date
 
 -}
 setYear : Int -> Date -> Maybe Date
@@ -227,10 +227,10 @@ setYear =
 
 {-| Attempts to set the `Month` part of a [Date](DateTime-Calendar#Date).
 
-    date = fromRawParts { day = 31, month = Jan, year = 2019 }
+    -- date == 31 Jan 2019
+    setMonth Aug date -- Just (31 Aug 2019) : Maybe Date
 
-    Maybe.andThen (setMonth Aug) date -- Just (Date { day = Day 31, month = Aug, year = Year 2019 })
-    Maybe.andThen (setMonth Apr) date -- Nothing
+    setMonth Apr date -- Nothing : Maybe Date
 
 -}
 setMonth : Month -> Date -> Maybe Date
@@ -240,10 +240,10 @@ setMonth =
 
 {-| Attempts to set the `Day` part of a [Date](DateTime-Calendar#Date).
 
-    date = fromRawParts { day = 31, month = Jan, year = 2019 }
+    -- date == 31 Jan 2019
+    setDay 25 date -- Just (25 Jan 2019) : Maybe Date
 
-    Maybe.andThen (setDay 25) date -- Just (Date { day = Day 25, month = Jan, year = 2019 })
-    Maybe.andThen (setDay 32) date -- Nothing
+    setDay 32 date -- Nothing : Maybe Date
 
 -}
 setDay : Int -> Date -> Maybe Date
@@ -257,11 +257,11 @@ setDay =
 
 {-| Increments the `Year` in a given [Date](DateTime-Calendar#Date) while preserving the `Month` and `Day` parts.
 
-    date = fromRawParts { day = 31, month = Jan, year = 2019 }
-    Maybe.map incrementYear date -- Just (Date { day = Day 31, month = Jan, year = Year 2020 })
+    -- date == 31 Jan 2019
+    incrementYear date -- 31 Jan 2020 : Date
 
-    date2 = fromRawParts { day = 29, month = Feb, year = 2020 }
-    Maybe.map incrementYear date2 -- Just (Date { day = Day 28, month = Feb, year = Year 2021 })
+    -- date2 == 29 Feb 2020
+    incrementYear date2 -- 28 Feb 2021 : Date
 
 **Note:** In the first example, incrementing the `Year` causes no changes in the `Month` and `Day` parts.
 On the second example we see that the `Day` part is different than the input. This is because the resulting date
@@ -276,14 +276,14 @@ incrementYear =
 
 {-| Increments the `Month` in a given [Date](DateTime-Calendar#Date). It will also roll over to the next year where applicable.
 
-    date = fromRawParts { day = 15, month = Sep, year = 2019 }
-    Maybe.map incrementMonth date -- Just (Date { day = Day 15, month = Oct, year = Year 2019 })
+    -- date == 15 Sep 2019
+    incrementMonth date -- 15 Oct 2019 : Date
 
-    date2 = fromRawParts { day = 15, month = Dec, year = 2019 }
-    Maybe.map incrementMonth date2 -- Just (Date { day = Day 15, month = Jan, year = Year 2020 })
+    -- date2 == 15 Dec 2019
+    incrementMonth date2 -- 15 Jan 2020 : Date
 
-    date3 = fromRawParts { day = 31, month = Jan, year = 2019 }
-    Maybe.map incrementMonth date3 -- Just (Date { day = 28, month = Feb, year = Year 2019 })
+    -- date3 == 31 Jan 2019
+    Maybe.map incrementMonth date3 -- 28 Feb 2019 : Date
 
 **Note:** In the first example, incrementing the `Month` causes no changes in the `Year` and `Day` parts while on the second
 example it rolls forward the 'Year'. On the last example we see that the `Day` part is different than the input. This is because
@@ -298,11 +298,11 @@ incrementMonth =
 
 {-| Increments the `Day` in a given [Date](DateTime-Calendar#Date). Will also increment `Month` and `Year` where applicable.
 
-    date = fromRawParts { day = 25, month = Aug, year = 2019 }
-    Maybe.map incrementDay date -- Just (Date { day = 26, month = Aug, year = Year 2019 })
+    -- date == 25 Aug 2019
+    incrementDay date -- 26 Aug 2019 : Date
 
-    date2 = fromRawParts { day = 31, month = Dec, year = 2019 }
-    Maybe.map incrementDay date2 -- Just (Date { day = 1, month = Jan, year = Year 2020 })
+    -- date2 == 31 Dec 2019
+    incrementDay date2 -- 1 Jan 2020 : Date
 
 -}
 incrementDay : Date -> Date
@@ -316,11 +316,11 @@ incrementDay =
 
 {-| Decrements the `Year` in a given [Date](DateTime-Calendar#Date) while preserving the `Month` and `Day` parts.
 
-    date = fromRawParts { day = 31, month = Jan, year = 2019 }
-    Maybe.map decrementYear date -- Just (Date { day = Day 31, month = Jan, year = Year 2018 })
+    -- date == 31 Jan 2019
+    decrementYear date -- 31 Jan 2018 : Date
 
-    date2 = fromRawParts { day = 29, month = Feb, year = 2020 }
-    Maybe.map decrementYear date2 -- Just (Date { day = Day 28, month = Feb, year = Year 2019 })
+    -- date2 == 29 Feb 2020
+    decrementYear date2 -- 28 Feb 2019 : Date
 
 **Note:** In the first example, decrementing the `Year` causes no changes in the `Month` and `Day` parts.
 On the second example we see that the `Day` part is different than the input. This is because the resulting date
@@ -335,14 +335,14 @@ decrementYear =
 
 {-| Decrements the `Month` in a given [Date](DateTime-Calendar#Date). It will also roll backwards to the previous year where applicable.
 
-    date = fromRawParts { day = 15, month = Sep, year = 2019 }
-    Maybe.map decrementMonth date -- Just (Date { day = Day 15, month = Aug, year = Year 2019 })
+    -- date == 15 Sep 2019
+    decrementMonth date -- 15 Aug 2019 : Date
 
-    date2 = fromRawParts { day = 15, month = Jan, year = 2020 }
-    Maybe.map decrementMonth date2 -- Just (Date { day = Day 15, month = Dec, year = Year 2019 })
+    -- date2 == 15 Jan 2020
+    decrementMonth date2 -- 15 Dec 2019 : Date
 
-    date3 = fromRawParts { day = 31, month = Dec, year = 2019 }
-    Maybe.map decrementMonth date3 -- Just (Date { day = Day 30, month = Nov, year = Year 2019 })
+    -- date3 == 31 Dec 2019
+    decrementMonth date3 -- 30 Nov 2019 : Date
 
 **Note:** In the first example, decrementing the `Month` causes no changes in the `Year` and `Day` parts while
 on the second example it rolls backwards the `Year`. On the last example we see that the `Day` part is different
@@ -357,11 +357,11 @@ decrementMonth =
 
 {-| Decrements the `Day` in a given [Date](DateTime-Calendar#Date). Will also decrement `Month` and `Year` where applicable.
 
-    date = fromRawParts { day = 27, month = Aug, year = 2019 }
-    Maybe.map decrementDay date -- Just (Date { day = Day 26, month = Aug, year = Year 2019 })
+    -- date == 27 Aug 2019
+    decrementDay date -- 26 Aug 2019 : Date
 
-    date2 = fromRawParts { day = 1, month = Jan, year = 2020 }
-    Maybe.map decrementDay date2 -- Just (Date { day = Day 31, month = Dec, year = Year 2019 })
+    -- date2 == 1 Jan 2020
+    decrementDay date2 -- 31 Dec 2019 : Date
 
 -}
 decrementDay : Date -> Date
@@ -375,12 +375,13 @@ decrementDay =
 
 {-| Compares the two given [Dates](DateTime-Calendar#Date) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
 
-    past = fromRawParts { day = 25, month = Aug, year = 2019 }
-    future = fromRawParts { day = 26, month = Aug, year = 2019 }
+    -- past   == 25 Aug 2019
+    -- future == 26 Aug 2019
+    compare past past -- EQ : Order
 
-    Maybe.map2 compare past past   -- Just EQ
-    Maybe.map2 compare past future -- Just LT
-    Maybe.map2 compare future past -- Just GT
+    compare past future -- LT : Order
+
+    compare future past -- GT : Order
 
 -}
 compare : Date -> Date -> Order
@@ -395,17 +396,14 @@ compare =
 {-| Returns an incrementally sorted [Date](DateTime-Calendar#Date) list based on the **start** and **end** date parameters.
 _**The resulting list will include both start and end dates**_.
 
-    start = fromRawParts { day = 26, month = Feb, year = 2020 }
-    end = fromRawParts { day = 1, month = Mar, year = 2020 }
+    -- start == 26 Feb 2020
+    -- end   == 1 Mar 2020
 
-    Maybe.map2 getDateRange start end
-    -- Just
-    --   [ Date { day = Day 26, month = Feb, year = Year 2020 }
-    --   , Date { day = Day 27, month = Feb, year = Year 2020 }
-    --   , Date { day = Day 28, month = Feb, year = Year 2020 }
-    --   , Date { day = Day 29, month = Feb, year = Year 2020 }
-    --   , Date { day = Day 1, month = Mar, year = Year 2020 }
-    --   ]
+    getDateRange start end
+    -- [ 26 Feb 2020, 27 Feb 2020, 28 Feb 2020, 29 Feb 2020, 1  Mar 2020 ] : List Date
+
+    getDateRange end start
+    -- [ 26 Feb 2020, 27 Feb 2020, 28 Feb 2020, 29 Feb 2020, 1  Mar 2020 ] : List Date
 
 -}
 getDateRange : Date -> Date -> List Date
@@ -415,18 +413,10 @@ getDateRange =
 
 {-| Returns a list of [Dates](DateTime-Calendar#Date) for the given `Year` and `Month` combination.
 
-    date = fromRawParts { day = 26, month = Aug, year = 2019 }
-    Maybe.map getDatesInMonth date
+    -- date == 26 Aug 2019
 
-    -- Just
-    --   [ Date { day = 1, month = Aug, year = Year 2020 }
-    --   , Date { day = 2, month = Aug, year = Year 2020 }
-    --   , Date { day = 3, month = Aug, year = Year 2020 }
-    --   ...
-    --   , Date { day = 29, month = Aug, year = Year 2020 }
-    --   , Date { day = 30, month = Aug, year = Year 2020 }
-    --   , Date { day = 31, month = Aug, year = Year 2020 }
-    --   ]
+    getDatesInMonth date
+    -- [ 1 Aug 2019, 2 Aug 2019, 3 Aug 2019, ..., 29 Aug 2019, 30 Aug 2019, 31 Aug 2019 ] : List Date
 
 -}
 getDatesInMonth : Date -> List Date
@@ -436,11 +426,11 @@ getDatesInMonth =
 
 {-| Returns the difference in days between two [Dates](DateTime-Calendar#Date). We can have a negative difference of days as can be seen in the examples below.
 
-    past = fromRawParts { day = 24, month = Aug, year = 2019 }
-    future = fromRawParts { day = 26, month = Aug, year = 2019 }
+    -- past   == 24 Aug 2019
+    -- future == 26 Aug 2019
+    getDayDiff past future -- 2  : Int
 
-    Maybe.map2 getDayDiff past future -- Just 2
-    Maybe.map2 getDayDiff future past -- Just -2
+    getDayDiff future past -- -2 : Int
 
 -}
 getDayDiff : Date -> Date -> Int
@@ -451,9 +441,9 @@ getDayDiff =
 {-| Returns a list with all the following months in a Calendar Year based on the `Month` argument provided.
 The resulting list **will not include** the given `Month`.
 
-    getFollowingMonths Aug -- [ Sep, Oct, Nov, Dec ]
+    getFollowingMonths Aug -- [ Sep, Oct, Nov, Dec ] : List Month
 
-    getFollowingMonths Dec -- []
+    getFollowingMonths Dec -- [] : List Month
 
 -}
 getFollowingMonths : Month -> List Month
@@ -464,9 +454,9 @@ getFollowingMonths =
 {-| Returns a list with all the preceding months in a Calendar Year based on the `Month` argument provided.
 The resulting list **will not include** the given `Month`.
 
-    getPrecedingMonths May -- [ Jan, Feb, Mar, Apr ]
+    getPrecedingMonths May -- [ Jan, Feb, Mar, Apr ] : List Month
 
-    getPrecedingMonths Jan -- []
+    getPrecedingMonths Jan -- [] : List Month
 
 -}
 getPrecedingMonths : Month -> List Month
@@ -476,8 +466,8 @@ getPrecedingMonths =
 
 {-| Returns the weekday of a specific [Date](DateTime-Calendar#Date).
 
-    date = fromRawParts { day = 26, month = Aug, year = 2019 }
-    Maybe.map getWeekday date -- Just Mon
+    -- date == 26 Aug 2019
+    getWeekday date -- Mon : Weekday
 
 -}
 getWeekday : Date -> Time.Weekday
@@ -487,11 +477,11 @@ getWeekday =
 
 {-| Checks if the `Year` part of the given [Date](DateTime-Calendar#Date) is a leap year.
 
-    date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map isLeapYear date -- Just False
+    -- date == 25 Dec 2019
+    isLeapYear date -- False
 
-    date2 = fromRawParts { day = 25, month = Dec, year = 2020 }
-    Maybe.map isLeapYear date2 -- Just True
+    -- date2 == 25 Dec 2020
+    isLeapYear date2 -- True
 
 -}
 isLeapYear : Date -> Bool
@@ -501,15 +491,10 @@ isLeapYear =
 
 {-| Sorts incrementally a list of [Dates](DateTime-Calendar#Date).
 
-    past = fromRawParts { day = 26, month = Aug, year = 1920 }
-    epoch = fromRawParts { day = 1, month = Jan, year = 1970 }
-    future = fromRawParts { day = 25, month = Dec, year = 2020 }
-
-    sort (List.filterMap identity [ future, past, epoch ])
-    -- [ Date { day = Day 26, month = Aug, year = Year 1920 }
-    -- , Date { day = Day 1, month = Jan, year = Year 1970 }
-    -- , Date { day = Day 25, month = Dec, year = Year 2020 }
-    -- ]
+    -- past   == 26 Aug 1920
+    -- epoch  == 1 Jan 1970
+    -- future == 25 Dec 2020
+    sort [ future, past, epoch ] -- [ 26 Aug 1920, 1 Jan 1970, 25 Dec 2020 ] : List Date
 
 -}
 sort : List Date -> List Date
