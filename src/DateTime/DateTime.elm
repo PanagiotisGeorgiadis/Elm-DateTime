@@ -663,11 +663,9 @@ getWeekday =
 The `Time` parts of the resulting list will be equal to the `Time` portion of the [DateTime](DateTime-DateTime#DateTime)
 that was provided.
 
-    dt = fromRawParts { day = 26, month = Aug, year = 2019 } { hours = 12, minutes = 30, seconds = 45, milliseconds = 0 }
-    defaultTime = Clock.fromRawParts { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+    dt = fromRawParts { day = 26, month = Aug, year = 2019 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
 
     Maybe.map getDatesInMonth dt
-
     -- Just
     --   [ DateTime { date = Date { day = Day 1, month = Aug, year = Year 2019 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
     --   , DateTime { date = Date { day = Day 2, month = Aug, year = Year 2019 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
@@ -679,7 +677,7 @@ that was provided.
     --   ]
 
 -}
-getDatesInMonth : DateTime -> Clock.Time -> List DateTime
+getDatesInMonth : DateTime -> List DateTime
 getDatesInMonth =
     Internal.getDatesInMonth
 

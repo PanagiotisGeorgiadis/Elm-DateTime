@@ -1280,9 +1280,8 @@ getDatesInMonthTests =
 
                     dates =
                         Maybe.withDefault [] <|
-                            Maybe.map2 DateTime.getDatesInMonth
-                                (DateTime.fromRawParts { year = 2019, month = Aug, day = 1 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 })
-                                (Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+                            Maybe.map DateTime.getDatesInMonth <|
+                                DateTime.fromRawParts { year = 2019, month = Aug, day = 1 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
                 in
                 Expect.equalLists expectedDates dates
             )
@@ -1299,9 +1298,8 @@ getDatesInMonthTests =
 
                     dates =
                         Maybe.withDefault [] <|
-                            Maybe.map2 DateTime.getDatesInMonth
-                                (DateTime.fromRawParts { year = 2019, month = Feb, day = 1 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 })
-                                (Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+                            Maybe.map DateTime.getDatesInMonth <|
+                                DateTime.fromRawParts { year = 2019, month = Feb, day = 1 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
                 in
                 Expect.equalLists expectedDates dates
             )
@@ -1318,9 +1316,8 @@ getDatesInMonthTests =
 
                     dates =
                         Maybe.withDefault [] <|
-                            Maybe.map2 DateTime.getDatesInMonth
-                                (DateTime.fromRawParts { year = 2020, month = Feb, day = 1 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 })
-                                (Clock.fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+                            Maybe.map DateTime.getDatesInMonth <|
+                                DateTime.fromRawParts { year = 2020, month = Feb, day = 1 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
                 in
                 Expect.equalLists expectedDates dates
             )

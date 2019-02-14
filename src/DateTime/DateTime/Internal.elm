@@ -559,8 +559,8 @@ getWeekday (DateTime dateTime) =
 
 {-| Returns a list of Dates that belong in the current month of the 'DateTime'.
 -}
-getDatesInMonth : DateTime -> Clock.Time -> List DateTime
-getDatesInMonth (DateTime { date }) time =
+getDatesInMonth : DateTime -> List DateTime
+getDatesInMonth (DateTime { date, time }) =
     List.map
         (\date_ ->
             DateTime { date = date_, time = time }
