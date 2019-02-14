@@ -100,13 +100,13 @@ You can construct a `Posix` time from milliseconds using the [millisToPosix](htt
 function located in the [elm/time](https://package.elm-lang.org/packages/elm/time/latest/) package.
 
     fromPosix (Time.millisToPosix 0)
-    -- Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }
+    -- Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } : Time
 
     fromPosix (Time.millisToPosix 1566795954000)
-    -- Time { hours = Hour 5, minutes = Minute 5, seconds = Second 54, milliseconds = Millisecond 0 }
+    -- Time { hours = Hour 5, minutes = Minute 5, seconds = Second 54, milliseconds = Millisecond 0 } : Time
 
     fromPosix (Time.millisToPosix 1566777600000)
-    -- Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }
+    -- Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } : Time
 
 Notice that in the first and third examples the timestamps that are used are different but the result [Times](DateTime-Clock#Time) are identical.
 This is because the [Clock](DateTime-Clock) module only extracts the `Hours`, `Minutes`, `Seconds` and `Milliseconds` from the given
@@ -120,13 +120,13 @@ fromPosix =
     Internal.fromPosix
 
 
-{-| Construct a clock `Time` from raw hour, minute, second, millisecond integers.
+{-| Construct a clock [Time](DateTime-Clock#Time) from raw `Hour`, `Minute`, `Second`, `Millisecond` integers.
 
-    time = { hours = 23, minutes = 15, seconds = 45, milliseconds = 999 }
-    fromRawParts time -- Just (Time { hours = Hour 23, minutes = Minute 15, seconds = Second 45, milliseconds = Millisecond 999 })
+    fromRawParts { hours = 23, minutes = 15, seconds = 45, milliseconds = 999 }
+    -- Just (Time { hours = Hour 23, minutes = Minute 15, seconds = Second 45, milliseconds = Millisecond 999 }) : Maybe Time
 
-    time2 = { hours = 24, minutes = 15, seconds = 45, milliseconds = 999 }
-    fromRawParts time -- Nothing
+    fromRawParts { hours = 24, minutes = 15, seconds = 45, milliseconds = 999 }
+    -- Nothing : Maybe Time
 
 Notice that the second attempt to construct a time resulted in `Nothing`. This is because the upper limit for an `Hour` is 23.
 
@@ -147,12 +147,15 @@ fromRawParts =
 -- Converters
 
 
-{-| Convert a `Time` to milliseconds.
+{-| Convert a [Time](DateTime-Clock#Time) to milliseconds since midnight.
 
     time = fromRawParts { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
-    Maybe.map toMillis time -- Just 45000000
+    Maybe.map toMillis time -- Just 45000000 : Maybe Int
 
-    toMillis <| fromPosix (Time.millisToPosix 1566777600000) -- 0
+    want = 1566777600000 -- 26 Aug 2019 00:00:00.000
+    got = toMillis (fromPosix (Time.millisToPosix want)) -- 0 : Int
+
+    want == got -- False
 
 -}
 toMillis : Time -> Int
@@ -166,8 +169,8 @@ toMillis =
 
 {-| Extract the `Hours` part of a [Time](DateTime-Clock#Time).
 
-    time = fromRawParts { hours = 12, minutes = 15, seconds = 45, milliseconds = 500 }
-    Maybe.map getHours time -- Just 12
+    -- time == 12:15:45.500
+    getHours time -- 12 : Int
 
 -}
 getHours : Time -> Int
@@ -177,8 +180,8 @@ getHours =
 
 {-| Extract the `Minutes` part of a [Time](DateTime-Clock#Time).
 
-    time = fromRawParts { hours = 12, minutes = 15, seconds = 45, milliseconds = 500 }
-    Maybe.map getMinutes time -- Just 15
+    -- time == 12:15:45.500
+    getMinutes time -- 15 : Int
 
 -}
 getMinutes : Time -> Int
@@ -188,8 +191,8 @@ getMinutes =
 
 {-| Extract the `Seconds` part of a [Time](DateTime-Clock#Time).
 
-    time = fromRawParts { hours = 12, minutes = 15, seconds = 45, milliseconds = 500 }
-    Maybe.map getSeconds time -- Just 45
+    -- time == 12:15:45.500
+    getSeconds time -- 45 : Int
 
 -}
 getSeconds : Time -> Int
@@ -199,8 +202,8 @@ getSeconds =
 
 {-| Extract the `Millisecond` part of a [Time](DateTime-Clock#Time).
 
-    time = fromRawParts { hours = 12, minutes = 15, seconds = 45, milliseconds = 500 }
-    Maybe.map getMilliseconds time -- Just 500
+    -- time == 12:15:45.500
+    getMilliseconds time -- 500 : Int
 
 -}
 getMilliseconds : Time -> Int
@@ -214,10 +217,10 @@ getMilliseconds =
 
 {-| Attempts to set the `Hour` on an existing time.
 
-    time = fromRawParts { hours = 15, minutes = 45, seconds = 54, milliseconds = 250 }
+    -- time == 15:45:54.250
+    setHours 23 time -- Just (23:45:54.250) : Maybe Time
 
-    Maybe.andThen (setHours 23) time -- Just (Time { hours = Hour 23, minutes = Minute 45, seconds = Second 54, milliseconds = Millisecond 250 })
-    Maybe.andThen (setHours 24) time -- Nothing
+    setHours 24 time -- Nothing : Maybe Time
 
 -}
 setHours : Int -> Time -> Maybe Time
@@ -227,10 +230,10 @@ setHours =
 
 {-| Attempts to set the `Minute` on an existing time.
 
-    time = fromRawParts { hours = 15, minutes = 45, seconds = 54, milliseconds = 250 }
+    -- time == 15:45:54.250
+    setMinutes 36 time -- Just (15:36:54.250) : Maybe Time
 
-    Maybe.andThen (setMinutes 36) time -- Just (Time { hours = Hour 15, minutes = Minute 36, seconds = Second 54, milliseconds = Millisecond 250 })
-    Maybe.andThen (setMinutes 60) time -- Nothing
+    setMinutes 60 time -- Nothing : Maybe Time
 
 -}
 setMinutes : Int -> Time -> Maybe Time
@@ -240,10 +243,10 @@ setMinutes =
 
 {-| Attempts to set the `Second` on an existing time.
 
-    time = fromRawParts { hours = 15, minutes = 45, seconds = 54, milliseconds = 250 }
+    -- time == 15:45:54.250
+    setSeconds 20 time -- Just (15:45:20.250) : Maybe Time
 
-    Maybe.andThen (setSeconds 20) time -- Just (Time { hours = Hour 15, minutes = Minute 45, seconds = Second 20, milliseconds = Millisecond 250 })
-    Maybe.andThen (setSeconds 60) time -- Nothing
+    setSeconds 60 time -- Nothing : Maybe Time
 
 -}
 setSeconds : Int -> Time -> Maybe Time
@@ -253,10 +256,10 @@ setSeconds =
 
 {-| Attempts to set the `Millisecond` on an existing time.
 
-    time = fromRawParts { hours = 15, minutes = 45, seconds = 54, milliseconds = 250 }
+    -- time == 15:45:54.250
+    setMilliseconds 589 time -- Just (15:45:54.589) : Maybe Time
 
-    Maybe.andThen (setMilliseconds 589) time -- Just (Time { hours = Hour 15, minutes = Minute 45, seconds = Second 54, milliseconds = Millisecond 589 })
-    Maybe.andThen (setMilliseconds 1000) time -- Nothing
+    setMilliseconds 1000 time -- Nothing : Maybe Time
 
 -}
 setMilliseconds : Int -> Time -> Maybe Time
@@ -273,11 +276,11 @@ maximum time of _23:59:59.999_. It also returns a `Bool` flag which indicates if
 This flag can be used in order to notify that a `Day` has passed but it is advised to use the [DateTime](DateTime-DateTime) module for these kind
 of operations since it provides all the available helpers and takes care of any [Calendar](DateTime-Calendar) changes.
 
-    time = fromRawParts { hours = 12, minutes = 15, seconds = 45, milliseconds = 750 }
-    Maybe.map incrementHours time -- Just (Time { hours = Hour 13, minutes = Minute 15, seconds = Second 45, milliseconds = Millisecond 750 }, False)
+    -- time == 12:15:45.750
+    incrementHours time -- (13:15:45.750, False) : (Time, Bool)
 
-    time2 = fromRawParts { hours = 23, minutes = 0, seconds = 0, milliseconds = 0 }
-    Maybe.map incrementHours time2 -- Just (Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }, True)
+    -- time2 == 23:00:00.000
+    incrementHours time2 -- (00:00:00.000, True) : (Time, Bool)
 
 -}
 incrementHours : Time -> ( Time, Bool )
@@ -288,11 +291,11 @@ incrementHours =
 {-| Increments a `Minute` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling around
 as mentioned in the [incrementHours](DateTime-Clock#incrementHours) description.
 
-    time = fromRawParts { hours = 12, minutes = 59, seconds = 45, milliseconds = 750 }
-    Maybe.map incrementMinutes time -- Just (Time { hours = Hour 13, minutes = Minute 0, seconds = Second 45, milliseconds = Millisecond 750 }, False)
+    -- time == 12:59:45.750
+    incrementMinutes time -- (13:00:45.750, False) : (Time, Bool)
 
-    time2 = fromRawParts { hours = 23, minutes = 59, seconds = 45, milliseconds = 750 }
-    Maybe.map incrementMinutes time2 -- Just (Time { hours = Hour 0, minutes = Minute 0, seconds = Second 45, milliseconds = Millisecond 750}, True)
+    -- time2 == 23:59:45.750
+    incrementMinutes time2 -- (00:00:45.750, True) : (Time, Bool)
 
 -}
 incrementMinutes : Time -> ( Time, Bool )
@@ -303,11 +306,11 @@ incrementMinutes =
 {-| Increments a `Second` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling around
 as mentioned in the [incrementHours](DateTime-Clock#incrementHours) description.
 
-    time = fromRawParts { hours = 12, minutes = 59, seconds = 59, milliseconds = 750 }
-    Maybe.map incrementSeconds time -- Just (Time { hours = Hour 13, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 750 }, False)
+    -- time == 12:59:59.750
+    incrementSeconds time -- (13:00:00.750, False) : (Time, Bool)
 
-    time2 = fromRawParts { hours = 23, minutes = 59, seconds = 59, milliseconds = 750 }
-    Maybe.map incrementSeconds time2 -- Just (Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 750}, True)
+    -- time2 == 23:59:59.750
+    incrementSeconds time2 -- (00:00:00.750, True) : (Time, Bool)
 
 -}
 incrementSeconds : Time -> ( Time, Bool )
@@ -318,11 +321,11 @@ incrementSeconds =
 {-| Increments a `Millisecond` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling around
 as mentioned in the [incrementHours](DateTime-Clock#incrementHours) description.
 
-    time = fromRawParts { hours = 12, minutes = 59, seconds = 59, milliseconds = 999 }
-    Maybe.map incrementMilliseconds time -- Just (Time { hours = Hour 13, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }, False)
+    -- time == 12:59:59.999
+    incrementMilliseconds time -- (13:00:00.000, False) : (Time, Bool)
 
-    time2 = fromRawParts { hours = 23, minutes = 59, seconds = 59, milliseconds = 999 }
-    Maybe.map incrementMilliseconds time2 -- Just (Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0}, True)
+    -- time2 == 23:59:59.999
+    incrementMilliseconds time2 -- (00:00:00.000, True) : (Time, Bool)
 
 -}
 incrementMilliseconds : Time -> ( Time, Bool )
@@ -339,11 +342,11 @@ minimum time of _00:00:00.000_. It also returns a `Bool` flag which indicates if
 This flag can be used in order to notify that a `Day` has passed but it is advised to use the [DateTime](DateTime-DateTime) module for these kind
 of operations since it provides all the available helpers and takes care of any [Calendar](DateTime-Calendar) changes.
 
-    time = fromRawParts { hours = 13, minutes = 15, seconds = 45, milliseconds = 750 }
-    Maybe.map decrementHours time -- Just (Time { hours = Hour 12, minutes = Minute 15, seconds = Second 45, milliseconds = Millisecond 750 }, False)
+    -- time == 13:15:45.750
+    decrementHours time -- (12:15:45.750, False) : (Time, Bool)
 
-    time2 = fromRawParts { hours = 0, minutes = 59, seconds = 59, milliseconds = 999 }
-    Maybe.map decrementHours time2 -- Just (Time { hours = Hour 23, minutes = Minute 59, seconds = Second 59, milliseconds = Millisecond 999 }, True)
+    -- time2 == 00:59:59.999
+    decrementHours time2 -- (23:59:59.999, True) : (Time, Bool)
 
 -}
 decrementHours : Time -> ( Time, Bool )
@@ -352,13 +355,13 @@ decrementHours =
 
 
 {-| Decrements a `Minute` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling backwards
-as mentioned in the [incrementHours](DateTime-Clock#decrementHours) description.
+as mentioned in the [decrementHours](DateTime-Clock#decrementHours) description.
 
-    time = fromRawParts { hours = 12, minutes = 15, seconds = 0, milliseconds = 0 }
-    Maybe.map decrementMinutes time -- Just (Time { hours = Hour 12, minutes = Minute 14, seconds = Second 0, milliseconds = Millisecond 0 }, False)
+    -- time == 12:15:00.000
+    decrementMinutes time -- (12:14:00.000, False) : (Time, Bool)
 
-    time2 = fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-    Maybe.map decrementMinutes time2 -- Just (Time { hours = Hour 23, minutes = Minute 59, seconds = Second 0, milliseconds = Millisecond 0 }, True)
+    -- time2 == 00:00:00.000
+    decrementMinutes time2 -- (23:59:00.000, True) : (Time, Bool)
 
 -}
 decrementMinutes : Time -> ( Time, Bool )
@@ -367,13 +370,13 @@ decrementMinutes =
 
 
 {-| Decrements a `Second` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling backwards
-as mentioned in the [incrementHours](DateTime-Clock#decrementHours) description.
+as mentioned in the [decrementHours](DateTime-Clock#decrementHours) description.
 
-    time = fromRawParts { hours = 12, minutes = 15, seconds = 0, milliseconds = 0 }
-    Maybe.map decrementSeconds time -- Just (Time { hours = Hour 12, minutes = Minute 14, seconds = Second 59, milliseconds = Millisecond 0 }, False)
+    -- time == 12:15:00.000
+    decrementSeconds time -- (12:14:59.000, False) : (Time, Bool)
 
-    time2 = fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-    Maybe.map decrementSeconds time2 -- Just (Time { hours = Hour 23, minutes = Minute 59, seconds = Second 59, milliseconds = Millisecond 0 }, True)
+    -- time2 == 00:00:00.000
+    decrementSeconds time2 -- (23:59:59.000, True) : (Time, Bool)
 
 -}
 decrementSeconds : Time -> ( Time, Bool )
@@ -382,13 +385,13 @@ decrementSeconds =
 
 
 {-| Decrements a `Millisecond` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling backwards
-as mentioned in the [incrementHours](DateTime-Clock#decrementHours) description.
+as mentioned in the [decrementHours](DateTime-Clock#decrementHours) description.
 
-    time = fromRawParts { hours = 12, minutes = 15, seconds = 0, milliseconds = 0 }
-    Maybe.map decrementMilliseconds time -- Just (Time { hours = Hour 12, minutes = Minute 14, seconds = Second 59, milliseconds = Millisecond 999 }, False)
+    -- time == 12:15:00.000
+    decrementMilliseconds time -- (12:14:59.999, False) : (Time, Bool)
 
-    time2 = fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-    Maybe.map decrementMilliseconds time2 -- Just (Time { hours = Hour 23, minutes = Minute 59, seconds = Second 59, milliseconds = Millisecond 999 }, True)
+    -- time2 = 00:00:00.000
+    decrementMilliseconds time2 -- (23:59:59.999, True) : (Time, Bool)
 
 -}
 decrementMilliseconds : Time -> ( Time, Bool )
@@ -402,12 +405,13 @@ decrementMilliseconds =
 
 {-| Compare two `Time` values.
 
-    past = fromRawParts { hours = 15, minutes = 45, seconds = 24, milliseconds = 780 }
-    future = fromRawParts { hours = 15, minutes = 45, seconds = 24, milliseconds = 800 }
+    -- past   == 15:45:24.780
+    -- future == 15:45:24.800
+    compare past past -- EQ : Order
 
-    Maybe.map2 compare past past -- Just EQ
-    Maybe.map2 compare past future -- Just LT
-    Maybe.map2 compare future past -- Just GT
+    compare past future -- LT : Order
+
+    compare future past -- GT : Order
 
 -}
 compare : Time -> Time -> Order
@@ -421,17 +425,13 @@ compare =
 
 {-| Sorts a List of 'Time' based on their representation in milliseconds.
 
-    midnight = fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-    dawn = fromRawParts { hours = 6, minutes = 0, seconds = 0, milliseconds = 0 }
-    noon = fromRawParts { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
-    dusk = fromRawParts { hours = 18, minutes = 0, seconds = 0, milliseconds = 0 }
+    -- dawn     == 06:00:00.000
+    -- noon     == 12:00:00.000
+    -- dusk     == 18:00:00.000
+    -- midnight == 00:00:00.000
 
-    sort (List.filterMap identity [ noon, dawn, dusk, midnight ])
-    -- [ Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }
-    -- , Time { hours = Hour 6, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }
-    -- , Time { hours = Hour 12, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }
-    -- , Time { hours = Hour 18, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 }
-    -- ]
+    sort [ noon, dawn, dusk, midnight ]
+    -- [ 00:00:00.000, 06:00:00.000, 12:00:00.000, 18:00:00.000 ] : List Time
 
 -}
 sort : List Time -> List Time
@@ -444,6 +444,9 @@ sort =
 
 
 {-| Returns midnight time.
+
+    midnight == 00:00:00.000
+
 -}
 midnight : Time
 midnight =

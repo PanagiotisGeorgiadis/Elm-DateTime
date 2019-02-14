@@ -495,7 +495,9 @@ isLeapYear =
     -- past   == 26 Aug 1920
     -- epoch  == 1 Jan 1970
     -- future == 25 Dec 2020
-    sort [ future, past, epoch ] -- [ 26 Aug 1920, 1 Jan 1970, 25 Dec 2020 ] : List Date
+
+    sort [ future, past, epoch ]
+    -- [ 26 Aug 1920, 1 Jan 1970, 25 Dec 2020 ] : List Date
 
 -}
 sort : List Date -> List Date
