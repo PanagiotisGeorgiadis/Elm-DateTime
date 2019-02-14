@@ -11,7 +11,13 @@ module DateTime.Calendar exposing
     , months, millisInADay
     )
 
-{-| A calendar date.
+{-| The `Calendar` module was introduced in order to keep track of the `Calendar Date` concept.
+It has no knowledge of `Time` therefore it can only represent a [Date](DateTime-Calendar#Date)
+which consists of a `Day`, a `Month` and a `Year`. You can construct a `Calendar Date` either
+from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time or by
+using its [Raw constituent parts](DateTime-Calendar#RawDate). You can use a `Date` and the
+Calendar's utilities as a standalone or you can combine a `Date` and a `Time` in order to
+get a `DateTime` which can then be converted into a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time.
 
 
 # Type definition
@@ -116,11 +122,11 @@ fromPosix =
 {-| Attempt to construct a [Date](DateTime-Calendar#Date) from its (raw) constituent parts.
 Returns `Nothing` if any parts or their combination would form an invalid date.
 
-    date = { day = 25, month = Dec, year = 2019 }
-    fromRawParts date -- Just (Date { day = Day 25, month = Dec, year = Year 2019 })
+    fromRawParts { day = 25, month = Dec, year = 2019 }
+    -- Just (Date { day = Day 25, month = Dec, year = Year 2019 })
 
-    date2 = { day = 29, month = Feb, year = 2019 }
-    fromRawParts date2 -- Nothing
+    fromRawParts { day = 29, month = Feb, year = 2019 }
+    -- Nothing
 
 -}
 fromRawParts : RawDate -> Maybe Date
@@ -135,9 +141,12 @@ fromRawParts =
 {-| Transforms a [Date](DateTime-Calendar#Date) into milliseconds.
 
     date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map toMillis date -- Just 1577232000000
+    Maybe.map toMillis date
+    -- Just 1577232000000
 
-    toMillis <| fromPosix (Time.millisToPosix 1566795954000) -- 1566777600000
+    want = 1566795954000
+    got = toMillis (fromPosix (Time.millisToPosix want))
+    want == got -- False
 
 Notice that transforming a **date** to milliseconds will always get you midnight hours.
 The first example above will return a timestamp that equals to **Wed 25th of December 2019 00:00:00.000**
@@ -168,8 +177,8 @@ monthToInt =
 
 {-| Extract the `Year` part of a [Date](DateTime-Calendar#Date).
 
-    date = fromRawParts { day = 25, month = Dec, year = 2019 }
-    Maybe.map getYear date -- Just 2019
+    -- date == 25th December 2019
+    getYear date -- 2019
 
 -}
 getYear : Date -> Int
@@ -336,7 +345,7 @@ decrementYear =
     Maybe.map decrementMonth date3 -- Just (Date { day = Day 30, month = Nov, year = Year 2019 })
 
 **Note:** In the first example, decrementing the `Month` causes no changes in the `Year` and `Day` parts while
-on the seconds example it rolls backwards the `Year`. On the last example we see that the `Day` part is different
+on the second example it rolls backwards the `Year`. On the last example we see that the `Day` part is different
 than the input. This is because the resulting date would be an invalid one ( _**31st of November 2019**_ ). As a result
 of this scenario we fall back to the last valid day of the given `Month` and `Year` combination.
 
