@@ -16,8 +16,9 @@ It has no knowledge of `Time` therefore it can only represent a [Date](DateTime-
 which consists of a `Day`, a `Month` and a `Year`. You can construct a `Calendar Date` either
 from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time or by
 using its [Raw constituent parts](DateTime-Calendar#RawDate). You can use a `Date` and the
-Calendar's utilities as a standalone or you can combine a `Date` and a `Time` in order to
-get a `DateTime` which can then be converted into a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time.
+Calendar's utilities as a standalone or you can combine a [Date](DateTime-Calendar#Date) and a
+[Time](DateTime-Clock#Time) in order to get a [DateTime](DateTime-DateTime#DateTime) which can then be converted into
+a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 
 
 # Type definition

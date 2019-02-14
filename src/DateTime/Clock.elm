@@ -11,7 +11,13 @@ module DateTime.Clock exposing
     , midnight
     )
 
-{-| A [24-hour clock time](https://en.wikipedia.org/wiki/24-hour_clock).
+{-| The `Clock` module was introduced in order to keep track of the `Time` concept.
+It has no notion of a `Date` or any of its parts and it represents `Time` as a [24-hour clock](https://en.wikipedia.org/wiki/24-hour_clock)
+which consists of `Hours`, `Minutes`, `Seconds` and `Milliseconds`. You can construct a `Time`
+either by providing a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time
+or by using its [Raw constituent parts](DateTime-Clock#RawTime). You can use a `Time` and
+the Clock's utilities as a standalone or you can combine a [Time](DateTime-Clock#Time) and a [Date](DateTime-Calendar#Date)
+in order to get a [DateTime](DateTime-DateTime#DateTime) which can then be converted into a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 
 
 # Type definition
