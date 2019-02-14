@@ -75,10 +75,10 @@ type alias DateTime =
 {-| Create a `DateTime` from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time.
 
     fromPosix (Time.millisToPosix 0)
-    -- DateTime { date = Date { day = Day 1, month = Jan, year = Year 1970 }, time = Time { hours = Hour 0, milliseconds = Millisecond 0, minutes = Minute 0, seconds = Second 0 } }
+    -- DateTime { date = Date { day = Day 1, month = Jan, year = Year 1970 }, time = Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
 
     fromPosix (Time.millisToPosix 1566795954000)
-    -- DateTime { date = Date { day = Day 26, month = Aug, year = Year 2019 }, time = Time { hours = Hour 5, milliseconds = Millisecond 0, minutes = Minute 5, seconds = Second 54 } }
+    -- DateTime { date = Date { day = Day 26, month = Aug, year = Year 2019 }, time = Time { hours = Hour 5, minutes = Minute 5, seconds = Second 54, milliseconds = Millisecond 0 } }
 
 -}
 fromPosix : Time.Posix -> DateTime
@@ -90,7 +90,7 @@ fromPosix =
 any parts or their combination would result in an invalid [DateTime](DateTime-DateTime#DateTime)
 
     fromRawParts { day = 26, month = Aug, year = 2019 } { hours = 12, minutes = 30, seconds = 45, milliseconds = 0 }
-    -- Just (DateTime { date = Date { day = Day 26, month = Aug, year = Year 2019 }, time = Time { hours = Hour 12, milliseconds = Millisecond 0, minutes = Minute 30, seconds = Second 45 }})
+    -- Just (DateTime { date = Date { day = Day 26, month = Aug, year = Year 2019 }, time = Time { hours = Hour 12, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 0 }})
 
     fromRawParts { day = 29, month = Feb, year = 2019 } { hours = 16, minutes = 30, seconds = 45, milliseconds = 0 }
     -- Nothing
@@ -110,7 +110,7 @@ fromRawParts rawDate rawTime =
     rawTime = Clock.fromRawParts { hours = 12, minutes = 30, seconds = 45, milliseconds = 0 }
 
     Maybe.map2 fromDateAndTime rawDate rawTime
-    -- DateTime { date = Date { day = Day 26, month = Aug, year = Year 2019 }, time = Time { hours = Hour 12, milliseconds = Millisecond 0, minutes = Minute 30, seconds = Second 45 } }
+    -- DateTime { date = Date { day = Day 26, month = Aug, year = Year 2019 }, time = Time { hours = Hour 12, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 0 } }
 
 -}
 fromDateAndTime : Calendar.Date -> Clock.Time -> DateTime
@@ -178,7 +178,7 @@ getDate =
 {-| Extract the [Clock Time](DateTime-Clock#Time) from a `DateTime`.
 
     dt = fromRawParts { day = 25, month = Dec, year = 2019 } { hours = 16, minutes = 45, seconds = 30, milliseconds = 0 }
-    Maybe.map getTime dt -- Just (Time { hours = Hour 16, milliseconds = Millisecond 0, minutes = Minute 45, seconds = Second 30 })
+    Maybe.map getTime dt -- Just (Time { hours = Hour 16, minutes = Minute 45, seconds = Second 30, milliseconds = Millisecond 0 })
 
 -}
 getTime : DateTime -> Clock.Time
@@ -271,7 +271,7 @@ getMilliseconds =
 
     dt = fromRawParts { day = 29, month = Feb, year = 2020 } { hours = 15, minutes = 30, seconds = 30, milliseconds = 0 }
 
-    Maybe.andThen (setYear 2024) dt -- Just (DateTime { date = Date { day = Day 29, month = Feb, year = Year 2024 }, time = Time { hours = Hour 15, milliseconds = Millisecond 0, minutes = Minute 30, seconds = Second 30 } })
+    Maybe.andThen (setYear 2024) dt -- Just (DateTime { date = Date { day = Day 29, month = Feb, year = Year 2024 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 30, milliseconds = Millisecond 0 } })
     Maybe.andThen (setYear 2019) dt -- Nothing
 
 -}
@@ -284,7 +284,7 @@ setYear =
 
     dt = fromRawParts { day = 31, month = Jan, year = 2019 } { hours = 15, minutes = 30, seconds = 30, milliseconds = 0 }
 
-    Maybe.andThen (setMonth Aug) dt -- Just (DateTime { date = Date { day = Day 31, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, milliseconds = Millisecond 0, minutes = Minute 30, seconds = Second 30 } })
+    Maybe.andThen (setMonth Aug) dt -- Just (DateTime { date = Date { day = Day 31, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 30, milliseconds = Millisecond 0 } })
     Maybe.andThen (setMonth Apr) dt -- Nothing
 
 -}
@@ -297,7 +297,7 @@ setMonth =
 
     dt = fromRawParts { day = 31, month = Jan, year = 2019 } { hours = 15, minutes = 30, seconds = 30, milliseconds = 0 }
 
-    Maybe.andThen (setDay 25) dt -- Just (DateTime { date = Date { day = Day 25, month = Jan, year = Year 2019 }, time = Time { hours = Hour 15, milliseconds = Millisecond 0, minutes = Minute 30, seconds = Second 30 } })
+    Maybe.andThen (setDay 25) dt -- Just (DateTime { date = Date { day = Day 25, month = Jan, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 30, milliseconds = Millisecond 0 } })
     Maybe.andThen (setDay 32) dt -- Nothing
 
 -}
@@ -310,7 +310,7 @@ setDay =
 
     dt = fromRawParts { day = 2, month = Jul, year = 2019 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
 
-    Maybe.andThen (setHours 23) dt -- Just (DateTime { date = Date { day = Day 2, month = Jul, year = Year 2019 }, time = Time { hours = Hour 23, milliseconds = Millisecond 0, minutes = Minute 0, seconds = Second 0 } })
+    Maybe.andThen (setHours 23) dt -- Just (DateTime { date = Date { day = Day 2, month = Jul, year = Year 2019 }, time = Time { hours = Hour 23, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } })
     Maybe.andThen (setHours 24) dt -- Nothing
 
 -}
@@ -323,7 +323,7 @@ setHours =
 
     dt = fromRawParts { day = 2, month = Jul, year = 2019 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
 
-    Maybe.andThen (setMinutes 36) dt -- Just (DateTime { date = Date { day = Day 2, month = Jul, year = Year 2019 }, time = Time { hours = Hour 12, milliseconds = Millisecond 0, minutes = Minute 36, seconds = Second 0 } })
+    Maybe.andThen (setMinutes 36) dt -- Just (DateTime { date = Date { day = Day 2, month = Jul, year = Year 2019 }, time = Time { hours = Hour 12, minutes = Minute 36, seconds = Second 0, milliseconds = Millisecond 0 } })
     Maybe.andThen (setMinutes 60) dt -- Nothing
 
 -}
@@ -336,7 +336,7 @@ setMinutes =
 
     dt = fromRawParts { day = 2, month = Jul, year = 2019 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
 
-    Maybe.andThen (setSeconds 20) dt -- Just (DateTime { date = Date { day = Day 2, month = Jul, year = Year 2019 }, time = Time { hours = Hour 12, milliseconds = Millisecond 0, minutes = Minute 0, seconds = Second 20 } })
+    Maybe.andThen (setSeconds 20) dt -- Just (DateTime { date = Date { day = Day 2, month = Jul, year = Year 2019 }, time = Time { hours = Hour 12, minutes = Minute 0, seconds = Second 20, milliseconds = Millisecond 0 } })
     Maybe.andThen (setSeconds 60) dt -- Nothing
 
 -}
@@ -349,7 +349,7 @@ setSeconds =
 
     dt = fromRawParts { day = 2, month = Jul, year = 2019 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
 
-    Maybe.andThen (setMilliseconds 589) dt -- Just (DateTime { date = Date { day = Day 2, month = Jul, year = Year 2019 }, time = Time { hours = Hour 12, milliseconds = Millisecond 589, minutes = Minute 0, seconds = Second 0 } })
+    Maybe.andThen (setMilliseconds 589) dt -- Just (DateTime { date = Date { day = Day 2, month = Jul, year = Year 2019 }, time = Time { hours = Hour 12, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 589 } })
     Maybe.andThen (setMilliseconds 1000) dt -- Nothing
 
 -}
@@ -362,34 +362,59 @@ setMilliseconds =
 -- Incrementers
 
 
-{-| Returns a new 'DateTime' with an updated year value.
+{-| Increments the `Year` in a given [DateTime](DateTime-DateTime#DateTime) while preserving the `Month`, and `Day` parts.
+_The [Time](DateTime-Clock#Time) related parts will remain the same._
+
+    dt = fromRawParts { day = 31, month = Jan, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementYear dt -- Just (DateTime { date = Date { day = Day 31, month = Jan, year = Year 2020 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 29, month = Feb, year = 2020 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementYear dt2 -- Just (DateTime { date = Date { day = Day 28, month = Feb, year = Year 2021 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+**Note:** In the first example, incrementing the `Year` causes no changes in the `Month` and `Day` parts.
+On the second example we see that the `Day` part is different than the input. This is because the resulting date in the `DateTime`
+would be an invalid date ( _**29th of February 2021**_ ). As a result of this scenario we fall back to the last valid day
+of the given `Month` and `Year` combination.
+
 -}
 incrementYear : DateTime -> DateTime
 incrementYear =
     Internal.incrementYear
 
 
-{-| Returns a new 'DateTime' with an updated month value.
+{-| Increments the `Month` in a given [DateTime](DateTime-DateTime#DateTime). It will also roll over to the next year where applicable.
+_The [Time](DateTime-Clock#Time) related parts will remain the same._
+
+    dt -- 15th Sep 2019
+    incrementMonth dt  -- 16th September
+
+    dt = fromRawParts { day = 15, month = Sep, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementMonth dt -- Just (DateTime { date = Date { day = Day 15, month = Oct, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 15, month = Dec, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementMonth dt2 -- Just (DateTime { date = Date { day = Day 15, month = Jan, year = Year 2020 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt3 = fromRawParts { day = 31, month = Jan, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementMonth dt3 -- Just (DateTime { date = Date { day = Day 28, month = Feb, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+**Note:** In the first example, incrementing the `Month` causes no changes in the `Year` and `Day` parts while on the second
+example it rolls forward the 'Year'. On the last example we see that the `Day` part is different than the input. This is because
+the resulting date would be an invalid one ( _**31st of February 2019**_ ). As a result of this scenario we fall back to the last
+valid day of the given `Month` and `Year` combination.
+
 -}
 incrementMonth : DateTime -> DateTime
 incrementMonth =
     Internal.incrementMonth
 
 
-{-| Increments the 'Day' in a given 'Date'. Will also increment 'Month' && 'Year'
---- if applicable.
+{-| Increments the `Day` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Month` and `Year` where applicable.
 
-> date = fromRawParts { day = 31, month = Dec, year = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> incrementDay date
-> DateTime { date = { day = Day 1, month = Jan, year = Year 2019 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
->
-> date2 = fromRawParts { day = 29, month = Feb, year = 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> incrementDay date2
-> DateTime { date = { day = Day 1, month = Mar, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
->
-> date3 = fromRawParts { day = 24, month = Dec, year = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> incrementDay date3
-> DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
+    dt = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementDay dt -- Just (DateTime { date = Date { day = Day 26, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 31, month = Dec, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementDay dt2 -- Just (DateTime { date = Date { day = Day 1, month = Jan, year = Year 2020 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
 
 -}
 incrementDay : DateTime -> DateTime
@@ -397,28 +422,56 @@ incrementDay =
     Internal.incrementDay
 
 
-{-| Increments the 'Hours' in a given 'Date'. Will also increment 'Day', 'Month', 'Year' where applicable.
+{-| Increments the `Hours` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Day`, `Month`, `Year` where applicable.
+
+    dt = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementHours dt -- Just (DateTime { date = Date { day = Day 25, month = Aug, year = Year 2019 }, time = Time { hours = Hour 16, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 31, month = Dec, year = 2019 } { hours = 23, minutes = 0, seconds = 0, milliseconds = 0 }
+    Maybe.map incrementHours dt2 -- Just (DateTime { date = Date { day = Day 1, month = Jan, year = Year 2020 }, time = Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } })
+
 -}
 incrementHours : DateTime -> DateTime
 incrementHours =
     Internal.incrementHours
 
 
-{-| Increments the 'Minutes' in a given 'Date'. Will also increment 'Hours', 'Day', 'Month', 'Year' where applicable.
+{-| Increments the `Minutes` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Hours`, `Day`, `Month`, `Year` where applicable.
+
+    dt = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementMinutes dt -- Just (DateTime { date = Date { day = Day 25, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 31, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 31, month = Dec, year = 2019 } { hours = 23, minutes = 59, seconds = 0, milliseconds = 0 }
+    Maybe.map incrementMinutes dt2 -- Just (DateTime { date = Date { day = Day 1, month = Jan, year = Year 2020 }, time = Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } })
+
 -}
 incrementMinutes : DateTime -> DateTime
 incrementMinutes =
     Internal.incrementMinutes
 
 
-{-| Increments the 'Seconds' in a given 'Date'. Will also increment 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+{-| Increments the `Seconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
+
+    dt = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementSeconds dt -- Just (DateTime { date = Date { day = Day 25, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 46, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 31, month = Dec, year = 2019 } { hours = 23, minutes = 59, seconds = 59, milliseconds = 0 }
+    Maybe.map incrementSeconds dt2 -- Just (DateTime { date = Date { day = Day 1, month = Jan, year = Year 2020 }, time = Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } })
+
 -}
 incrementSeconds : DateTime -> DateTime
 incrementSeconds =
     Internal.incrementSeconds
 
 
-{-| Increments the 'Milliseconds' in a given 'Date'. Will also increment 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+{-| Increments the `Milliseconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Seconds`, `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
+
+    dt = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map incrementMilliseconds dt -- Just (DateTime { date = Date { day = Day 25, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 101 } })
+
+    dt2 = fromRawParts { day = 31, month = Dec, year = 2019 } { hours = 23, minutes = 59, seconds = 59, milliseconds = 999 }
+    Maybe.map incrementMilliseconds dt2 -- Just (DateTime { date = Date { day = Day 1, month = Jan, year = Year 2020 }, time = Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 101 } })
+
 -}
 incrementMilliseconds : DateTime -> DateTime
 incrementMilliseconds =
@@ -429,34 +482,56 @@ incrementMilliseconds =
 -- Decrementers
 
 
-{-| Returns a new 'DateTime' with an updated year value.
+{-| Decrements the `Year` in a given [DateTime](DateTime-DateTime#DateTime) while preserving the `Month` and `Day`.
+_The [Time](DateTime-Clock#Time) related parts will remain the same._
+
+    dt = fromRawParts { day = 31, month = Jan, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementYear dt -- Just (DateTime { date = Date { day = Day 31, month = Jan, year = Year 2018 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 29, month = Feb, year = 2020 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementYear dt2 -- Just (DateTime { date = Date { day = Day 28, month = Feb, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+**Note:** In the first example, decrementing the `Year` causes no changes in the `Month` and `Day` parts.
+On the second example we see that the `Day` part is different than the input. This is because the resulting date in the `DateTime`
+would be an invalid date ( _**29th of February 2019**_ ). As a result of this scenario we fall back to the last valid day
+of the given `Month` and `Year` combination.
+
 -}
 decrementYear : DateTime -> DateTime
 decrementYear =
     Internal.decrementYear
 
 
-{-| Returns a new 'DateTime' with an updated month value.
+{-| Decrements the `Month` in a given [DateTime](DateTime-DateTime#DateTime). It will also roll backwards to the previous year where applicable.
+_The [Time](DateTime-Clock#Time) related parts will remain the same._
+
+    dt = fromRawParts { day = 15, month = Sep, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementMonth dt -- Just (DateTime { date = Date { day = Day 15, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 15, month = Jan, year = 2020 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementMonth dt2 -- Just (DateTime { date = Date { day = Day 15, month = Dec, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt3 = fromRawParts { day = 31, month = Dec, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementMonth dt3 -- Just (DateTime { date = Date { day = Day 30, month = Nov, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+**Note:** In the first example, decrementing the `Month` causes no changes in the `Year` and `Day` parts while
+on the second example it rolls backwards the `Year`. On the last example we see that the `Day` part is different
+than the input. This is because the resulting date would be an invalid one ( _**31st of November 2019**_ ). As a result
+of this scenario we fall back to the last valid day of the given `Month` and `Year` combination.
+
 -}
 decrementMonth : DateTime -> DateTime
 decrementMonth =
     Internal.decrementMonth
 
 
-{-| Decrements the 'Day' in a given 'Date'. Will also decrement 'Month' && 'Year'
---- if applicable.
+{-| Decrements the `Day` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Month` and `Year` where applicable.
 
-> date = fromRawParts { day = 1, month = Jan, year = 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> decrementDay date
-> DateTime { date = { day = Day 31, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
->
-> date2 = fromRawParts { day = 1, month = Mar, year = 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> decrementDay date2
-> DateTime { date = { day = Day 29, month = Feb, year = Year 2020 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
->
-> date3 = fromRawParts { day = 26, month = Dec, year = 2018 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> decrementDay date3
-> DateTime { date = { day = Day 25, month = Dec, year = Year 2018 }, time = { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 } }
+    dt = fromRawParts { day = 27, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementDay dt -- Just (DateTime { date = Date { day = Day 26, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 1, month = Jan, year = 2020 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementDay dt2 -- Just (DateTime { date = Date { day = Day 31, month = Dec, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
 
 -}
 decrementDay : DateTime -> DateTime
@@ -464,28 +539,56 @@ decrementDay =
     Internal.decrementDay
 
 
-{-| Decrements the 'Hours' in a given 'Date'. Will also decrement 'Day', 'Month', 'Year' where applicable.
+{-| Decrements the `Hours` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Day`, `Month`, `Year` where applicable.
+
+    dt = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementHours dt -- Just (DateTime { date = Date { day = Day 25, month = Aug, year = Year 2019 }, time = Time { hours = Hour 14, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 1, month = Jan, year = 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+    Maybe.map decrementHours dt2 -- Just (DateTime { date = Date { day = Day 31, month = Dec, year = Year 2019 }, time = Time { hours = Hour 23, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } })
+
 -}
 decrementHours : DateTime -> DateTime
 decrementHours =
     Internal.decrementHours
 
 
-{-| Decrements the 'Minutes' in a given 'Date'. Will also decrement 'Hours', 'Day', 'Month', 'Year' where applicable.
+{-| Decrements the `Minutes` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Hours`, `Day`, `Month`, `Year` where applicable.
+
+    dt = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementMinutes dt -- Just (DateTime { date = Date { day = Day 25, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 29, seconds = Second 45, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 1, month = Jan, year = 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+    Maybe.map decrementMinutes dt2 -- Just (DateTime { date = Date { day = Day 31, month = Dec, year = Year 2019 }, time = Time { hours = Hour 23, minutes = Minute 59, seconds = Second 0, milliseconds = Millisecond 0 } })
+
 -}
 decrementMinutes : DateTime -> DateTime
 decrementMinutes =
     Internal.decrementMinutes
 
 
-{-| Decrements the 'Seconds' in a given 'Date'. Will also decrement 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+{-| Decrements the `Seconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
+
+    dt = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementSeconds dt -- Just (DateTime { date = Date { day = Day 25, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 44, milliseconds = Millisecond 100 } })
+
+    dt2 = fromRawParts { day = 1, month = Jan, year = 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+    Maybe.map decrementSeconds dt2 -- Just (DateTime { date = Date { day = Day 31, month = Dec, year = Year 2019 }, time = Time { hours = Hour 23, minutes = Minute 59, seconds = Second 59, milliseconds = Millisecond 0 } })
+
 -}
 decrementSeconds : DateTime -> DateTime
 decrementSeconds =
     Internal.decrementSeconds
 
 
-{-| Decrements the 'Milliseconds' in a given 'Date'. Will also decrement 'Seconds', 'Minutes', 'Hours', 'Day', 'Month', 'Year' where applicable.
+{-| Decrements the `Milliseconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Seconds`, `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
+
+    dt = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 15, minutes = 30, seconds = 45, milliseconds = 100 }
+    Maybe.map decrementMilliseconds dt -- Just (DateTime { date = Date { day = Day 25, month = Aug, year = Year 2019 }, time = Time { hours = Hour 15, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 99 } })
+
+    dt2 = fromRawParts { day = 1, month = Jan, year = 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+    Maybe.map decrementMilliseconds dt2 -- Just (DateTime { date = Date { day = Day 31, month = Dec, year = Year 2019 }, time = Time { hours = Hour 23, minutes = Minute 59, seconds = Second 59, milliseconds = Millisecond 999 } })
+
 -}
 decrementMilliseconds : DateTime -> DateTime
 decrementMilliseconds =
@@ -496,21 +599,45 @@ decrementMilliseconds =
 -- Comparers
 
 
-{-| Compares two DateTimes and returns their 'Order'.
+{-| Compares the two given [DateTimes](DateTime-DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
+
+    past = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 12, minutes = 15, seconds = 45, milliseconds = 250 }
+    future = fromRawParts { day = 26, month = Aug, year = 2019 } { hours = 12, minutes = 15, seconds = 45, milliseconds = 250 }
+
+    Maybe.map2 compare past past   -- Just EQ
+    Maybe.map2 compare past future -- Just LT
+    Maybe.map2 compare future past -- Just GT
+
 -}
 compare : DateTime -> DateTime -> Order
 compare =
     Internal.compare
 
 
-{-| Returns the 'Order' of the 'Date' part of two DateTimes.
+{-| Compares the [Date](DateTime-Calendar#Date) part of two given [DateTime](DateTime-DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
+
+    past = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 12, minutes = 15, seconds = 45, milliseconds = 250 }
+    future = fromRawParts { day = 26, month = Aug, year = 2019 } { hours = 12, minutes = 15, seconds = 45, milliseconds = 250 }
+
+    Maybe.map2 compare past past   -- Just EQ
+    Maybe.map2 compare past future -- Just LT
+    Maybe.map2 compare future past -- Just GT
+
 -}
 compareDates : DateTime -> DateTime -> Order
 compareDates =
     Internal.compareDates
 
 
-{-| Returns the 'Order' of the 'Time' part of two DateTimes.
+{-| Compares the [Time](DateTime-Clock#Time) part of two given [DateTime](DateTime-DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
+
+    past = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 12, minutes = 15, seconds = 45, milliseconds = 250 }
+    future = fromRawParts { day = 25, month = Aug, year = 2019 } { hours = 13, minutes = 15, seconds = 45, milliseconds = 250 }
+
+    Maybe.map2 compare past past   -- Just EQ
+    Maybe.map2 compare past future -- Just LT
+    Maybe.map2 compare future past -- Just GT
+
 -}
 compareTime : DateTime -> DateTime -> Order
 compareTime =
@@ -532,38 +659,47 @@ getWeekday =
     Internal.getWeekday
 
 
-{-| Returns a list of Dates that belong in the current month of the 'DateTime'.
+{-| Returns a list of [DateTimes](DateTime-DateTime#DateTime) for the given `Year` and `Month` combination.
+The `Time` parts of the resulting list will be equal to the `Time` portion of the [DateTime](DateTime-DateTime#DateTime)
+that was provided.
+
+    dt = fromRawParts { day = 26, month = Aug, year = 2019 } { hours = 12, minutes = 30, seconds = 45, milliseconds = 0 }
+    defaultTime = Clock.fromRawParts { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+
+    Maybe.map getDatesInMonth dt
+
+    -- Just
+    --   [ DateTime { date = Date { day = Day 1, month = Aug, year = Year 2019 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   , DateTime { date = Date { day = Day 2, month = Aug, year = Year 2019 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   , DateTime { date = Date { day = Day 3, month = Aug, year = Year 2019 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   ...
+    --   , DateTime { date = Date { day = Day 29, month = Aug, year = Year 2019 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   , DateTime { date = Date { day = Day 30, month = Aug, year = Year 2019 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   , DateTime { date = Date { day = Day 13, month = Aug, year = Year 2019 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   ]
+
 -}
 getDatesInMonth : DateTime -> Clock.Time -> List DateTime
 getDatesInMonth =
     Internal.getDatesInMonth
 
 
-{-| Returns a List of dates based on the start and end 'DateTime' given as parameters.
---- The resulting list includes both the start and end 'Dates'.
---- In the case of startDate > endDate the resulting list would still be
---- a valid sorted date range list.
+{-| Returns an incrementally sorted [DateTime](DateTime-DateTime#DateTime) list based on the **start** and **end** `DateTime` parameters.
+The `Time` parts of the resulting list will be equal to the `Time` argument that was provided.
+_**The resulting list will include both start and end dates**_.
 
-> startDate = fromRawParts { day = 25, month = Feb, year = 2020 }
-> endDate = fromRawParts { day = 1, month = Mar, year = 2020 }
-> getDateRange startDate endDate Clock.midnight
-> [ Date { day = Day 25, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> , Date { day = Day 26, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> , Date { day = Day 27, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> , Date { day = Day 28, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> , Date { day = Day 29, month = Feb, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> , Date { day = Day 1, month = Mar, year = Year 2020 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> ]
->
-> startDate2 = fromRawParts { day = 25, month = Feb, year = 2019 }
-> endDate2 = fromRawParts { day = 1, month = Mar, year = 2019 }
-> getDateRange startDate2 endDate2 Clock.midnight
-> [ Date { day = Day 25, month = Feb, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> , Date { day = Day 26, month = Feb, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> , Date { day = Day 27, month = Feb, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> , Date { day = Day 28, month = Feb, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> , Date { day = Day 1, month = Mar, year = Year 2019 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-> ]
+    start = fromRawParts { day = 26, month = Feb, year = 2020 } { hours = 12, minutes = 30, seconds = 45, milliseconds = 0 }
+    end = fromRawParts { day = 1, month = Mar, year = 2020 } { hours = 16, minutes = 30, seconds = 45, milliseconds = 0 }
+    defaultTime = Clock.fromRawParts { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+
+    Maybe.map3 getDateRange start end defaultTime
+    -- Just
+    --   [ DateTime { date = Date { day = Day 26, month = Feb, year = Year 2020 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   , DateTime { date = Date { day = Day 27, month = Feb, year = Year 2020 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   , DateTime { date = Date { day = Day 28, month = Feb, year = Year 2020 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   , DateTime { date = Date { day = Day 29, month = Feb, year = Year 2020 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   , DateTime { date = Date { day = Day 1, month = Mar, year = Year 2020 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    --   ]
 
 -}
 getDateRange : DateTime -> DateTime -> Clock.Time -> List DateTime
@@ -571,7 +707,24 @@ getDateRange =
     Internal.getDateRange
 
 
-{-| Sorts a List of 'DateTime' based on their posix timestamps.
+{-| Sorts incrementally a list of [DateTime](DateTime-DateTime#DateTime).
+
+    dt = fromRawParts { day = 26, month = Aug, year = 1920 } { hours = 12, minutes = 30, seconds = 45, milliseconds = 0 }
+    dt2 = fromRawParts { day = 26, month = Aug, year = 1920 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+    dt3 = fromRawParts { day = 1, month = Jan, year = 1970 } { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+    dt4 = fromRawParts { day = 1, month = Jan, year = 1970 } { hours = 14, minutes = 40, seconds = 20, milliseconds = 120 }
+    dt5 = fromRawParts { day = 25, month = Dec, year = 2020 } { hours = 14, minutes = 40, seconds = 20, milliseconds = 120 }
+    dt6 = fromRawParts { day = 25, month = Dec, year = 2020 } { hours = 14, minutes = 40, seconds = 20, milliseconds = 150 }
+
+    sort (List.filterMap identity [ dt4, dt2, dt6, dt5, dt, dt3 ])
+    -- [ DateTime { date = Date { day = Day 26, month = Aug, year = Year 1920 }, time = Time { hours = Hour 12, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 0 } }
+    -- , DateTime { date = Date { day = Day 26, month = Aug, year = Year 1920 }, time = Time { hours = Hour 21, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    -- , DateTime { date = Date { day = Day 1, month = Jan, year = Year 1970 }, time = Time { hours = Hour 0, minutes = Minute 0, seconds = Second 0, milliseconds = Millisecond 0 } }
+    -- , DateTime { date = Date { day = Day 1, month = Jan, year = Year 1970 }, time = Time { hours = Hour 14, minutes = Minute 40, seconds = Second 20, milliseconds = Millisecond 120 } }
+    -- , DateTime { date = Date { day = Day 25, month = Dec, year = Year 2020 }, time = Time { hours = Hour 14, minutes = Minute 40, seconds = Second 20, milliseconds = Millisecond 120 } }
+    -- , DateTime { date = Date { day = Day 25, month = Dec, year = Year 2020 }, time = Time { hours = Hour 14, minutes = Minute 40, seconds = Second 20, milliseconds = Millisecond 150 } }
+    -- ]
+
 -}
 sort : List DateTime -> List DateTime
 sort =
