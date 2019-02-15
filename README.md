@@ -4,10 +4,11 @@ The 0.19 version of Elm introduced some [important changes][important-changes] i
 
 The DateTime package was inspired because __date and time__ is a crucial part on our everyday lives and most of the products we are working on rely heavily on the ___correct interpretation of both.___
 This means that whenever we need to handle date or time we need to be sure that it is a ___valid___ __DateTime__. In order to guarantee the __validity of the DateTime__ but also create a solid package
-we had to make some sacrifices such as not using timezones.
+we had to compromise on using [UTC][UTC-wiki] time.
 
-This means that all the results that DateTime returns are based on [UTC][UTC-wiki] and therefore the consumer of the package should be the one that implements timezone specific solutions. This gives us the
-freedom to work on generic solutions of DateTime handling instead of having timezone specific solutions.
+This basically means that all the results that come from the DateTime package are based on [UTC][UTC-wiki] and therefore the ___consumer should be the one that implements timezone specific solutions.___
+That approach makes the DateTime package easier to use without having the overhead of ___timezones___ or ___daylight saving___ and it also gave us the opportunity to focus on implementing generic
+DateTime handling functionality instead of having to focus on timezone specific solutions.
 
 The main goal of this package is to serve as an extension of [elm/time][elm-time] and to provide ___isomorphism___ between [Time.Posix][Time-Posix] and __DateTime__.
 This basically means that __DateTime__ can be constructed by a [Time.Posix][Time-Posix] type and it can be converted back to [Time.Posix][Time-Posix] without losing any of it's integrity.
