@@ -1,4 +1,4 @@
-module DateTime.Clock exposing
+module Clock exposing
     ( Time, RawTime
     , fromPosix, fromRawParts
     , toMillis
@@ -71,7 +71,7 @@ in order to get a [DateTime](DateTime-DateTime#DateTime) which can then be conve
 
 -}
 
-import DateTime.Clock.Internal as Internal exposing (Hour, Millisecond, Minute, Second)
+import Clock.Internal as Internal exposing (Hour, Millisecond, Minute, Second)
 import Time as Time_
 
 

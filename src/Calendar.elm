@@ -1,4 +1,4 @@
-module DateTime.Calendar exposing
+module Calendar exposing
     ( Date, RawDate
     , fromPosix, fromRawParts
     , toMillis, monthToInt
@@ -73,7 +73,7 @@ a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 -}
 
 import Array exposing (Array)
-import DateTime.Calendar.Internal as Internal
+import Calendar.Internal as Internal
 import Time exposing (Month)
 
 

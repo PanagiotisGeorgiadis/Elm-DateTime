@@ -1,4 +1,4 @@
-module DateTime.Calendar.Internal exposing
+module Calendar.Internal exposing
     ( Date(..), RawDate
     , fromPosix, fromRawParts, fromRawDay, fromYearMonthDay, yearFromInt, dayFromInt
     , toPosix, toMillis, yearToInt, monthToInt, dayToInt

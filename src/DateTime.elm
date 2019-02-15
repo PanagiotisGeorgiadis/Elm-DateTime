@@ -1,4 +1,4 @@
-module DateTime.DateTime exposing
+module DateTime exposing
     ( DateTime
     , fromPosix, fromRawParts, fromDateAndTime
     , toPosix, toMillis
@@ -62,9 +62,9 @@ you can _**attempt**_ to construct a `DateTime` by using a combination of a
 
 -}
 
-import DateTime.Calendar as Calendar
-import DateTime.Clock as Clock
-import DateTime.DateTime.Internal as Internal
+import Calendar as Calendar
+import Clock as Clock
+import DateTime.Internal as Internal
 import Time
 
 

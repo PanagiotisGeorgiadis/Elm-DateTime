@@ -1,6 +1,6 @@
 module Tests.Clock exposing (suite)
 
-import DateTime.Clock.Internal as Clock
+import Clock.Internal as Clock
 import Expect exposing (Expectation)
 import Test exposing (Test, describe, test)
 import Time

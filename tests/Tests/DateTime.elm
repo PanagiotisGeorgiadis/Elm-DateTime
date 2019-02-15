@@ -1,8 +1,8 @@
 module Tests.DateTime exposing (suite)
 
-import DateTime.Calendar.Internal as Calendar
-import DateTime.Clock.Internal as Clock
-import DateTime.DateTime.Internal as DateTime
+import Calendar.Internal as Calendar
+import Clock.Internal as Clock
+import DateTime.Internal as DateTime
 import Expect exposing (Expectation)
 import Test exposing (Test, describe, test)
 import Time exposing (Month(..), Weekday(..))

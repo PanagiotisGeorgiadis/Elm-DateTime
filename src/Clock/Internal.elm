@@ -1,4 +1,4 @@
-module DateTime.Clock.Internal exposing
+module Clock.Internal exposing
     ( Time(..), RawTime
     , fromRawParts
     , toMillis

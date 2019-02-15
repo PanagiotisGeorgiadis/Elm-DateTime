@@ -1,4 +1,4 @@
-module DateTime.DateTime.Internal exposing
+module DateTime.Internal exposing
     ( DateTime(..)
     , fromPosix, fromRawParts, fromDateAndTime
     , toPosix, toMillis
@@ -63,10 +63,10 @@ module DateTime.DateTime.Internal exposing
 -}
 
 import Array
-import DateTime.Calendar as Calendar
-import DateTime.Calendar.Internal as Calendar_
-import DateTime.Clock as Clock
-import DateTime.Clock.Internal as Clock_
+import Calendar
+import Calendar.Internal as Calendar_
+import Clock
+import Clock.Internal as Clock_
 import Time
 
 

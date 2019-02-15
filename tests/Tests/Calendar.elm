@@ -1,7 +1,7 @@
 module Tests.Calendar exposing (suite)
 
 import Array
-import DateTime.Calendar.Internal as Calendar
+import Calendar.Internal as Calendar
 import Expect exposing (Expectation)
 import Test exposing (Test, describe, test)
 import Time exposing (Month(..), Weekday(..))
