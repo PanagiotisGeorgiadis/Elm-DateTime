@@ -41,17 +41,17 @@ you can _**attempt**_ to construct a `DateTime` by using a combination of a
 @docs setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
 
 
-# Incrementers
+# Increment values
 
 @docs incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
 
 
-# Decrementers
+# Decrement values
 
 @docs decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
 
 
-# Comparers
+# Compare values
 
 @docs compare, compareDates, compareTime
 
@@ -75,7 +75,7 @@ type alias DateTime =
 
 
 
--- Constructors
+-- Creating a `DateTime`
 
 
 {-| Create a `DateTime` from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time.
@@ -125,7 +125,7 @@ fromDateAndTime =
 
 
 
--- Converters
+-- Conversions
 
 
 {-| Converts a `DateTime` to a posix time. The result is relative to the [Epoch](https://en.wikipedia.org/wiki/Unix_time).
@@ -365,7 +365,7 @@ setMilliseconds =
 
 
 
--- Incrementers
+-- Increment values
 
 
 {-| Increments the `Year` in a given [DateTime](DateTime-DateTime#DateTime) while preserving the `Month`, and `Day` parts.
@@ -482,7 +482,7 @@ incrementMilliseconds =
 
 
 
--- Decrementers
+-- Decrement values
 
 
 {-| Decrements the `Year` in a given [DateTime](DateTime-DateTime#DateTime) while preserving the `Month` and `Day`.
@@ -599,7 +599,7 @@ decrementMilliseconds =
 
 
 
--- Comparers
+-- Compare values
 
 
 {-| Compares the two given [DateTimes](DateTime-DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
@@ -656,15 +656,21 @@ compareTime =
 -- Utilities
 
 
-{-| Returns the weekday of a specific [DateTime](DateTime-DateTime#DateTime).
+{-| Returns an incrementally sorted [DateTime](DateTime-DateTime#DateTime) list based on the **start** and **end** `DateTime` parameters.
+The `Time` parts of the resulting list will be equal to the `Time` argument that was provided.
+_**The resulting list will include both start and end dates**_.
 
-    -- dateTime == 26 Aug 2019 12:30:45.000
-    getWeekday dateTime -- Mon : Weekday
+    -- start       == 26 Feb 2020 12:30:45.000
+    -- end         == 1  Mar 2020 16:30:45.000
+    -- defaultTime == 21:00:00.000
+
+    getDateRange start end defaultTime
+    -- [ 26 Feb 2020 21:00:00.000, 27 Feb 2020 21:00:00.000, 28 Feb 2020 21:00:00.000, 29 Feb 2020 21:00:00.000, 1 Mar 2020 21:00:00.000 ] : List DateTime
 
 -}
-getWeekday : DateTime -> Time.Weekday
-getWeekday =
-    Internal.getWeekday
+getDateRange : DateTime -> DateTime -> Clock.Time -> List DateTime
+getDateRange =
+    Internal.getDateRange
 
 
 {-| Returns a list of [DateTimes](DateTime-DateTime#DateTime) for the given `Year` and `Month` combination.
@@ -689,21 +695,15 @@ getDatesInMonth =
     Internal.getDatesInMonth
 
 
-{-| Returns an incrementally sorted [DateTime](DateTime-DateTime#DateTime) list based on the **start** and **end** `DateTime` parameters.
-The `Time` parts of the resulting list will be equal to the `Time` argument that was provided.
-_**The resulting list will include both start and end dates**_.
+{-| Returns the weekday of a specific [DateTime](DateTime-DateTime#DateTime).
 
-    -- start       == 26 Feb 2020 12:30:45.000
-    -- end         == 1  Mar 2020 16:30:45.000
-    -- defaultTime == 21:00:00.000
-
-    getDateRange start end defaultTime
-    -- [ 26 Feb 2020 21:00:00.000, 27 Feb 2020 21:00:00.000, 28 Feb 2020 21:00:00.000, 29 Feb 2020 21:00:00.000, 1 Mar 2020 21:00:00.000 ] : List DateTime
+    -- dateTime == 26 Aug 2019 12:30:45.000
+    getWeekday dateTime -- Mon : Weekday
 
 -}
-getDateRange : DateTime -> DateTime -> Clock.Time -> List DateTime
-getDateRange =
-    Internal.getDateRange
+getWeekday : DateTime -> Time.Weekday
+getWeekday =
+    Internal.getWeekday
 
 
 {-| Sorts incrementally a list of [DateTime](DateTime-DateTime#DateTime).

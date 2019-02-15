@@ -45,17 +45,17 @@ in order to get a [DateTime](DateTime-DateTime#DateTime) which can then be conve
 @docs setHours, setMinutes, setSeconds, setMilliseconds
 
 
-# Incrementers
+# Increment values
 
 @docs incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
 
 
-# Decrementers
+# Decrement values
 
 @docs decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
 
 
-# Comparers
+# Compare values
 
 @docs compare
 
@@ -92,7 +92,7 @@ type alias RawTime =
 
 
 
--- Constructors
+-- Creating a `Time`
 
 
 {-| Construct a [Time](DateTime-Clock#Time) from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time.
@@ -144,7 +144,7 @@ fromRawParts =
 
 
 
--- Converters
+-- Conversions
 
 
 {-| Convert a [Time](DateTime-Clock#Time) to milliseconds since midnight.
@@ -268,7 +268,7 @@ setMilliseconds =
 
 
 
--- Incrementers
+-- Increment values
 
 
 {-| Increments an `Hour` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling forward with a
@@ -334,7 +334,7 @@ incrementMilliseconds =
 
 
 
--- Decrementers
+-- Decrement values
 
 
 {-| Decrements an `Hour` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling backwards with a
@@ -400,7 +400,7 @@ decrementMilliseconds =
 
 
 
--- Comparers
+-- Compare values
 
 
 {-| Compare two `Time` values.

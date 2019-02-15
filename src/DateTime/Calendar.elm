@@ -93,7 +93,7 @@ type alias RawDate =
 
 
 
--- Constructors
+-- Creating a `Date`
 
 
 {-| Construct a [Date](DateTime-Calendar#Date) from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time.
@@ -136,7 +136,7 @@ fromRawParts =
 
 
 
--- Converters
+-- Conversions
 
 
 {-| Transforms a [Date](DateTime-Calendar#Date) into milliseconds.
@@ -253,7 +253,7 @@ setDay =
 
 
 
--- Incrementers
+-- Increment values
 
 
 {-| Increments the `Year` in a given [Date](DateTime-Calendar#Date) while preserving the `Month` and `Day` parts.
@@ -312,7 +312,7 @@ incrementDay =
 
 
 
--- Decrementers
+-- Decrement values
 
 
 {-| Decrements the `Year` in a given [Date](DateTime-Calendar#Date) while preserving the `Month` and `Day` parts.
@@ -371,7 +371,7 @@ decrementDay =
 
 
 
--- Comparers
+-- Compare values
 
 
 {-| Compares the two given [Dates](DateTime-Calendar#Date) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).

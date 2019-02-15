@@ -546,28 +546,6 @@ compareTime (DateTime lhs) (DateTime rhs) =
 -- Utilities
 
 
-{-| Extract the weekday from a `DateTime`.
-
-> getWeekday (fromPosix (Time.millisToPosix 0))
-> Thu : Time.Weekday
-
--}
-getWeekday : DateTime -> Time.Weekday
-getWeekday (DateTime dateTime) =
-    Calendar.getWeekday dateTime.date
-
-
-{-| Returns a list of Dates that belong in the current month of the 'DateTime'.
--}
-getDatesInMonth : DateTime -> List DateTime
-getDatesInMonth (DateTime { date, time }) =
-    List.map
-        (\date_ ->
-            DateTime { date = date_, time = time }
-        )
-        (Calendar.getDatesInMonth date)
-
-
 {-| Returns a List of dates based on the start and end 'DateTime' given as parameters.
 --- The resulting list includes both the start and end 'Dates'.
 --- In the case of startDate > endDate the resulting list would still be
@@ -602,6 +580,28 @@ getDateRange (DateTime start) (DateTime end) time =
             DateTime { date = date, time = time }
         )
         (Calendar.getDateRange start.date end.date)
+
+
+{-| Returns a list of Dates that belong in the current month of the 'DateTime'.
+-}
+getDatesInMonth : DateTime -> List DateTime
+getDatesInMonth (DateTime { date, time }) =
+    List.map
+        (\date_ ->
+            DateTime { date = date_, time = time }
+        )
+        (Calendar.getDatesInMonth date)
+
+
+{-| Extract the weekday from a `DateTime`.
+
+> getWeekday (fromPosix (Time.millisToPosix 0))
+> Thu : Time.Weekday
+
+-}
+getWeekday : DateTime -> Time.Weekday
+getWeekday (DateTime dateTime) =
+    Calendar.getWeekday dateTime.date
 
 
 {-| Sorts a List of 'DateTime' based on their posix timestamps.
