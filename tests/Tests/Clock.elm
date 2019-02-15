@@ -174,41 +174,6 @@ fromRawPartsTests =
         ]
 
 
-toMillisTests : Test
-toMillisTests =
-    describe "Clock.toMillis Test Suite"
-        [ test "Clock.fromPosix > Clock.toMillis conversion test"
-            (\_ ->
-                let
-                    time =
-                        -- This timestamp is equivalent to Fri Dec 21 2018 15:45:30 GMT+0000
-                        Clock.fromPosix (Time.millisToPosix 1545407130000)
-
-                    expectedMillis =
-                        (millisInAnHour * 15)
-                            + (millisInAMinute * 45)
-                            + (millisInASecond * 30)
-                in
-                Expect.equal expectedMillis (Clock.toMillis time)
-            )
-        , test "Clock.fromRawParts > Clock.toMillis conversion test"
-            (\_ ->
-                let
-                    time =
-                        -- This timestamp is equivalent to Fri Dec 21 2018 15:45:30 GMT+0000
-                        Clock.fromRawParts { hours = 15, minutes = 45, seconds = 30, milliseconds = 0 }
-
-                    expectedMillis =
-                        (millisInAnHour * 15)
-                            + (millisInAMinute * 45)
-                            + (millisInASecond * 30)
-                in
-                Expect.equal (Just expectedMillis) <|
-                    Maybe.map Clock.toMillis time
-            )
-        ]
-
-
 hoursFromIntTests : Test
 hoursFromIntTests =
     describe "Clock.hoursFromInt Test Suite"
@@ -297,6 +262,125 @@ millisecondsFromIntTests =
         ]
 
 
+toMillisTests : Test
+toMillisTests =
+    describe "Clock.toMillis Test Suite"
+        [ test "Clock.fromPosix > Clock.toMillis conversion test"
+            (\_ ->
+                let
+                    time =
+                        -- This timestamp is equivalent to Fri Dec 21 2018 15:45:30 GMT+0000
+                        Clock.fromPosix (Time.millisToPosix 1545407130000)
+
+                    expectedMillis =
+                        (millisInAnHour * 15)
+                            + (millisInAMinute * 45)
+                            + (millisInASecond * 30)
+                in
+                Expect.equal expectedMillis (Clock.toMillis time)
+            )
+        , test "Clock.fromRawParts > Clock.toMillis conversion test"
+            (\_ ->
+                let
+                    time =
+                        -- This timestamp is equivalent to Fri Dec 21 2018 15:45:30 GMT+0000
+                        Clock.fromRawParts { hours = 15, minutes = 45, seconds = 30, milliseconds = 0 }
+
+                    expectedMillis =
+                        (millisInAnHour * 15)
+                            + (millisInAMinute * 45)
+                            + (millisInASecond * 30)
+                in
+                Expect.equal (Just expectedMillis) <|
+                    Maybe.map Clock.toMillis time
+            )
+        ]
+
+
+setHoursTests : Test
+setHoursTests =
+    let
+        initial =
+            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
+    in
+    describe "Clock.setHours Test Suite"
+        [ test "Testing a valid updating of hours."
+            (\_ ->
+                Expect.equal
+                    (Clock.fromRawParts { hours = 23, minutes = 0, seconds = 0, milliseconds = 0 })
+                    (Maybe.andThen (Clock.setHours 23) initial)
+            )
+        , test "Testing an invalid updating of hours."
+            (\_ ->
+                Expect.equal Nothing <|
+                    Maybe.andThen (Clock.setHours 24) initial
+            )
+        ]
+
+
+setMinutesTests : Test
+setMinutesTests =
+    let
+        initial =
+            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
+    in
+    describe "Clock.setMinutes Test Suite"
+        [ test "Testing a valid updating of minutes."
+            (\_ ->
+                Expect.equal
+                    (Clock.fromRawParts { hours = 15, minutes = 30, seconds = 0, milliseconds = 0 })
+                    (Maybe.andThen (Clock.setMinutes 30) initial)
+            )
+        , test "Testing an invalid updating of minutes."
+            (\_ ->
+                Expect.equal Nothing <|
+                    Maybe.andThen (Clock.setMinutes 60) initial
+            )
+        ]
+
+
+setSecondsTests : Test
+setSecondsTests =
+    let
+        initial =
+            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
+    in
+    describe "Clock.setSeconds Test Suite"
+        [ test "Testing a valid updating of seconds."
+            (\_ ->
+                Expect.equal
+                    (Clock.fromRawParts { hours = 15, minutes = 0, seconds = 30, milliseconds = 0 })
+                    (Maybe.andThen (Clock.setSeconds 30) initial)
+            )
+        , test "Testing an invalid updating of seconds."
+            (\_ ->
+                Expect.equal Nothing <|
+                    Maybe.andThen (Clock.setSeconds 60) initial
+            )
+        ]
+
+
+setMillisecondsTests : Test
+setMillisecondsTests =
+    let
+        initial =
+            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
+    in
+    describe "Clock.setMilliseconds Test Suite"
+        [ test "Testing a valid updating of seconds."
+            (\_ ->
+                Expect.equal
+                    (Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 500 })
+                    (Maybe.andThen (Clock.setMilliseconds 500) initial)
+            )
+        , test "Testing an invalid updating of seconds."
+            (\_ ->
+                Expect.equal Nothing <|
+                    Maybe.andThen (Clock.setMilliseconds 1000) initial
+            )
+        ]
+
+
 incrementHoursTests : Test
 incrementHoursTests =
     describe "Clock.incrementHours Test Suite"
@@ -328,48 +412,6 @@ incrementHoursTests =
 
                     res =
                         Maybe.map Clock.incrementHours startTime
-                in
-                case ( res, expectedTime ) of
-                    ( Just r, Just expected ) ->
-                        Expect.equal ( expected, True ) r
-
-                    _ ->
-                        Expect.fail "Failed to construct Time from raw parts"
-            )
-        ]
-
-
-decrementHoursTests : Test
-decrementHoursTests =
-    describe "Clock.decrementHours Test Suite"
-        [ test "Normal case hour decrement"
-            (\_ ->
-                let
-                    ( startTime, expectedTime ) =
-                        ( Clock.fromRawParts { hours = 1, minutes = 0, seconds = 0, milliseconds = 0 }
-                        , Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-                        )
-
-                    res =
-                        Maybe.map Clock.decrementHours startTime
-                in
-                case ( res, expectedTime ) of
-                    ( Just r, Just expected ) ->
-                        Expect.equal ( expected, False ) r
-
-                    _ ->
-                        Expect.fail "Failed to construct Time from raw parts"
-            )
-        , test "Lower hour limit case decrement"
-            (\_ ->
-                let
-                    ( startTime, expectedTime ) =
-                        ( Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-                        , Clock.fromRawParts { hours = 23, minutes = 0, seconds = 0, milliseconds = 0 }
-                        )
-
-                    res =
-                        Maybe.map Clock.decrementHours startTime
                 in
                 case ( res, expectedTime ) of
                     ( Just r, Just expected ) ->
@@ -430,66 +472,6 @@ incrementMinutesTests =
 
                     res =
                         Maybe.map Clock.incrementMinutes startTime
-                in
-                case ( res, expectedTime ) of
-                    ( Just r, Just expected ) ->
-                        Expect.equal ( expected, True ) r
-
-                    _ ->
-                        Expect.fail "Failed to construct Time from raw parts"
-            )
-        ]
-
-
-decrementMinutesTests : Test
-decrementMinutesTests =
-    describe "Clock.decrementMinutes Test Suite"
-        [ test "Normal case minute decrement"
-            (\_ ->
-                let
-                    ( startTime, expectedTime ) =
-                        ( Clock.fromRawParts { hours = 0, minutes = 1, seconds = 0, milliseconds = 0 }
-                        , Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-                        )
-
-                    res =
-                        Maybe.map Clock.decrementMinutes startTime
-                in
-                case ( res, expectedTime ) of
-                    ( Just r, Just expected ) ->
-                        Expect.equal ( expected, False ) r
-
-                    _ ->
-                        Expect.fail "Failed to construct Time from raw parts"
-            )
-        , test "Lower minute limit case decrement"
-            (\_ ->
-                let
-                    ( startTime, expectedTime ) =
-                        ( Clock.fromRawParts { hours = 1, minutes = 0, seconds = 0, milliseconds = 0 }
-                        , Clock.fromRawParts { hours = 0, minutes = 59, seconds = 0, milliseconds = 0 }
-                        )
-
-                    res =
-                        Maybe.map Clock.decrementMinutes startTime
-                in
-                case ( res, expectedTime ) of
-                    ( Just r, Just expected ) ->
-                        Expect.equal ( expected, False ) r
-
-                    _ ->
-                        Expect.fail "Failed to construct Time from raw parts"
-            )
-        , test "Lower minute and hour limit case decrement"
-            (\_ ->
-                let
-                    ( startTime, expectedTime ) =
-                        ( Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-                        , Clock.fromRawParts { hours = 23, minutes = 59, seconds = 0, milliseconds = 0 }
-                        )
-
-                    res =
-                        Maybe.map Clock.decrementMinutes startTime
                 in
                 case ( res, expectedTime ) of
                     ( Just r, Just expected ) ->
@@ -568,84 +550,6 @@ incrementSecondsTests =
 
                     res =
                         Maybe.map Clock.incrementSeconds startTime
-                in
-                case ( res, expectedTime ) of
-                    ( Just r, Just expected ) ->
-                        Expect.equal ( expected, True ) r
-
-                    _ ->
-                        Expect.fail "Failed to construct Time from raw parts"
-            )
-        ]
-
-
-decrementSecondsTests : Test
-decrementSecondsTests =
-    describe "Clock.decrementSeconds Test Suite"
-        [ test "Normal case seconds decrement"
-            (\_ ->
-                let
-                    ( startTime, expectedTime ) =
-                        ( Clock.fromRawParts { hours = 0, minutes = 0, seconds = 1, milliseconds = 0 }
-                        , Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-                        )
-
-                    res =
-                        Maybe.map Clock.decrementSeconds startTime
-                in
-                case ( res, expectedTime ) of
-                    ( Just r, Just expected ) ->
-                        Expect.equal ( expected, False ) r
-
-                    _ ->
-                        Expect.fail "Failed to construct Time from raw parts"
-            )
-        , test "Lower seconds limit case decrement"
-            (\_ ->
-                let
-                    ( startTime, expectedTime ) =
-                        ( Clock.fromRawParts { hours = 0, minutes = 1, seconds = 0, milliseconds = 0 }
-                        , Clock.fromRawParts { hours = 0, minutes = 0, seconds = 59, milliseconds = 0 }
-                        )
-
-                    res =
-                        Maybe.map Clock.decrementSeconds startTime
-                in
-                case ( res, expectedTime ) of
-                    ( Just r, Just expected ) ->
-                        Expect.equal ( expected, False ) r
-
-                    _ ->
-                        Expect.fail "Failed to construct Time from raw parts"
-            )
-        , test "Lower seconds and minute limit case decrement"
-            (\_ ->
-                let
-                    ( startTime, expectedTime ) =
-                        ( Clock.fromRawParts { hours = 1, minutes = 0, seconds = 0, milliseconds = 0 }
-                        , Clock.fromRawParts { hours = 0, minutes = 59, seconds = 59, milliseconds = 0 }
-                        )
-
-                    res =
-                        Maybe.map Clock.decrementSeconds startTime
-                in
-                case ( res, expectedTime ) of
-                    ( Just r, Just expected ) ->
-                        Expect.equal ( expected, False ) r
-
-                    _ ->
-                        Expect.fail "Failed to construct Time from raw parts"
-            )
-        , test "Lower seconds, minute and hour limit case decrement"
-            (\_ ->
-                let
-                    ( startTime, expectedTime ) =
-                        ( Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
-                        , Clock.fromRawParts { hours = 23, minutes = 59, seconds = 59, milliseconds = 0 }
-                        )
-
-                    res =
-                        Maybe.map Clock.decrementSeconds startTime
                 in
                 case ( res, expectedTime ) of
                     ( Just r, Just expected ) ->
@@ -742,6 +646,186 @@ incrementMillisecondsTests =
 
                     res =
                         Maybe.map Clock.incrementMilliseconds startTime
+                in
+                case ( res, expectedTime ) of
+                    ( Just r, Just expected ) ->
+                        Expect.equal ( expected, True ) r
+
+                    _ ->
+                        Expect.fail "Failed to construct Time from raw parts"
+            )
+        ]
+
+
+decrementHoursTests : Test
+decrementHoursTests =
+    describe "Clock.decrementHours Test Suite"
+        [ test "Normal case hour decrement"
+            (\_ ->
+                let
+                    ( startTime, expectedTime ) =
+                        ( Clock.fromRawParts { hours = 1, minutes = 0, seconds = 0, milliseconds = 0 }
+                        , Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+
+                    res =
+                        Maybe.map Clock.decrementHours startTime
+                in
+                case ( res, expectedTime ) of
+                    ( Just r, Just expected ) ->
+                        Expect.equal ( expected, False ) r
+
+                    _ ->
+                        Expect.fail "Failed to construct Time from raw parts"
+            )
+        , test "Lower hour limit case decrement"
+            (\_ ->
+                let
+                    ( startTime, expectedTime ) =
+                        ( Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+                        , Clock.fromRawParts { hours = 23, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+
+                    res =
+                        Maybe.map Clock.decrementHours startTime
+                in
+                case ( res, expectedTime ) of
+                    ( Just r, Just expected ) ->
+                        Expect.equal ( expected, True ) r
+
+                    _ ->
+                        Expect.fail "Failed to construct Time from raw parts"
+            )
+        ]
+
+
+decrementMinutesTests : Test
+decrementMinutesTests =
+    describe "Clock.decrementMinutes Test Suite"
+        [ test "Normal case minute decrement"
+            (\_ ->
+                let
+                    ( startTime, expectedTime ) =
+                        ( Clock.fromRawParts { hours = 0, minutes = 1, seconds = 0, milliseconds = 0 }
+                        , Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+
+                    res =
+                        Maybe.map Clock.decrementMinutes startTime
+                in
+                case ( res, expectedTime ) of
+                    ( Just r, Just expected ) ->
+                        Expect.equal ( expected, False ) r
+
+                    _ ->
+                        Expect.fail "Failed to construct Time from raw parts"
+            )
+        , test "Lower minute limit case decrement"
+            (\_ ->
+                let
+                    ( startTime, expectedTime ) =
+                        ( Clock.fromRawParts { hours = 1, minutes = 0, seconds = 0, milliseconds = 0 }
+                        , Clock.fromRawParts { hours = 0, minutes = 59, seconds = 0, milliseconds = 0 }
+                        )
+
+                    res =
+                        Maybe.map Clock.decrementMinutes startTime
+                in
+                case ( res, expectedTime ) of
+                    ( Just r, Just expected ) ->
+                        Expect.equal ( expected, False ) r
+
+                    _ ->
+                        Expect.fail "Failed to construct Time from raw parts"
+            )
+        , test "Lower minute and hour limit case decrement"
+            (\_ ->
+                let
+                    ( startTime, expectedTime ) =
+                        ( Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+                        , Clock.fromRawParts { hours = 23, minutes = 59, seconds = 0, milliseconds = 0 }
+                        )
+
+                    res =
+                        Maybe.map Clock.decrementMinutes startTime
+                in
+                case ( res, expectedTime ) of
+                    ( Just r, Just expected ) ->
+                        Expect.equal ( expected, True ) r
+
+                    _ ->
+                        Expect.fail "Failed to construct Time from raw parts"
+            )
+        ]
+
+
+decrementSecondsTests : Test
+decrementSecondsTests =
+    describe "Clock.decrementSeconds Test Suite"
+        [ test "Normal case seconds decrement"
+            (\_ ->
+                let
+                    ( startTime, expectedTime ) =
+                        ( Clock.fromRawParts { hours = 0, minutes = 0, seconds = 1, milliseconds = 0 }
+                        , Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+
+                    res =
+                        Maybe.map Clock.decrementSeconds startTime
+                in
+                case ( res, expectedTime ) of
+                    ( Just r, Just expected ) ->
+                        Expect.equal ( expected, False ) r
+
+                    _ ->
+                        Expect.fail "Failed to construct Time from raw parts"
+            )
+        , test "Lower seconds limit case decrement"
+            (\_ ->
+                let
+                    ( startTime, expectedTime ) =
+                        ( Clock.fromRawParts { hours = 0, minutes = 1, seconds = 0, milliseconds = 0 }
+                        , Clock.fromRawParts { hours = 0, minutes = 0, seconds = 59, milliseconds = 0 }
+                        )
+
+                    res =
+                        Maybe.map Clock.decrementSeconds startTime
+                in
+                case ( res, expectedTime ) of
+                    ( Just r, Just expected ) ->
+                        Expect.equal ( expected, False ) r
+
+                    _ ->
+                        Expect.fail "Failed to construct Time from raw parts"
+            )
+        , test "Lower seconds and minute limit case decrement"
+            (\_ ->
+                let
+                    ( startTime, expectedTime ) =
+                        ( Clock.fromRawParts { hours = 1, minutes = 0, seconds = 0, milliseconds = 0 }
+                        , Clock.fromRawParts { hours = 0, minutes = 59, seconds = 59, milliseconds = 0 }
+                        )
+
+                    res =
+                        Maybe.map Clock.decrementSeconds startTime
+                in
+                case ( res, expectedTime ) of
+                    ( Just r, Just expected ) ->
+                        Expect.equal ( expected, False ) r
+
+                    _ ->
+                        Expect.fail "Failed to construct Time from raw parts"
+            )
+        , test "Lower seconds, minute and hour limit case decrement"
+            (\_ ->
+                let
+                    ( startTime, expectedTime ) =
+                        ( Clock.fromRawParts { hours = 0, minutes = 0, seconds = 0, milliseconds = 0 }
+                        , Clock.fromRawParts { hours = 23, minutes = 59, seconds = 59, milliseconds = 0 }
+                        )
+
+                    res =
+                        Maybe.map Clock.decrementSeconds startTime
                 in
                 case ( res, expectedTime ) of
                     ( Just r, Just expected ) ->
@@ -1007,90 +1091,6 @@ compareMillisecondsTests =
         , test "Equality test case"
             (\_ ->
                 Expect.equal (Just EQ) (Maybe.map2 Clock.compareMilliseconds (Maybe.map Clock.getMilliseconds time) (Maybe.map Clock.getMilliseconds time))
-            )
-        ]
-
-
-setHoursTests : Test
-setHoursTests =
-    let
-        initial =
-            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
-    in
-    describe "Clock.setHours Test Suite"
-        [ test "Testing a valid updating of hours."
-            (\_ ->
-                Expect.equal
-                    (Clock.fromRawParts { hours = 23, minutes = 0, seconds = 0, milliseconds = 0 })
-                    (Maybe.andThen (Clock.setHours 23) initial)
-            )
-        , test "Testing an invalid updating of hours."
-            (\_ ->
-                Expect.equal Nothing <|
-                    Maybe.andThen (Clock.setHours 24) initial
-            )
-        ]
-
-
-setMinutesTests : Test
-setMinutesTests =
-    let
-        initial =
-            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
-    in
-    describe "Clock.setMinutes Test Suite"
-        [ test "Testing a valid updating of minutes."
-            (\_ ->
-                Expect.equal
-                    (Clock.fromRawParts { hours = 15, minutes = 30, seconds = 0, milliseconds = 0 })
-                    (Maybe.andThen (Clock.setMinutes 30) initial)
-            )
-        , test "Testing an invalid updating of minutes."
-            (\_ ->
-                Expect.equal Nothing <|
-                    Maybe.andThen (Clock.setMinutes 60) initial
-            )
-        ]
-
-
-setSecondsTests : Test
-setSecondsTests =
-    let
-        initial =
-            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
-    in
-    describe "Clock.setSeconds Test Suite"
-        [ test "Testing a valid updating of seconds."
-            (\_ ->
-                Expect.equal
-                    (Clock.fromRawParts { hours = 15, minutes = 0, seconds = 30, milliseconds = 0 })
-                    (Maybe.andThen (Clock.setSeconds 30) initial)
-            )
-        , test "Testing an invalid updating of seconds."
-            (\_ ->
-                Expect.equal Nothing <|
-                    Maybe.andThen (Clock.setSeconds 60) initial
-            )
-        ]
-
-
-setMillisecondsTests : Test
-setMillisecondsTests =
-    let
-        initial =
-            Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 0 }
-    in
-    describe "Clock.setMilliseconds Test Suite"
-        [ test "Testing a valid updating of seconds."
-            (\_ ->
-                Expect.equal
-                    (Clock.fromRawParts { hours = 15, minutes = 0, seconds = 0, milliseconds = 500 })
-                    (Maybe.andThen (Clock.setMilliseconds 500) initial)
-            )
-        , test "Testing an invalid updating of seconds."
-            (\_ ->
-                Expect.equal Nothing <|
-                    Maybe.andThen (Clock.setMilliseconds 1000) initial
             )
         ]
 
