@@ -132,7 +132,7 @@ fromDateAndTime =
 This basically means that **if the DateTime provided is after the Epoch** the result will be a **positive posix time.** Otherwise the
 result will be a **negative posix time**.
 
-    -- dateTime == 25 Dec 2019 19:23:45.000
+    -- dateTime  == 25 Dec 2019 19:23:45.000
     toPosix dateTime -- Posix 1577301825000 : Posix
 
     -- dateTime2 == 1 Jan 1970 00:00:00.000 : Posix
@@ -151,7 +151,7 @@ toPosix =
 This basically means that **if the DateTime provided is after the Epoch** the result will be a **positive number** representing the milliseconds
 that have elapsed since the Epoch. Otherwise the result will be a negative number representing the milliseconds required in order to reach the Epoch.
 
-    -- dateTime == 25 Dec 2019 19:23:45.000
+    -- dateTime  == 25 Dec 2019 19:23:45.000
     toMillis dateTime -- 1577301825000 : Int
 
     -- dateTime2 == 1 Jan 1970 00:00:00.000
@@ -371,7 +371,7 @@ setMilliseconds =
 {-| Increments the `Year` in a given [DateTime](DateTime-DateTime#DateTime) while preserving the `Month`, and `Day` parts.
 _The [Time](DateTime-Clock#Time) related parts will remain the same._
 
-    -- dateTime == 31 Jan 2019 15:30:45.100
+    -- dateTime  == 31 Jan 2019 15:30:45.100
     incrementYear dateTime -- 31 Jan 2020 15:30:45.100 : DateTime
 
     -- dateTime2 == 29 Feb 2020 15:30:45.100
@@ -391,7 +391,7 @@ incrementYear =
 {-| Increments the `Month` in a given [DateTime](DateTime-DateTime#DateTime). It will also roll over to the next year where applicable.
 _The [Time](DateTime-Clock#Time) related parts will remain the same._
 
-    -- dateTime == 15 Sep 2019 15:30:45.100
+    -- dateTime  == 15 Sep 2019 15:30:45.100
     incrementMonth dateTime -- 15 Oct 2019 15:30:45.100 : DateTime
 
     -- dateTime2 == 15 Dec 2019 15:30:45.100
@@ -413,7 +413,7 @@ incrementMonth =
 
 {-| Increments the `Day` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Month` and `Year` where applicable.
 
-    -- dateTime == 25 Aug 2019 15:30:45.100
+    -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementDay dateTime -- 26 Aug 2019 15:30:45.100 : DateTime
 
     -- dateTime2 == 31 Dec 2019 15:30:45.100
@@ -427,7 +427,7 @@ incrementDay =
 
 {-| Increments the `Hours` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Day`, `Month`, `Year` where applicable.
 
-    -- dateTime == 25 Aug 2019 15:30:45.100
+    -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementHours dateTime -- 25 Aug 2019 16:30:45.100 : DateTime
 
     -- dateTime2 == 31 Dec 2019 23:00:00.000
@@ -441,7 +441,7 @@ incrementHours =
 
 {-| Increments the `Minutes` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Hours`, `Day`, `Month`, `Year` where applicable.
 
-    -- dateTime == 25 Aug 2019 15:30:45.100
+    -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementMinutes dateTime -- 25 Aug 2019 15:31:45.100 : DateTime
 
     -- dateTime2 == 31 Dec 2019 23:59:00.000
@@ -455,7 +455,7 @@ incrementMinutes =
 
 {-| Increments the `Seconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
 
-    -- dateTime == 25 Aug 2019 15:30:45.100
+    -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementSeconds dateTime -- 25 Aug 2019 15:30:46.100 : DateTime
 
     -- dateTime2 == 31 Dec 2019 23:59:59.000
@@ -469,7 +469,7 @@ incrementSeconds =
 
 {-| Increments the `Milliseconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Seconds`, `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
 
-    -- dateTime == 25 Aug 2019 15:30:45.100
+    -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementMilliseconds dateTime -- 25 Aug 2019 15:30:45:101 : DateTime
 
     -- dateTime2 == 31 Dec 2019 23:59:59.999
@@ -488,7 +488,7 @@ incrementMilliseconds =
 {-| Decrements the `Year` in a given [DateTime](DateTime-DateTime#DateTime) while preserving the `Month` and `Day`.
 _The [Time](DateTime-Clock#Time) related parts will remain the same._
 
-    -- dateTime == 31 Jan 2019 15:30:45.100
+    -- dateTime  == 31 Jan 2019 15:30:45.100
     decrementYear dateTime -- 31 Jan 2018 15:30:45.100 : DateTime
 
     -- dateTime2 == 29 Feb 2020 15:30:45.100
@@ -508,7 +508,7 @@ decrementYear =
 {-| Decrements the `Month` in a given [DateTime](DateTime-DateTime#DateTime). It will also roll backwards to the previous year where applicable.
 _The [Time](DateTime-Clock#Time) related parts will remain the same._
 
-    -- dateTime == 15 Sep 2019 15:30:45.100
+    -- dateTime  == 15 Sep 2019 15:30:45.100
     decrementMonth dateTime -- 15 Aug 2019 15:30:45.100 : DateTime
 
     -- dateTime2 == 15 Jan 2020 15:30:45.100
@@ -530,7 +530,7 @@ decrementMonth =
 
 {-| Decrements the `Day` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Month` and `Year` where applicable.
 
-    -- dateTime == 27 Aug 2019 15:30:45.100
+    -- dateTime  == 27 Aug 2019 15:30:45.100
     decrementDay dateTime -- 26 Aug 2019 15:30:45.100 : DateTime
 
     -- dateTime2 == 1 Jan 2020 15:30:45.100
@@ -544,7 +544,7 @@ decrementDay =
 
 {-| Decrements the `Hours` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Day`, `Month`, `Year` where applicable.
 
-    -- dateTime == 25 Aug 2019 15:30:45.100
+    -- dateTime  == 25 Aug 2019 15:30:45.100
     decrementHours dateTime -- 25 Aug 2019 14:30:45.100 : DateTime
 
     -- dateTime2 == 1 Jan 2020 00:00:00.000
@@ -558,7 +558,7 @@ decrementHours =
 
 {-| Decrements the `Minutes` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Hours`, `Day`, `Month`, `Year` where applicable.
 
-    -- dateTime == 25 Aug 2019 15:30:45.100
+    -- dateTime  == 25 Aug 2019 15:30:45.100
     decrementMinutes dateTime -- 25 Aug 2019 15:29:45.100 : DateTime
 
     -- dateTime2 == 1 Jan 2020 00:00:00.000
@@ -572,7 +572,7 @@ decrementMinutes =
 
 {-| Decrements the `Seconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
 
-    -- dateTime == 25 Aug 2019 15:30:45.100
+    -- dateTime  == 25 Aug 2019 15:30:45.100
     decrementSeconds dateTime -- 25 Aug 2019 15:30:44.100 : DateTime
 
     -- dateTime2 == 1 Jan 2020 00:00:00.000
@@ -586,7 +586,7 @@ decrementSeconds =
 
 {-| Decrements the `Milliseconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Seconds`, `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
 
-    -- dateTime == 25 Aug 2019 15:30:45.100
+    -- dateTime  == 25 Aug 2019 15:30:45.100
     decrementMilliseconds dateTime -- 25 Aug 2019 15:30:45.099 : DateTime
 
     -- dateTime2 == 1 Jan 2020 00:00:00.000
@@ -726,7 +726,7 @@ getWeekday =
 
 {-| Checks if the `Year` part of the given [DateTime](DateTime-DateTime#DateTime) is a leap year.
 
-    -- dateTime == 25 Dec 2019 21:00:00.000
+    -- dateTime  == 25 Dec 2019 21:00:00.000
     isLeapYear dateTime -- False
 
     -- dateTime2 == 25 Dec 2020 12:00:00.000

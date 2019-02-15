@@ -258,7 +258,7 @@ setDay =
 
 {-| Increments the `Year` in a given [Date](DateTime-Calendar#Date) while preserving the `Month` and `Day` parts.
 
-    -- date == 31 Jan 2019
+    -- date  == 31 Jan 2019
     incrementYear date -- 31 Jan 2020 : Date
 
     -- date2 == 29 Feb 2020
@@ -277,14 +277,14 @@ incrementYear =
 
 {-| Increments the `Month` in a given [Date](DateTime-Calendar#Date). It will also roll over to the next year where applicable.
 
-    -- date == 15 Sep 2019
+    -- date  == 15 Sep 2019
     incrementMonth date -- 15 Oct 2019 : Date
 
     -- date2 == 15 Dec 2019
     incrementMonth date2 -- 15 Jan 2020 : Date
 
     -- date3 == 31 Jan 2019
-    Maybe.map incrementMonth date3 -- 28 Feb 2019 : Date
+    incrementMonth date3 -- 28 Feb 2019 : Date
 
 **Note:** In the first example, incrementing the `Month` causes no changes in the `Year` and `Day` parts while on the second
 example it rolls forward the 'Year'. On the last example we see that the `Day` part is different than the input. This is because
@@ -299,7 +299,7 @@ incrementMonth =
 
 {-| Increments the `Day` in a given [Date](DateTime-Calendar#Date). Will also increment `Month` and `Year` where applicable.
 
-    -- date == 25 Aug 2019
+    -- date  == 25 Aug 2019
     incrementDay date -- 26 Aug 2019 : Date
 
     -- date2 == 31 Dec 2019
@@ -317,7 +317,7 @@ incrementDay =
 
 {-| Decrements the `Year` in a given [Date](DateTime-Calendar#Date) while preserving the `Month` and `Day` parts.
 
-    -- date == 31 Jan 2019
+    -- date  == 31 Jan 2019
     decrementYear date -- 31 Jan 2018 : Date
 
     -- date2 == 29 Feb 2020
@@ -336,7 +336,7 @@ decrementYear =
 
 {-| Decrements the `Month` in a given [Date](DateTime-Calendar#Date). It will also roll backwards to the previous year where applicable.
 
-    -- date == 15 Sep 2019
+    -- date  == 15 Sep 2019
     decrementMonth date -- 15 Aug 2019 : Date
 
     -- date2 == 15 Jan 2020
@@ -358,7 +358,7 @@ decrementMonth =
 
 {-| Decrements the `Day` in a given [Date](DateTime-Calendar#Date). Will also decrement `Month` and `Year` where applicable.
 
-    -- date == 27 Aug 2019
+    -- date  == 27 Aug 2019
     decrementDay date -- 26 Aug 2019 : Date
 
     -- date2 == 1 Jan 2020
@@ -478,7 +478,7 @@ getWeekday =
 
 {-| Checks if the `Year` part of the given [Date](DateTime-Calendar#Date) is a leap year.
 
-    -- date == 25 Dec 2019
+    -- date  == 25 Dec 2019
     isLeapYear date -- False
 
     -- date2 == 25 Dec 2020

@@ -291,7 +291,7 @@ incrementHours =
 {-| Increments a `Minute` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling around
 as mentioned in the [incrementHours](DateTime-Clock#incrementHours) description.
 
-    -- time == 12:59:45.750
+    -- time  == 12:59:45.750
     incrementMinutes time -- (13:00:45.750, False) : (Time, Bool)
 
     -- time2 == 23:59:45.750
@@ -306,7 +306,7 @@ incrementMinutes =
 {-| Increments a `Second` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling around
 as mentioned in the [incrementHours](DateTime-Clock#incrementHours) description.
 
-    -- time == 12:59:59.750
+    -- time  == 12:59:59.750
     incrementSeconds time -- (13:00:00.750, False) : (Time, Bool)
 
     -- time2 == 23:59:59.750
@@ -321,7 +321,7 @@ incrementSeconds =
 {-| Increments a `Millisecond` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling around
 as mentioned in the [incrementHours](DateTime-Clock#incrementHours) description.
 
-    -- time == 12:59:59.999
+    -- time  == 12:59:59.999
     incrementMilliseconds time -- (13:00:00.000, False) : (Time, Bool)
 
     -- time2 == 23:59:59.999
@@ -342,7 +342,7 @@ minimum time of _00:00:00.000_. It also returns a `Bool` flag which indicates if
 This flag can be used in order to notify that a `Day` has passed but it is advised to use the [DateTime](DateTime-DateTime) module for these kind
 of operations since it provides all the available helpers and takes care of any [Calendar](DateTime-Calendar) changes.
 
-    -- time == 13:15:45.750
+    -- time  == 13:15:45.750
     decrementHours time -- (12:15:45.750, False) : (Time, Bool)
 
     -- time2 == 00:59:59.999
@@ -357,7 +357,7 @@ decrementHours =
 {-| Decrements a `Minute` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling backwards
 as mentioned in the [decrementHours](DateTime-Clock#decrementHours) description.
 
-    -- time == 12:15:00.000
+    -- time  == 12:15:00.000
     decrementMinutes time -- (12:14:00.000, False) : (Time, Bool)
 
     -- time2 == 00:00:00.000
@@ -372,7 +372,7 @@ decrementMinutes =
 {-| Decrements a `Second` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling backwards
 as mentioned in the [decrementHours](DateTime-Clock#decrementHours) description.
 
-    -- time == 12:15:00.000
+    -- time  == 12:15:00.000
     decrementSeconds time -- (12:14:59.000, False) : (Time, Bool)
 
     -- time2 == 00:00:00.000
@@ -387,10 +387,10 @@ decrementSeconds =
 {-| Decrements a `Millisecond` inside a [Time](DateTime-Clock#Time). The [Time](DateTime-Clock#Time) will keep on cycling backwards
 as mentioned in the [decrementHours](DateTime-Clock#decrementHours) description.
 
-    -- time == 12:15:00.000
+    -- time  == 12:15:00.000
     decrementMilliseconds time -- (12:14:59.999, False) : (Time, Bool)
 
-    -- time2 = 00:00:00.000
+    -- time2 == 00:00:00.000
     decrementMilliseconds time2 -- (23:59:59.999, True) : (Time, Bool)
 
 -}
