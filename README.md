@@ -18,13 +18,13 @@ This basically means that __DateTime__ can be constructed by a [Time.Posix][Time
 
 You can construct a [DateTime][DateTime-url] in 2 different ways. Either by providing a __Posix Time__ or by combining a [Calendar.Date][Calendar-Date] and a [Clock.Time][Clock-Time].
 
-![Isomorphic DateTime construction](Isomorphic-DateTime-Construction)
+![Isomorphic DateTime construction](https://github.com/PanagiotisGeorgiadis/elm-datetime/blob/master/assets/Isomorphic-DateTime-Construction.png "Isomorphic DateTime construction")
 
 &nbsp;
 
 You can also ___attempt___ to construct a [DateTime][DateTime-url] by providing its' constituent parts as raw data.
 
-![RawParts to Maybe DateTime](RawParts-DateTime-Construction)
+![RawParts to Maybe DateTime](https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/assets/RawParts-DateTime-Construction.png "RawParts to Maybe DateTime")
 
 &nbsp;
 
@@ -32,7 +32,7 @@ You can also ___attempt___ to construct a [DateTime][DateTime-url] by providing 
 
 You can ___attempt___ to construct a [Calendar.Date][Calendar-Date] by providing its' constituent parts as raw data as shown in the diagram below.
 
-![RawParts to Calendar.Date](RawParts-Calendar-Construction)
+![RawParts to Calendar.Date](https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/assets/RawParts-Calendar-Construction.png "RawParts to Calendar.Date")
 
 There could be some cases where you don't really care about the time but you only need to store the Dates. Of course this will mean that if you try to convert a [Calendar.Date][Calendar-Date] to
 a __Posix Time__ it will always __default to 00:00 hours.__ You can always use this along with a [Clock.Time][Clock-Time] to construct a [DateTime][DateTime-url] in case you need to.
@@ -43,7 +43,7 @@ a __Posix Time__ it will always __default to 00:00 hours.__ You can always use t
 
 You can ___attempt___ to construct a [Clock.Time][Clock-Time] by providing its' constituent parts as raw data as shown in the diagram below.
 
-![RawParts to Clock.Time](RawParts-Clock-Construction)
+![RawParts to Clock.Time](https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/assets/RawParts-Clock-Construction.png "RawParts to Clock.Time")
 
 Building a timer app could be one of the cases where you don't really care about the [Calendar.Date][Calendar-Date] portion of [DateTime][DateTime-url].
 This would mean that you only need a [Clock.Time][Clock-Time] in order to keep track of the time. Be very careful though if you want to get a valid __Posix Time__
@@ -67,7 +67,3 @@ npm test
 [CircleCI-build]: https://img.shields.io/circleci/project/github/PanagiotisGeorgiadis/Elm-DateTime.svg?style=flat
 [Licence-Icon]: https://img.shields.io/badge/License-MIT-blue.svg
 [Elm-Package-Version]: https://img.shields.io/elm-package/v/PanagiotisGeorgiadis/Elm-datetime.svg?style=flat
-[Isomorphic-DateTime-Construction]: https://github.com/PanagiotisGeorgiadis/elm-datetime/blob/master/assets/Isomorphic-DateTime-Construction.png "Isomorphic DateTime construction"
-[RawParts-DateTime-Construction]: https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/assets/RawParts-DateTime-Construction.png "RawParts to Maybe DateTime"
-[RawParts-Calendar-Construction]: https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/assets/RawParts-Calendar-Construction.png "RawParts to Calendar.Date"
-[RawParts-Clock-Construction]: https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/assets/RawParts-Clock-Construction.png "RawParts to Clock.Time"
