@@ -6,7 +6,8 @@
   "scripts": {
     "elm-make": "elm make ./src/DateTime/DateTime.elm --output=./elm.bundle.js",
     "elm-docs": "elm make --docs=docs.json",
-    "test": "elm-test"
+    "test": "elm-test",
+    "elm-doc-preview": "elm-doc-preview"
   },
   "keywords": [
     "Elm",
