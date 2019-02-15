@@ -7,7 +7,7 @@ module DateTime.DateTime.Internal exposing
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compare, compareDates, compareTime
-    , getWeekday, getDateRange, getDatesInMonth, sort
+    , getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
     , rollDayBackwards, rollDayForward
     )
 
@@ -53,7 +53,7 @@ module DateTime.DateTime.Internal exposing
 
 # Utilities
 
-@docs getWeekday, getDateRange, getDatesInMonth, sort
+@docs getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
 
 
 # Exposed for Testing Purposes
@@ -593,6 +593,24 @@ getDatesInMonth (DateTime { date, time }) =
         (Calendar.getDatesInMonth date)
 
 
+{-| Returns the difference in days between two [DateTimes](DateTime-DateTime#DateTime).
+We can have a negative difference of days as can be seen in the examples below.
+
+    -- dateTime  == 24 Aug 2019 12:00:00.000
+    -- dateTime2 == 24 Aug 2019 21:00:00.000
+    -- dateTime3 == 26 Aug 2019 15:45:00.000
+    getDayDiff dateTime dateTime2 -- 0 : Int
+
+    getDayDiff dateTime dateTime3 -- 2  : Int
+
+    getDayDiff dateTime3 dateTime -- -2 : Int
+
+-}
+getDayDiff : DateTime -> DateTime -> Int
+getDayDiff (DateTime lhs) (DateTime rhs) =
+    Calendar.getDayDiff lhs.date rhs.date
+
+
 {-| Extract the weekday from a `DateTime`.
 
 > getWeekday (fromPosix (Time.millisToPosix 0))
@@ -602,6 +620,20 @@ getDatesInMonth (DateTime { date, time }) =
 getWeekday : DateTime -> Time.Weekday
 getWeekday (DateTime dateTime) =
     Calendar.getWeekday dateTime.date
+
+
+{-| Checks if the `Year` part of the given [DateTime](DateTime-DateTime#DateTime) is a leap year.
+
+    -- dateTime == 25 Dec 2019 21:00:00.000
+    isLeapYear dateTime -- False
+
+    -- dateTime2 == 25 Dec 2020 12:00:00.000
+    isLeapYear dateTime2 -- True
+
+-}
+isLeapYear : DateTime -> Bool
+isLeapYear (DateTime { date, time }) =
+    Calendar.isLeapYear date
 
 
 {-| Sorts a List of 'DateTime' based on their posix timestamps.

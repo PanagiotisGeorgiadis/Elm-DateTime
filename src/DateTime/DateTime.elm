@@ -7,7 +7,7 @@ module DateTime.DateTime exposing
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compare, compareDates, compareTime
-    , getDateRange, getDatesInMonth, getWeekday, sort
+    , getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
     )
 
 {-| The [DateTime](DateTime-DateTime) module was introduced in order to keep track of both the
@@ -58,7 +58,7 @@ you can _**attempt**_ to construct a `DateTime` by using a combination of a
 
 # Utilities
 
-@docs getDateRange, getDatesInMonth, getWeekday, sort
+@docs getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
 
 -}
 
@@ -695,6 +695,24 @@ getDatesInMonth =
     Internal.getDatesInMonth
 
 
+{-| Returns the difference in days between two [DateTimes](DateTime-DateTime#DateTime).
+We can have a negative difference of days as can be seen in the examples below.
+
+    -- dateTime  == 24 Aug 2019 12:00:00.000
+    -- dateTime2 == 24 Aug 2019 21:00:00.000
+    -- dateTime3 == 26 Aug 2019 15:45:00.000
+    getDayDiff dateTime dateTime2 -- 0 : Int
+
+    getDayDiff dateTime dateTime3 -- 2  : Int
+
+    getDayDiff dateTime3 dateTime -- -2 : Int
+
+-}
+getDayDiff : DateTime -> DateTime -> Int
+getDayDiff =
+    Internal.getDayDiff
+
+
 {-| Returns the weekday of a specific [DateTime](DateTime-DateTime#DateTime).
 
     -- dateTime == 26 Aug 2019 12:30:45.000
@@ -704,6 +722,20 @@ getDatesInMonth =
 getWeekday : DateTime -> Time.Weekday
 getWeekday =
     Internal.getWeekday
+
+
+{-| Checks if the `Year` part of the given [DateTime](DateTime-DateTime#DateTime) is a leap year.
+
+    -- dateTime == 25 Dec 2019 21:00:00.000
+    isLeapYear dateTime -- False
+
+    -- dateTime2 == 25 Dec 2020 12:00:00.000
+    isLeapYear dateTime2 -- True
+
+-}
+isLeapYear : DateTime -> Bool
+isLeapYear =
+    Internal.isLeapYear
 
 
 {-| Sorts incrementally a list of [DateTime](DateTime-DateTime#DateTime).

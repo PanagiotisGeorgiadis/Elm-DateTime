@@ -82,7 +82,9 @@ suite =
         , compareTimeTests
         , getDateRangeTests
         , getDatesInMonthTests
+        , getDayDiffTests
         , getWeekdayTests
+        , isLeapYearTests
         , sortTests
         ]
 
@@ -1353,6 +1355,102 @@ getDatesInMonthTests =
         ]
 
 
+getDayDiffTests : Test
+getDayDiffTests =
+    describe "DateTime.getDayDiff Test Suite"
+        [ test "Testing with lower and higher."
+            (\_ ->
+                let
+                    ( now, past ) =
+                        ( DateTime.fromRawParts { year = 2019, month = Feb, day = 7 } { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
+                        , DateTime.fromRawParts { year = 2019, month = Jan, day = 7 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+                in
+                case ( past, now ) of
+                    ( Just past_, Just now_ ) ->
+                        Expect.equal 31 (DateTime.getDayDiff past_ now_)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing with reversed parameters."
+            (\_ ->
+                let
+                    ( now, past ) =
+                        ( DateTime.fromRawParts { year = 2019, month = Feb, day = 7 } { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
+                        , DateTime.fromRawParts { year = 2019, month = Jan, day = 7 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+                in
+                case ( now, past ) of
+                    ( Just now_, Just past_ ) ->
+                        Expect.equal -31 (DateTime.getDayDiff now_ past_)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing a year in the past difference."
+            (\_ ->
+                let
+                    ( now, aYearInThePast ) =
+                        ( DateTime.fromRawParts { year = 2019, month = Feb, day = 7 } { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
+                        , DateTime.fromRawParts { year = 2018, month = Feb, day = 7 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+                in
+                case ( now, aYearInThePast ) of
+                    ( Just now_, Just past ) ->
+                        Expect.equal -365 (DateTime.getDayDiff now_ past)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing a year in the future difference."
+            (\_ ->
+                let
+                    ( now, aYearInTheFuture ) =
+                        ( DateTime.fromRawParts { year = 2019, month = Feb, day = 7 } { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
+                        , DateTime.fromRawParts { year = 2020, month = Feb, day = 7 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+                in
+                case ( now, aYearInTheFuture ) of
+                    ( Just now_, Just future ) ->
+                        Expect.equal 365 (DateTime.getDayDiff now_ future)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing a year in the future of a leap year."
+            (\_ ->
+                let
+                    ( leapYear, aYearInTheFuture ) =
+                        ( DateTime.fromRawParts { year = 2020, month = Feb, day = 7 } { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
+                        , DateTime.fromRawParts { year = 2021, month = Feb, day = 7 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+                in
+                case ( leapYear, aYearInTheFuture ) of
+                    ( Just now, Just future ) ->
+                        Expect.equal 366 (DateTime.getDayDiff now future)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        , test "Testing a year in the past of a leap year."
+            (\_ ->
+                let
+                    ( leapYear, aYearInThePast ) =
+                        ( DateTime.fromRawParts { year = 2020, month = Mar, day = 7 } { hours = 12, minutes = 30, seconds = 0, milliseconds = 0 }
+                        , DateTime.fromRawParts { year = 2019, month = Mar, day = 7 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 }
+                        )
+                in
+                case ( leapYear, aYearInThePast ) of
+                    ( Just now, Just past ) ->
+                        Expect.equal -366 (DateTime.getDayDiff now past)
+
+                    _ ->
+                        Expect.fail "Couldn't create dates from raw parts"
+            )
+        ]
+
+
 getWeekdayTests : Test
 getWeekdayTests =
     describe "DateTime.getWeekday Test Suite"
@@ -1373,6 +1471,40 @@ getWeekdayTests =
                 Expect.equal (Just Sun) <|
                     Maybe.map DateTime.getWeekday
                         (DateTime.fromRawParts { year = 2020, month = Mar, day = 1 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        ]
+
+
+isLeapYearTests : Test
+isLeapYearTests =
+    describe "DateTime.isLeapYear Test Suite"
+        [ test "Test with the given year being 2018"
+            (\_ ->
+                let
+                    rawDate =
+                        DateTime.fromRawParts { year = 2018, month = Mar, day = 25 } { hours = 14, minutes = 30, seconds = 0, milliseconds = 0 }
+                in
+                case rawDate of
+                    Just date ->
+                        Expect.false "Expected DateTime.isLeapYear to return False for a normal year"
+                            (DateTime.isLeapYear date)
+
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw parts"
+            )
+        , test "Test with the given year being 2020"
+            (\_ ->
+                let
+                    rawDate =
+                        DateTime.fromRawParts { year = 2020, month = Aug, day = 26 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 }
+                in
+                case rawDate of
+                    Just date ->
+                        Expect.true "Expected DateTime.isLeapYear to return True for a leap year"
+                            (DateTime.isLeapYear date)
+
+                    Nothing ->
+                        Expect.fail "Couldn't create date from raw parts"
             )
         ]
 
