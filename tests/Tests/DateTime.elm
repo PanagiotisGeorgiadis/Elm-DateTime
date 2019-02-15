@@ -80,9 +80,9 @@ suite =
         , compareTests
         , compareDatesTests
         , compareTimeTests
-        , getWeekdayTests
-        , getDatesInMonthTests
         , getDateRangeTests
+        , getDatesInMonthTests
+        , getWeekdayTests
         , sortTests
         ]
 
@@ -1236,26 +1236,55 @@ compareTimeTests =
         ]
 
 
-getWeekdayTests : Test
-getWeekdayTests =
-    describe "DateTime.getWeekday Test Suite"
-        [ test "Getting the weekday from 11th of February 2019."
+getDateRangeTests : Test
+getDateRangeTests =
+    let
+        defaultDate =
+            DateTime.fromPosix (Time.millisToPosix 0)
+
+        constructDate day month year =
+            Maybe.withDefault defaultDate <|
+                DateTime.fromRawParts { year = year, month = month, day = day } midnightRawParts
+    in
+    describe "DateTime.getDateRange Test Suite"
+        [ test "Getting a date range from 25th of February 2019 to 2nd of March 2019"
             (\_ ->
-                Expect.equal (Just Mon) <|
-                    Maybe.map DateTime.getWeekday
-                        (DateTime.fromRawParts { year = 2019, month = Feb, day = 11 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+                let
+                    ( start, end ) =
+                        ( constructDate 25 Feb 2019
+                        , constructDate 2 Mar 2019
+                        )
+
+                    expected =
+                        [ constructDate 25 Feb 2019
+                        , constructDate 26 Feb 2019
+                        , constructDate 27 Feb 2019
+                        , constructDate 28 Feb 2019
+                        , constructDate 1 Mar 2019
+                        , constructDate 2 Mar 2019
+                        ]
+                in
+                Expect.equalLists expected (DateTime.getDateRange start end Clock.midnight)
             )
-        , test "Getting the weekday from 29th of February 2020."
+        , test "Getting a date range from 25th of February 2020 to 2nd of March 2020"
             (\_ ->
-                Expect.equal (Just Sat) <|
-                    Maybe.map DateTime.getWeekday
-                        (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
-            )
-        , test "Getting the weekday from 1st of March 2020."
-            (\_ ->
-                Expect.equal (Just Sun) <|
-                    Maybe.map DateTime.getWeekday
-                        (DateTime.fromRawParts { year = 2020, month = Mar, day = 1 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+                let
+                    ( start, end ) =
+                        ( constructDate 25 Feb 2020
+                        , constructDate 2 Mar 2020
+                        )
+
+                    expected =
+                        [ constructDate 25 Feb 2020
+                        , constructDate 26 Feb 2020
+                        , constructDate 27 Feb 2020
+                        , constructDate 28 Feb 2020
+                        , constructDate 29 Feb 2020
+                        , constructDate 1 Mar 2020
+                        , constructDate 2 Mar 2020
+                        ]
+                in
+                Expect.equalLists expected (DateTime.getDateRange start end Clock.midnight)
             )
         ]
 
@@ -1324,55 +1353,26 @@ getDatesInMonthTests =
         ]
 
 
-getDateRangeTests : Test
-getDateRangeTests =
-    let
-        defaultDate =
-            DateTime.fromPosix (Time.millisToPosix 0)
-
-        constructDate day month year =
-            Maybe.withDefault defaultDate <|
-                DateTime.fromRawParts { year = year, month = month, day = day } midnightRawParts
-    in
-    describe "DateTime.getDateRange Test Suite"
-        [ test "Getting a date range from 25th of February 2019 to 2nd of March 2019"
+getWeekdayTests : Test
+getWeekdayTests =
+    describe "DateTime.getWeekday Test Suite"
+        [ test "Getting the weekday from 11th of February 2019."
             (\_ ->
-                let
-                    ( start, end ) =
-                        ( constructDate 25 Feb 2019
-                        , constructDate 2 Mar 2019
-                        )
-
-                    expected =
-                        [ constructDate 25 Feb 2019
-                        , constructDate 26 Feb 2019
-                        , constructDate 27 Feb 2019
-                        , constructDate 28 Feb 2019
-                        , constructDate 1 Mar 2019
-                        , constructDate 2 Mar 2019
-                        ]
-                in
-                Expect.equalLists expected (DateTime.getDateRange start end Clock.midnight)
+                Expect.equal (Just Mon) <|
+                    Maybe.map DateTime.getWeekday
+                        (DateTime.fromRawParts { year = 2019, month = Feb, day = 11 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
             )
-        , test "Getting a date range from 25th of February 2020 to 2nd of March 2020"
+        , test "Getting the weekday from 29th of February 2020."
             (\_ ->
-                let
-                    ( start, end ) =
-                        ( constructDate 25 Feb 2020
-                        , constructDate 2 Mar 2020
-                        )
-
-                    expected =
-                        [ constructDate 25 Feb 2020
-                        , constructDate 26 Feb 2020
-                        , constructDate 27 Feb 2020
-                        , constructDate 28 Feb 2020
-                        , constructDate 29 Feb 2020
-                        , constructDate 1 Mar 2020
-                        , constructDate 2 Mar 2020
-                        ]
-                in
-                Expect.equalLists expected (DateTime.getDateRange start end Clock.midnight)
+                Expect.equal (Just Sat) <|
+                    Maybe.map DateTime.getWeekday
+                        (DateTime.fromRawParts { year = 2020, month = Feb, day = 29 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
+            )
+        , test "Getting the weekday from 1st of March 2020."
+            (\_ ->
+                Expect.equal (Just Sun) <|
+                    Maybe.map DateTime.getWeekday
+                        (DateTime.fromRawParts { year = 2020, month = Mar, day = 1 } { hours = 12, minutes = 0, seconds = 0, milliseconds = 0 })
             )
         ]
 
