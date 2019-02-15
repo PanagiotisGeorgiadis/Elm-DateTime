@@ -26,12 +26,12 @@ a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 @docs Date, RawDate
 
 
-# Creating values
+# Creating a `Date`
 
 @docs fromPosix, fromRawParts
 
 
-# Converters
+# Conversions
 
 @docs toMillis, monthToInt
 

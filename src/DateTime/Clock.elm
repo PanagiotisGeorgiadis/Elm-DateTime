@@ -25,7 +25,7 @@ in order to get a [DateTime](DateTime-DateTime#DateTime) which can then be conve
 @docs Time, RawTime
 
 
-# Creating values
+# Creating a `Time`
 
 @docs fromPosix, fromRawParts
 
