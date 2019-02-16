@@ -11,13 +11,13 @@ module Calendar exposing
     , months, millisInADay
     )
 
-{-| The `Calendar` module was introduced in order to keep track of the `Calendar Date` concept.
-It has no knowledge of `Time` therefore it can only represent a [Date](DateTime-Calendar#Date)
+{-| The [Calendar](Calendar#) module was introduced in order to keep track of the `Calendar Date` concept.
+It has no knowledge of `Time` therefore it can only represent a [Date](Calendar#Date)
 which consists of a `Day`, a `Month` and a `Year`. You can construct a `Calendar Date` either
 from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time or by
-using its [Raw constituent parts](DateTime-Calendar#RawDate). You can use a `Date` and the
-Calendar's utilities as a standalone or you can combine a [Date](DateTime-Calendar#Date) and a
-[Time](DateTime-Clock#Time) in order to get a [DateTime](DateTime-DateTime#DateTime) which can then be converted into
+using its [Raw constituent parts](Calendar#RawDate). You can use a `Date` and the
+Calendar's utilities as a standalone or you can combine a [Date](Calendar#Date) and a
+[Time](Clock#Time) in order to get a [DateTime](DateTime#DateTime) which can then be converted into
 a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 
 
@@ -96,7 +96,7 @@ type alias RawDate =
 -- Creating a `Date`
 
 
-{-| Construct a [Date](DateTime-Calendar#Date) from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time.
+{-| Construct a [Date](Calendar#Date) from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time.
 You can construct a `Posix` time from milliseconds using the [millisToPosix](https://package.elm-lang.org/packages/elm/time/latest/Time#millisToPosix)
 function located in the [elm/time](https://package.elm-lang.org/packages/elm/time/latest/) package.
 
@@ -109,9 +109,9 @@ function located in the [elm/time](https://package.elm-lang.org/packages/elm/tim
     fromPosix (Time.millisToPosix 1566777600000)
     -- Date { day = Day 26, month = Aug, year = Year 2019 } : Date
 
-Notice that in the second and third examples the timestamps that are used are different but the resulting [Dates](DateTime-Calendar#Date) are identical.
-This is because the [Calendar](DateTime-Calendar) module doesn't have any knowledge of `Time` which means that if we attempt to convert both of these dates back [toMillis](DateTime-Calendar#toMillis)
-they will result in the same milliseconds. It is recommended using the [fromPosix](DateTime-DateTime#fromPosix) function provided in the [DateTime](DateTime-DateTime)
+Notice that in the second and third examples the timestamps that are used are different but the resulting [Dates](Calendar#Date) are identical.
+This is because the [Calendar](Calendar#) module doesn't have any knowledge of `Time` which means that if we attempt to convert both of these dates back [toMillis](Calendar#toMillis)
+they will result in the same milliseconds. It is recommended using the [fromPosix](DateTime#fromPosix) function provided in the [DateTime](DateTime#)
 module if you need to preserve both `Date` and `Time`.
 
 -}
@@ -120,7 +120,7 @@ fromPosix =
     Internal.fromPosix
 
 
-{-| Attempt to construct a [Date](DateTime-Calendar#Date) from its (raw) constituent parts.
+{-| Attempt to construct a [Date](Calendar#Date) from its (raw) constituent parts.
 Returns `Nothing` if any parts or their combination would form an invalid date.
 
     fromRawParts { day = 25, month = Dec, year = 2019 }
@@ -139,7 +139,7 @@ fromRawParts =
 -- Conversions
 
 
-{-| Transforms a [Date](DateTime-Calendar#Date) into milliseconds.
+{-| Transforms a [Date](Calendar#Date) into milliseconds.
 
     date = fromRawParts { day = 25, month = Dec, year = 2019 }
     Maybe.map toMillis date -- Just 1577232000000 == 25 Dec 2019 00:00:00.000
@@ -152,7 +152,7 @@ fromRawParts =
 Notice that transforming a **date** to milliseconds will always get you midnight hours.
 The first example above will return a timestamp that equals to **Wed 25th of December 2019 00:00:00.000**
 and the second example will return a timestamp that equals to **26th of August 2019 00:00:00.000** even though
-the timestamp we provided in the [fromPosix](DateTime-Calendar#fromPosix) was equal to **26th of August 2019 05:05:54.000**
+the timestamp we provided in the [fromPosix](Calendar#fromPosix) was equal to **26th of August 2019 05:05:54.000**
 
 -}
 toMillis : Date -> Int
@@ -176,7 +176,7 @@ monthToInt =
 -- Accessors
 
 
-{-| Extract the `Year` part of a [Date](DateTime-Calendar#Date).
+{-| Extract the `Year` part of a [Date](Calendar#Date).
 
     -- date == 25 Dec 2019
     getYear date -- 2019 : Int
@@ -187,7 +187,7 @@ getYear =
     Internal.yearToInt << Internal.getYear
 
 
-{-| Extract the `Month` part of a [Date](DateTime-Calendar#Date).
+{-| Extract the `Month` part of a [Date](Calendar#Date).
 
     -- date == 25 Dec 2019
     getMonth date -- Dec : Month
@@ -198,7 +198,7 @@ getMonth =
     Internal.getMonth
 
 
-{-| Extract the `Day` part of a [Date](DateTime-Calendar#Date).
+{-| Extract the `Day` part of a [Date](Calendar#Date).
 
     -- date == 25 Dec 2019
     getDay date -- 25 : Int
@@ -213,7 +213,7 @@ getDay =
 -- Setters
 
 
-{-| Attempts to set the `Year` part of a [Date](DateTime-Calendar#Date).
+{-| Attempts to set the `Year` part of a [Date](Calendar#Date).
 
     -- date == 29 Feb 2020
     setYear 2024 date -- Just (29 Feb 2024) : Maybe Date
@@ -226,7 +226,7 @@ setYear =
     Internal.setYear
 
 
-{-| Attempts to set the `Month` part of a [Date](DateTime-Calendar#Date).
+{-| Attempts to set the `Month` part of a [Date](Calendar#Date).
 
     -- date == 31 Jan 2019
     setMonth Aug date -- Just (31 Aug 2019) : Maybe Date
@@ -239,7 +239,7 @@ setMonth =
     Internal.setMonth
 
 
-{-| Attempts to set the `Day` part of a [Date](DateTime-Calendar#Date).
+{-| Attempts to set the `Day` part of a [Date](Calendar#Date).
 
     -- date == 31 Jan 2019
     setDay 25 date -- Just (25 Jan 2019) : Maybe Date
@@ -256,7 +256,7 @@ setDay =
 -- Increment values
 
 
-{-| Increments the `Year` in a given [Date](DateTime-Calendar#Date) while preserving the `Month` and `Day` parts.
+{-| Increments the `Year` in a given [Date](Calendar#Date) while preserving the `Month` and `Day` parts.
 
     -- date  == 31 Jan 2019
     incrementYear date -- 31 Jan 2020 : Date
@@ -275,7 +275,7 @@ incrementYear =
     Internal.incrementYear
 
 
-{-| Increments the `Month` in a given [Date](DateTime-Calendar#Date). It will also roll over to the next year where applicable.
+{-| Increments the `Month` in a given [Date](Calendar#Date). It will also roll over to the next year where applicable.
 
     -- date  == 15 Sep 2019
     incrementMonth date -- 15 Oct 2019 : Date
@@ -297,7 +297,7 @@ incrementMonth =
     Internal.incrementMonth
 
 
-{-| Increments the `Day` in a given [Date](DateTime-Calendar#Date). Will also increment `Month` and `Year` where applicable.
+{-| Increments the `Day` in a given [Date](Calendar#Date). Will also increment `Month` and `Year` where applicable.
 
     -- date  == 25 Aug 2019
     incrementDay date -- 26 Aug 2019 : Date
@@ -315,7 +315,7 @@ incrementDay =
 -- Decrement values
 
 
-{-| Decrements the `Year` in a given [Date](DateTime-Calendar#Date) while preserving the `Month` and `Day` parts.
+{-| Decrements the `Year` in a given [Date](Calendar#Date) while preserving the `Month` and `Day` parts.
 
     -- date  == 31 Jan 2019
     decrementYear date -- 31 Jan 2018 : Date
@@ -334,7 +334,7 @@ decrementYear =
     Internal.decrementYear
 
 
-{-| Decrements the `Month` in a given [Date](DateTime-Calendar#Date). It will also roll backwards to the previous year where applicable.
+{-| Decrements the `Month` in a given [Date](Calendar#Date). It will also roll backwards to the previous year where applicable.
 
     -- date  == 15 Sep 2019
     decrementMonth date -- 15 Aug 2019 : Date
@@ -356,7 +356,7 @@ decrementMonth =
     Internal.decrementMonth
 
 
-{-| Decrements the `Day` in a given [Date](DateTime-Calendar#Date). Will also decrement `Month` and `Year` where applicable.
+{-| Decrements the `Day` in a given [Date](Calendar#Date). Will also decrement `Month` and `Year` where applicable.
 
     -- date  == 27 Aug 2019
     decrementDay date -- 26 Aug 2019 : Date
@@ -374,7 +374,7 @@ decrementDay =
 -- Compare values
 
 
-{-| Compares the two given [Dates](DateTime-Calendar#Date) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
+{-| Compares the two given [Dates](Calendar#Date) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
 
     -- past   == 25 Aug 2019
     -- future == 26 Aug 2019
@@ -394,7 +394,7 @@ compare =
 -- Utilities
 
 
-{-| Returns an incrementally sorted [Date](DateTime-Calendar#Date) list based on the **start** and **end** date parameters.
+{-| Returns an incrementally sorted [Date](Calendar#Date) list based on the **start** and **end** date parameters.
 _**The resulting list will include both start and end dates**_.
 
     -- start == 26 Feb 2020
@@ -412,7 +412,7 @@ getDateRange =
     Internal.getDateRange
 
 
-{-| Returns a list of [Dates](DateTime-Calendar#Date) for the given `Year` and `Month` combination.
+{-| Returns a list of [Dates](Calendar#Date) for the given `Year` and `Month` combination.
 
     -- date == 26 Aug 2019
 
@@ -425,7 +425,7 @@ getDatesInMonth =
     Internal.getDatesInMonth
 
 
-{-| Returns the difference in days between two [Dates](DateTime-Calendar#Date). We can have a negative difference of days as can be seen in the examples below.
+{-| Returns the difference in days between two [Dates](Calendar#Date). We can have a negative difference of days as can be seen in the examples below.
 
     -- past   == 24 Aug 2019
     -- future == 26 Aug 2019
@@ -465,7 +465,7 @@ getPrecedingMonths =
     Internal.getPrecedingMonths
 
 
-{-| Returns the weekday of a specific [Date](DateTime-Calendar#Date).
+{-| Returns the weekday of a specific [Date](Calendar#Date).
 
     -- date == 26 Aug 2019
     getWeekday date -- Mon : Weekday
@@ -476,7 +476,7 @@ getWeekday =
     Internal.getWeekday
 
 
-{-| Checks if the `Year` part of the given [Date](DateTime-Calendar#Date) is a leap year.
+{-| Checks if the `Year` part of the given [Date](Calendar#Date) is a leap year.
 
     -- date  == 25 Dec 2019
     isLeapYear date -- False
@@ -490,7 +490,7 @@ isLeapYear =
     Internal.isLeapYear << Internal.getYear
 
 
-{-| Sorts incrementally a list of [Dates](DateTime-Calendar#Date).
+{-| Sorts incrementally a list of [Dates](Calendar#Date).
 
     -- past   == 26 Aug 1920
     -- epoch  == 1 Jan 1970

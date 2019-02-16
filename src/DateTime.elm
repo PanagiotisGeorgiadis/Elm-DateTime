@@ -10,13 +10,13 @@ module DateTime exposing
     , getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
     )
 
-{-| The [DateTime](DateTime-DateTime) module was introduced in order to keep track of both the
-[Date](DateTime-Calendar#Date) and [Time](DateTime-Clock#Time). The `DateTime`
+{-| The [DateTime](DateTime#) module was introduced in order to keep track of both the
+[Date](Calendar#Date) and [Time](Clock#Time). The `DateTime`
 consists of a `Day`, `Month`, `Year`, `Hours`, `Minutes`, `Seconds` and `Milliseconds`.
 You can construct a `DateTime` either by using a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix)
-or by using an existing [Date](DateTime-Calendar#Date) and [Time](DateTime-Clock#Time) combination. Otherwise
+or by using an existing [Date](Calendar#Date) and [Time](Clock#Time) combination. Otherwise
 you can _**attempt**_ to construct a `DateTime` by using a combination of a
-[RawDate](DateTime-Calendar#RawDate) and a [RawClock](DateTime-Clock#RawClock).
+[RawDate](Calendar#RawDate) and a [RawClock](Clock#RawClock).
 
 @docs DateTime
 
@@ -68,7 +68,7 @@ import DateTime.Internal as Internal
 import Time
 
 
-{-| An instant in time, composed of a [Date](DateTime-Calendar#Date) and a [Time](DateTime-Clock#Time).
+{-| An instant in time, composed of a [Date](Calendar#Date) and a [Time](Clock#Time).
 -}
 type alias DateTime =
     Internal.DateTime
@@ -93,7 +93,7 @@ fromPosix =
 
 
 {-| Attempts to construct a new `DateTime` object from its raw constituent parts. Returns `Nothing` if
-any parts or their combination would result in an invalid [DateTime](DateTime-DateTime#DateTime).
+any parts or their combination would result in an invalid [DateTime](DateTime#DateTime).
 
     fromRawParts { day = 26, month = Aug, year = 2019 } { hours = 12, minutes = 30, seconds = 45, milliseconds = 0 }
     -- Just (DateTime { date = Date { day = Day 26, month = Aug, year = Year 2019 }, time = Time { hours = Hour 12, minutes = Minute 30, seconds = Second 45, milliseconds = Millisecond 0 }}) : Maybe DateTime
@@ -110,7 +110,7 @@ fromRawParts rawDate rawTime =
     Internal.fromRawParts rawDate rawTime
 
 
-{-| Create a [DateTime](DateTime-DateTime#DateTime) by combining a [Date](DateTime-Calendar#Date) and [Time](DateTime-Clock#Time).
+{-| Create a [DateTime](DateTime#DateTime) by combining a [Date](Calendar#Date) and [Time](Clock#Time).
 
     -- date == 26 Aug 2019
     -- time == 12:30:45.000
@@ -170,7 +170,7 @@ toMillis =
 -- Accessors
 
 
-{-| Extract the [Date](DateTime-Calendar#Date) from a `DateTime`.
+{-| Extract the [Date](Calendar#Date) from a `DateTime`.
 
     -- dateTime == 25 Dec 2019 16:45:30.000
     getDate dateTime -- 25 Dec 2019 : Calendar.Date
@@ -181,7 +181,7 @@ getDate =
     Internal.getDate
 
 
-{-| Extract the [Time](DateTime-Clock#Time) from a `DateTime`.
+{-| Extract the [Time](Clock#Time) from a `DateTime`.
 
     -- dateTime == 25 Dec 2019 16:45:30.000
     getTime dateTime -- 16:45:30.000 : Clock.Time
@@ -273,7 +273,7 @@ getMilliseconds =
 -- Setters
 
 
-{-| Attempts to set the `Year` part of a [Calendar.Date](DateTime-Calendar#Date) in a `DateTime`.
+{-| Attempts to set the `Year` part of a [Calendar.Date](Calendar#Date) in a `DateTime`.
 
     -- dateTime == 29 Feb 2020 15:30:30.000
     setYear 2024 dateTime -- Just (29 Feb 2024 15:30:30.000) : Maybe DateTime
@@ -286,7 +286,7 @@ setYear =
     Internal.setYear
 
 
-{-| Attempts to set the `Month` part of a [Calendar.Date](DateTime-Calendar#Date) in a `DateTime`.
+{-| Attempts to set the `Month` part of a [Calendar.Date](Calendar#Date) in a `DateTime`.
 
     -- dateTime == 31 Jan 2019 15:30:30.000
     setMonth Aug dateTime -- Just (31 Aug 2019 15:30:30.000) : Maybe DateTime
@@ -299,7 +299,7 @@ setMonth =
     Internal.setMonth
 
 
-{-| Attempts to set the `Day` part of a [Calendar.Date](DateTime-Calendar#Date) in a `DateTime`.
+{-| Attempts to set the `Day` part of a [Calendar.Date](Calendar#Date) in a `DateTime`.
 
     -- dateTime == 31 Jan 2019 15:30:30.000
     setDay 25 dateTime -- Just (25 Jan 2019 15:30:30.000) : Maybe DateTime
@@ -312,7 +312,7 @@ setDay =
     Internal.setDay
 
 
-{-| Attempts to set the `Hours` part of a [Clock.Time](DateTime-Clock#Time) in a DateTime.
+{-| Attempts to set the `Hours` part of a [Clock.Time](Clock#Time) in a DateTime.
 
     -- dateTime == 2 Jul 2019 12:00:00.000
     setHours 23 dateTime -- Just (2 Jul 2019 23:00:00.000) : Maybe DateTime
@@ -325,7 +325,7 @@ setHours =
     Internal.setHours
 
 
-{-| Attempts to set the `Minutes` part of a [Clock.Time](DateTime-Clock#Time) in a DateTime.
+{-| Attempts to set the `Minutes` part of a [Clock.Time](Clock#Time) in a DateTime.
 
     -- dateTime == 2 Jul 2019 12:00:00.000
     setMinutes 36 dateTime -- Just (2 Jul 2019 12:36:00.000) : Maybe DateTime
@@ -338,7 +338,7 @@ setMinutes =
     Internal.setMinutes
 
 
-{-| Attempts to set the `Seconds` part of a [Clock.Time](DateTime-Clock#Time) in a DateTime.
+{-| Attempts to set the `Seconds` part of a [Clock.Time](Clock#Time) in a DateTime.
 
     -- dateTime == 2 Jul 2019 12:00:00.000
     setSeconds 20 dateTime -- Just (2 Jul 2019 12:00:20.000) : Maybe DateTime
@@ -351,7 +351,7 @@ setSeconds =
     Internal.setSeconds
 
 
-{-| Attempts to set the `Milliseconds` part of a [Clock.Time](DateTime-Clock#Time) in a DateTime.
+{-| Attempts to set the `Milliseconds` part of a [Clock.Time](Clock#Time) in a DateTime.
 
     -- dateTime == 2 Jul 2019 12:00:00.000
     setMilliseconds 589 dateTime -- Just (2 Jul 2019 12:00:00.589) : Maybe DateTime
@@ -368,8 +368,8 @@ setMilliseconds =
 -- Increment values
 
 
-{-| Increments the `Year` in a given [DateTime](DateTime-DateTime#DateTime) while preserving the `Month`, and `Day` parts.
-_The [Time](DateTime-Clock#Time) related parts will remain the same._
+{-| Increments the `Year` in a given [DateTime](DateTime#DateTime) while preserving the `Month`, and `Day` parts.
+_The [Time](Clock#Time) related parts will remain the same._
 
     -- dateTime  == 31 Jan 2019 15:30:45.100
     incrementYear dateTime -- 31 Jan 2020 15:30:45.100 : DateTime
@@ -388,8 +388,8 @@ incrementYear =
     Internal.incrementYear
 
 
-{-| Increments the `Month` in a given [DateTime](DateTime-DateTime#DateTime). It will also roll over to the next year where applicable.
-_The [Time](DateTime-Clock#Time) related parts will remain the same._
+{-| Increments the `Month` in a given [DateTime](DateTime#DateTime). It will also roll over to the next year where applicable.
+_The [Time](Clock#Time) related parts will remain the same._
 
     -- dateTime  == 15 Sep 2019 15:30:45.100
     incrementMonth dateTime -- 15 Oct 2019 15:30:45.100 : DateTime
@@ -411,7 +411,7 @@ incrementMonth =
     Internal.incrementMonth
 
 
-{-| Increments the `Day` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Month` and `Year` where applicable.
+{-| Increments the `Day` in a given [DateTime](DateTime#DateTime). Will also increment `Month` and `Year` where applicable.
 
     -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementDay dateTime -- 26 Aug 2019 15:30:45.100 : DateTime
@@ -425,7 +425,7 @@ incrementDay =
     Internal.incrementDay
 
 
-{-| Increments the `Hours` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Day`, `Month`, `Year` where applicable.
+{-| Increments the `Hours` in a given [DateTime](DateTime#DateTime). Will also increment `Day`, `Month`, `Year` where applicable.
 
     -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementHours dateTime -- 25 Aug 2019 16:30:45.100 : DateTime
@@ -439,7 +439,7 @@ incrementHours =
     Internal.incrementHours
 
 
-{-| Increments the `Minutes` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Hours`, `Day`, `Month`, `Year` where applicable.
+{-| Increments the `Minutes` in a given [DateTime](DateTime#DateTime). Will also increment `Hours`, `Day`, `Month`, `Year` where applicable.
 
     -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementMinutes dateTime -- 25 Aug 2019 15:31:45.100 : DateTime
@@ -453,7 +453,7 @@ incrementMinutes =
     Internal.incrementMinutes
 
 
-{-| Increments the `Seconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
+{-| Increments the `Seconds` in a given [DateTime](DateTime#DateTime). Will also increment `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
 
     -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementSeconds dateTime -- 25 Aug 2019 15:30:46.100 : DateTime
@@ -467,7 +467,7 @@ incrementSeconds =
     Internal.incrementSeconds
 
 
-{-| Increments the `Milliseconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also increment `Seconds`, `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
+{-| Increments the `Milliseconds` in a given [DateTime](DateTime#DateTime). Will also increment `Seconds`, `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
 
     -- dateTime  == 25 Aug 2019 15:30:45.100
     incrementMilliseconds dateTime -- 25 Aug 2019 15:30:45:101 : DateTime
@@ -485,8 +485,8 @@ incrementMilliseconds =
 -- Decrement values
 
 
-{-| Decrements the `Year` in a given [DateTime](DateTime-DateTime#DateTime) while preserving the `Month` and `Day`.
-_The [Time](DateTime-Clock#Time) related parts will remain the same._
+{-| Decrements the `Year` in a given [DateTime](DateTime#DateTime) while preserving the `Month` and `Day`.
+_The [Time](Clock#Time) related parts will remain the same._
 
     -- dateTime  == 31 Jan 2019 15:30:45.100
     decrementYear dateTime -- 31 Jan 2018 15:30:45.100 : DateTime
@@ -505,8 +505,8 @@ decrementYear =
     Internal.decrementYear
 
 
-{-| Decrements the `Month` in a given [DateTime](DateTime-DateTime#DateTime). It will also roll backwards to the previous year where applicable.
-_The [Time](DateTime-Clock#Time) related parts will remain the same._
+{-| Decrements the `Month` in a given [DateTime](DateTime#DateTime). It will also roll backwards to the previous year where applicable.
+_The [Time](Clock#Time) related parts will remain the same._
 
     -- dateTime  == 15 Sep 2019 15:30:45.100
     decrementMonth dateTime -- 15 Aug 2019 15:30:45.100 : DateTime
@@ -528,7 +528,7 @@ decrementMonth =
     Internal.decrementMonth
 
 
-{-| Decrements the `Day` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Month` and `Year` where applicable.
+{-| Decrements the `Day` in a given [DateTime](DateTime#DateTime). Will also decrement `Month` and `Year` where applicable.
 
     -- dateTime  == 27 Aug 2019 15:30:45.100
     decrementDay dateTime -- 26 Aug 2019 15:30:45.100 : DateTime
@@ -542,7 +542,7 @@ decrementDay =
     Internal.decrementDay
 
 
-{-| Decrements the `Hours` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Day`, `Month`, `Year` where applicable.
+{-| Decrements the `Hours` in a given [DateTime](DateTime#DateTime). Will also decrement `Day`, `Month`, `Year` where applicable.
 
     -- dateTime  == 25 Aug 2019 15:30:45.100
     decrementHours dateTime -- 25 Aug 2019 14:30:45.100 : DateTime
@@ -556,7 +556,7 @@ decrementHours =
     Internal.decrementHours
 
 
-{-| Decrements the `Minutes` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Hours`, `Day`, `Month`, `Year` where applicable.
+{-| Decrements the `Minutes` in a given [DateTime](DateTime#DateTime). Will also decrement `Hours`, `Day`, `Month`, `Year` where applicable.
 
     -- dateTime  == 25 Aug 2019 15:30:45.100
     decrementMinutes dateTime -- 25 Aug 2019 15:29:45.100 : DateTime
@@ -570,7 +570,7 @@ decrementMinutes =
     Internal.decrementMinutes
 
 
-{-| Decrements the `Seconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
+{-| Decrements the `Seconds` in a given [DateTime](DateTime#DateTime). Will also decrement `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
 
     -- dateTime  == 25 Aug 2019 15:30:45.100
     decrementSeconds dateTime -- 25 Aug 2019 15:30:44.100 : DateTime
@@ -584,7 +584,7 @@ decrementSeconds =
     Internal.decrementSeconds
 
 
-{-| Decrements the `Milliseconds` in a given [DateTime](DateTime-DateTime#DateTime). Will also decrement `Seconds`, `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
+{-| Decrements the `Milliseconds` in a given [DateTime](DateTime#DateTime). Will also decrement `Seconds`, `Minutes`, `Hours`, `Day`, `Month`, `Year` where applicable.
 
     -- dateTime  == 25 Aug 2019 15:30:45.100
     decrementMilliseconds dateTime -- 25 Aug 2019 15:30:45.099 : DateTime
@@ -602,7 +602,7 @@ decrementMilliseconds =
 -- Compare values
 
 
-{-| Compares the two given [DateTimes](DateTime-DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
+{-| Compares the two given [DateTimes](DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
 
     -- past   == 25 Aug 2019 12:15:45.250
     -- future == 26 Aug 2019 12:15:45.250
@@ -618,7 +618,7 @@ compare =
     Internal.compare
 
 
-{-| Compares the [Date](DateTime-Calendar#Date) part of two given [DateTime](DateTime-DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
+{-| Compares the [Date](Calendar#Date) part of two given [DateTime](DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
 
     -- dateTime  == 25 Aug 2019 12:15:45.250
     -- dateTime2 == 25 Aug 2019 21:00:00.000
@@ -635,7 +635,7 @@ compareDates =
     Internal.compareDates
 
 
-{-| Compares the [Time](DateTime-Clock#Time) part of two given [DateTime](DateTime-DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
+{-| Compares the [Time](Clock#Time) part of two given [DateTime](DateTime#DateTime) and returns an [Order](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order).
 
     -- dateTime  == 25 Aug 2019 12:15:45.250
     -- dateTime2 == 25 Aug 2019 21:00:00.000
@@ -656,7 +656,7 @@ compareTime =
 -- Utilities
 
 
-{-| Returns an incrementally sorted [DateTime](DateTime-DateTime#DateTime) list based on the **start** and **end** `DateTime` parameters.
+{-| Returns an incrementally sorted [DateTime](DateTime#DateTime) list based on the **start** and **end** `DateTime` parameters.
 The `Time` parts of the resulting list will be equal to the `Time` argument that was provided.
 _**The resulting list will include both start and end dates**_.
 
@@ -673,8 +673,8 @@ getDateRange =
     Internal.getDateRange
 
 
-{-| Returns a list of [DateTimes](DateTime-DateTime#DateTime) for the given `Year` and `Month` combination.
-The `Time` parts of the resulting list will be equal to the `Time` portion of the [DateTime](DateTime-DateTime#DateTime)
+{-| Returns a list of [DateTimes](DateTime#DateTime) for the given `Year` and `Month` combination.
+The `Time` parts of the resulting list will be equal to the `Time` portion of the [DateTime](DateTime#DateTime)
 that was provided.
 
     -- dateTime == 26 Aug 2019 21:00:00.000
@@ -695,7 +695,7 @@ getDatesInMonth =
     Internal.getDatesInMonth
 
 
-{-| Returns the difference in days between two [DateTimes](DateTime-DateTime#DateTime).
+{-| Returns the difference in days between two [DateTimes](DateTime#DateTime).
 We can have a negative difference of days as can be seen in the examples below.
 
     -- dateTime  == 24 Aug 2019 12:00:00.000
@@ -713,7 +713,7 @@ getDayDiff =
     Internal.getDayDiff
 
 
-{-| Returns the weekday of a specific [DateTime](DateTime-DateTime#DateTime).
+{-| Returns the weekday of a specific [DateTime](DateTime#DateTime).
 
     -- dateTime == 26 Aug 2019 12:30:45.000
     getWeekday dateTime -- Mon : Weekday
@@ -724,7 +724,7 @@ getWeekday =
     Internal.getWeekday
 
 
-{-| Checks if the `Year` part of the given [DateTime](DateTime-DateTime#DateTime) is a leap year.
+{-| Checks if the `Year` part of the given [DateTime](DateTime#DateTime) is a leap year.
 
     -- dateTime  == 25 Dec 2019 21:00:00.000
     isLeapYear dateTime -- False
@@ -738,7 +738,7 @@ isLeapYear =
     Internal.isLeapYear
 
 
-{-| Sorts incrementally a list of [DateTime](DateTime-DateTime#DateTime).
+{-| Sorts incrementally a list of [DateTime](DateTime#DateTime).
 
     -- dateTime  == 26 Aug 1920 12:30:45.000
     -- dateTime2 == 26 Aug 1920 21:00:00.000
