@@ -19,3 +19,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Changed the Licence of the project from MIT to BSD 3-Clause.
+- Changed the LICENCE filename to LICENSE.
