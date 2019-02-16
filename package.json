@@ -7,7 +7,9 @@
     "elm-make": "elm make ./src/DateTime.elm --output=./elm.bundle.js",
     "elm-docs": "elm make --docs=docs.json",
     "test": "elm-test",
-    "elm-doc-preview": "elm-doc-preview"
+    "elm-doc-preview": "elm-doc-preview",
+    "elm-bump": "elm bump",
+    "elm-publish": "elm publish"
   },
   "keywords": [
     "Elm",
