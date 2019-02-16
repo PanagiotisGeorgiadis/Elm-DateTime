@@ -90,6 +90,8 @@ type Date
     = Date InternalDate
 
 
+{-| The internal representation of Date and its constituent parts.
+-}
 type alias InternalDate =
     { year : Year
     , month : Month
