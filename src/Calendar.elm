@@ -46,17 +46,17 @@ a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 @docs setYear, setMonth, setDay
 
 
-# Incrementers
+# Increment values
 
 @docs incrementYear, incrementMonth, incrementDay
 
 
-# Decrementers
+# Decrement values
 
 @docs decrementYear, decrementMonth, decrementDay
 
 
-# Comparers
+# Compare values
 
 @docs compare
 
