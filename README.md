@@ -1,4 +1,4 @@
-# DateTime ![alt text][Elm-Package-Version] ![alt text][CircleCI-build] [![License: MIT][Licence-Icon]](https://opensource.org/licenses/MIT)
+# DateTime ![alt text][Elm-Package-Version] ![alt text][CircleCI-build] [![License: MIT][Licence-Icon]](https://opensource.org/licenses/BSD-3-Clause)
 
 The 0.19 version of Elm introduced some [important changes][important-changes] in the Time API which is now split into a [separate package][elm-time].
 
@@ -36,7 +36,7 @@ You can ___attempt___ to construct a [Calendar.Date][Calendar-Date] by providing
 ![RawParts to Calendar.Date](https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/assets/RawParts-Calendar-Construction.png "RawParts to Calendar.Date")
 
 There could be some cases where you don't really care about the time but you only need to store the Dates. Of course this will mean that if you try to convert a [Calendar.Date][Calendar-Date] to
-a __Posix Time__ it will always __default to 00:00 hours.__ You can always use this along with a [Clock.Time][Clock-Time] to construct a [DateTime][DateTime-url] in case you need to.
+a __Posix Time__ it will always __default to midnight hours (00:00:00.000).__ You can always use this along with a [Clock.Time][Clock-Time] to construct a [DateTime][DateTime-url] in case you need to.
 
 &nbsp;
 
@@ -66,5 +66,5 @@ npm test
 [Clock-Time]: https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/src/DateTime/Clock/Internal.elm#L45
 [DateTime-url]: https://github.com/PanagiotisGeorgiadis/Elm-DateTime/blob/master/src/DateTime/DateTime/Internal.elm#L57
 [CircleCI-build]: https://img.shields.io/circleci/project/github/PanagiotisGeorgiadis/Elm-DateTime.svg?style=flat
-[Licence-Icon]: https://img.shields.io/badge/License-MIT-blue.svg
+[Licence-Icon]: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
 [Elm-Package-Version]: https://img.shields.io/elm-package/v/PanagiotisGeorgiadis/Elm-datetime.svg?style=flat

@@ -2,7 +2,7 @@
     "type": "package",
     "name": "elm/datetime",
     "summary": "A \"human readable representation\" of date and time built on top of elm/time.",
-    "license": "MIT",
+    "license": "BSD-3-Clause",
     "version": "1.0.0",
     "exposed-modules": [
         "DateTime",
