@@ -1,6 +1,6 @@
 {
     "type": "package",
-    "name": "elm/datetime",
+    "name": "PanagiotisGeorgiadis/elm-datetime",
     "summary": "A \"human readable representation\" of date and time built on top of elm/time.",
     "license": "BSD-3-Clause",
     "version": "1.0.0",
