@@ -56,6 +56,8 @@ suite =
         -- , getSecondsTests -- There is nothing to test here.
         -- , getMillisecondsTests -- There is nothing to test here.
         --
+        -- , setDate -- There is nothing to test here.
+        -- , setTime -- There is nothing to test here.
         , setYearTests
         , setMonthTests
         , setDayTests

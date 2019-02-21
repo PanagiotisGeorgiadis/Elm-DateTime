@@ -3,7 +3,7 @@ module DateTime exposing
     , fromPosix, fromRawParts, fromDateAndTime
     , toPosix, toMillis
     , getDate, getTime, getYear, getMonth, getDay, getHours, getMinutes, getSeconds, getMilliseconds
-    , setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
+    , setDate, setTime, setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compare, compareDates, compareTime
@@ -38,7 +38,7 @@ you can _**attempt**_ to construct a `DateTime` by using a combination of a
 
 # Setters
 
-@docs setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
+@docs setDate, setTime, setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
 
 
 # Increment values
@@ -271,6 +271,29 @@ getMilliseconds =
 
 
 -- Setters
+
+
+{-| Sets the `Date` part of a [DateTime#DateTime].
+
+    -- date == 26 Aug 2019
+    -- dateTime == 25 Dec 2019 16:45:30.000
+    setDate date dateTime -- 26 Aug 2019 16:45:30.000
+
+-}
+setDate : Calendar.Date -> DateTime -> DateTime
+setDate =
+    Internal.setDate
+
+
+{-| Sets the `Time` part of a [DateTime#DateTime].
+
+    -- dateTime == 25 Dec 2019 16:45:30.000
+    setTime Clock.midnight dateTime -- 25 Dec 2019 00:00:00.000
+
+-}
+setTime : Clock.Time -> DateTime -> DateTime
+setTime =
+    Internal.setTime
 
 
 {-| Attempts to set the `Year` part of a [Calendar.Date](Calendar#Date) in a `DateTime`.

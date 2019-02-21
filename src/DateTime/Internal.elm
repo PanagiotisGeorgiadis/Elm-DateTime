@@ -3,7 +3,7 @@ module DateTime.Internal exposing
     , fromPosix, fromRawParts, fromDateAndTime
     , toPosix, toMillis
     , getDate, getTime, getYear, getMonth, getDay, getHours, getMinutes, getSeconds, getMilliseconds
-    , setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
+    , setDate, setTime, setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compare, compareDates, compareTime
@@ -39,7 +39,7 @@ you can _**attempt**_ to construct a `DateTime` by using a combination of a
 
 # Setters
 
-@docs setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
+@docs setDate, setTime, setYear, setMonth, setDay, setHours, setMinutes, setSeconds, setMilliseconds
 
 
 # Increment values
@@ -300,6 +300,35 @@ getMilliseconds =
 -- Setters
 
 
+{-| Sets the `Date` part of a [DateTime#DateTime].
+
+    -- date == 26 Aug 2019
+    -- dateTime == 25 Dec 2019 16:45:30.000
+    setDate date dateTime -- 26 Aug 2019 16:45:30.000
+
+-}
+setDate : Calendar.Date -> DateTime -> DateTime
+setDate date (DateTime { time }) =
+    DateTime
+        { date = date
+        , time = time
+        }
+
+
+{-| Sets the `Time` part of a [DateTime#DateTime].
+
+    -- dateTime == 25 Dec 2019 16:45:30.000
+    setTime Clock.midnight dateTime -- 25 Dec 2019 00:00:00.000
+
+-}
+setTime : Clock.Time -> DateTime -> DateTime
+setTime time (DateTime { date }) =
+    DateTime
+        { date = date
+        , time = time
+        }
+
+
 {-| Attempts to set the `Year` part of a [Calendar.Date](Calendar#Date) in a `DateTime`.
 
     -- dateTime == 29 Feb 2020 15:30:30.000
@@ -310,7 +339,8 @@ getMilliseconds =
 -}
 setYear : Int -> DateTime -> Maybe DateTime
 setYear year dateTime =
-    Maybe.map (updateDate dateTime) <| Calendar.setYear year (getDate dateTime)
+    Maybe.map (\y -> setDate y dateTime) <|
+        Calendar.setYear year (getDate dateTime)
 
 
 {-| Attempts to set the `Month` part of a [Calendar.Date](Calendar#Date) in a `DateTime`.
@@ -323,7 +353,8 @@ setYear year dateTime =
 -}
 setMonth : Time.Month -> DateTime -> Maybe DateTime
 setMonth month dateTime =
-    Maybe.map (updateDate dateTime) <| Calendar.setMonth month (getDate dateTime)
+    Maybe.map (\m -> setDate m dateTime) <|
+        Calendar.setMonth month (getDate dateTime)
 
 
 {-| Attempts to set the `Day` part of a [Calendar.Date](Calendar#Date) in a `DateTime`.
@@ -336,7 +367,8 @@ setMonth month dateTime =
 -}
 setDay : Int -> DateTime -> Maybe DateTime
 setDay day dateTime =
-    Maybe.map (updateDate dateTime) <| Calendar.setDay day (getDate dateTime)
+    Maybe.map (\d -> setDate d dateTime) <|
+        Calendar.setDay day (getDate dateTime)
 
 
 {-| Attempts to set the `Hours` part of a [Clock.Time](Clock#Time) in a DateTime.
@@ -349,7 +381,8 @@ setDay day dateTime =
 -}
 setHours : Int -> DateTime -> Maybe DateTime
 setHours hours dateTime =
-    Maybe.map (updateTime dateTime) <| Clock.setHours hours (getTime dateTime)
+    Maybe.map (\h -> setTime h dateTime) <|
+        Clock.setHours hours (getTime dateTime)
 
 
 {-| Attempts to set the `Minutes` part of a [Clock.Time](Clock#Time) in a DateTime.
@@ -362,7 +395,8 @@ setHours hours dateTime =
 -}
 setMinutes : Int -> DateTime -> Maybe DateTime
 setMinutes minutes dateTime =
-    Maybe.map (updateTime dateTime) <| Clock.setMinutes minutes (getTime dateTime)
+    Maybe.map (\m -> setTime m dateTime) <|
+        Clock.setMinutes minutes (getTime dateTime)
 
 
 {-| Attempts to set the `Seconds` part of a [Clock.Time](Clock#Time) in a DateTime.
@@ -375,7 +409,8 @@ setMinutes minutes dateTime =
 -}
 setSeconds : Int -> DateTime -> Maybe DateTime
 setSeconds seconds dateTime =
-    Maybe.map (updateTime dateTime) <| Clock.setSeconds seconds (getTime dateTime)
+    Maybe.map (\s -> setTime s dateTime) <|
+        Clock.setSeconds seconds (getTime dateTime)
 
 
 {-| Attempts to set the `Milliseconds` part of a [Clock.Time](Clock#Time) in a DateTime.
@@ -388,7 +423,8 @@ setSeconds seconds dateTime =
 -}
 setMilliseconds : Int -> DateTime -> Maybe DateTime
 setMilliseconds milliseconds dateTime =
-    Maybe.map (updateTime dateTime) <| Clock.setMilliseconds milliseconds (getTime dateTime)
+    Maybe.map (\m -> setTime m dateTime) <|
+        Clock.setMilliseconds milliseconds (getTime dateTime)
 
 
 
@@ -896,23 +932,3 @@ rollDayBackwards shouldRoll date =
 
     else
         date
-
-
-{-| Helper function that updates the 'Date' part of a DateTime.
--}
-updateDate : DateTime -> Calendar.Date -> DateTime
-updateDate (DateTime { time }) date =
-    DateTime
-        { date = date
-        , time = time
-        }
-
-
-{-| Helper function that updates the 'Time' part of a DateTime.
--}
-updateTime : DateTime -> Clock.Time -> DateTime
-updateTime (DateTime { date }) time =
-    DateTime
-        { date = date
-        , time = time
-        }
