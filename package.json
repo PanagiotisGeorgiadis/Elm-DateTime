@@ -9,7 +9,8 @@
     "test": "elm-test",
     "elm-doc-preview": "elm-doc-preview",
     "elm-bump": "elm bump",
-    "elm-publish": "elm publish"
+    "elm-publish": "elm publish",
+    "elm-repl": "elm repl"
   },
   "keywords": [
     "Elm",
