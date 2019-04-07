@@ -6,8 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0] - 2019-04-07
 ### Added
-- Added the getTimezoneOffset function in the DateTime module.
-- Added unit tests for the newly added getTimezoneOffset function.
+- Added the fromZonedPosix function to the Internal Calendar module. ( Shouldn't be exposed )
+- Added the fromZonedPosix function to the Internal Clock module. ( Shouldn't be exposed )
+- Added the fromZonedPosix function to the Internal DateTime module. ( Shouldn't be exposed )
+- Added the getTimezoneOffset function in the public DateTime module.
+- Added unit tests for the getTimezoneOffset function.
 
 ## [1.1.0] - 2019-02-21
 ### Added
