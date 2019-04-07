@@ -7,7 +7,7 @@ module DateTime exposing
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compare, compareDates, compareTime
-    , getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
+    , getTimezoneOffset, getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
     )
 
 {-| The [DateTime](DateTime#) module was introduced in order to keep track of both the
@@ -58,7 +58,7 @@ you can _**attempt**_ to construct a `DateTime` by using a combination of a
 
 # Utilities
 
-@docs getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
+@docs getTimezoneOffset, getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
 
 -}
 
@@ -677,6 +677,36 @@ compareTime =
 
 
 -- Utilities
+
+
+{-| Returns the Timezone Offset in Milliseconds. This function can be
+used in order to form a `DateTime` that actually matches each users local `DateTime`.
+
+
+    dateTime =
+        DateTime.fromPosix posix
+
+    offset =
+        DateTime.getTimezoneOffset zone posix
+
+    zonedDateTime =
+        DateTime.fromPosix (posix + offset)
+
+    -- zone == GMT+1100
+    -- posix == 1554660000000 -- 2019-04-07 18:00:00 UTC
+    -- dateTime == 2019-04-07 18:00:00 UTC
+    -- zonedDateTime == 2019-04-08 05:00:00 GMT+1100
+
+_The above example shows the difference between getting a `DateTime` in **UTC** and in **GMT+1100.**_
+
+**Note:** Timezones ( and local times ) should only be used for date representation purposes and never
+for storing or modeling. If you use getTimezoneOffset for constructing a _**local today**_ `DateTime`,
+remember to convert it back to UTC when storing it in a database.
+
+-}
+getTimezoneOffset : Time.Zone -> Time.Posix -> Int
+getTimezoneOffset =
+    Internal.getTimezoneOffset
 
 
 {-| Returns an incrementally sorted [DateTime](DateTime#DateTime) list based on the **start** and **end** `DateTime` parameters.

@@ -25,6 +25,8 @@ suite : Test
 suite =
     describe "Clock Test Suite"
         [ fromPosixTests
+
+        -- , fromZonedPosix -- There is nothing to test here.
         , fromRawPartsTests
         , hoursFromIntTests
         , minutesFromIntTests

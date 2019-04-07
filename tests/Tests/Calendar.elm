@@ -27,6 +27,8 @@ suite : Test
 suite =
     describe "Calendar Test Suite"
         [ fromPosixTests
+
+        -- , fromZonedPosix -- There is nothing to test here.
         , fromRawPartsTests
         , fromRawDayTest
         , fromYearMonthDayTest

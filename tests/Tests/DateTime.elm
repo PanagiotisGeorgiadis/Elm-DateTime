@@ -37,6 +37,8 @@ suite : Test
 suite =
     describe "DateTime Test Suite"
         [ fromPosixTests
+
+        -- , fromZonedPosix -- There is nothing to test here.
         , fromRawPartsTests
 
         -- , fromDateAndTimeTests -- There is nothing to test here.
@@ -82,6 +84,7 @@ suite =
         , compareTests
         , compareDatesTests
         , compareTimeTests
+        , getTimezoneOffsetTests
         , getDateRangeTests
         , getDatesInMonthTests
         , getDayDiffTests
@@ -1236,6 +1239,170 @@ compareTimeTests =
                     Maybe.map2 DateTime.compareTime
                         (DateTime.fromRawParts { year = 2020, month = Nov, day = 15 } { hours = 21, minutes = 0, seconds = 0, milliseconds = 0 })
                         (DateTime.fromRawParts { year = 2019, month = Aug, day = 26 } { hours = 21, minutes = 0, seconds = 45, milliseconds = 0 })
+            )
+        ]
+
+
+getTimezoneOffsetTests : Test
+getTimezoneOffsetTests =
+    let
+        -- 2019-04-07 18:00:00 UTC
+        posix =
+            1554660000000
+    in
+    describe "DateTime.getTimezoneOffset Test Suite"
+        [ test "Testing with GMT+1100 as the test timezone"
+            (\_ ->
+                let
+                    -- GMT+1100
+                    zone =
+                        Time.customZone (11 * 60) []
+
+                    offset =
+                        DateTime.getTimezoneOffset zone (Time.millisToPosix posix)
+
+                    -- 2019-04-08 05:00:00 GMT+1100
+                    zonedDateTime =
+                        DateTime.fromPosix (Time.millisToPosix (posix + offset))
+
+                    ( isValidDay, isValidMonth, isValidYear ) =
+                        ( DateTime.getDay zonedDateTime == 8
+                        , DateTime.getMonth zonedDateTime == Apr
+                        , DateTime.getYear zonedDateTime == 2019
+                        )
+
+                    ( areValidHours, areValidMinutes ) =
+                        ( DateTime.getHours zonedDateTime == 5
+                        , DateTime.getMinutes zonedDateTime == 0
+                        )
+
+                    ( areValidSeconds, areValidMillis ) =
+                        ( DateTime.getSeconds zonedDateTime == 0
+                        , DateTime.getMilliseconds zonedDateTime == 0
+                        )
+                in
+                Expect.true "Expected all the rawParts of the created DateTime to be matching the actual date"
+                    (isValidDay && isValidMonth && isValidYear && areValidHours && areValidMinutes && areValidSeconds && areValidMillis)
+            )
+        , test "Testing with GMT+0100 as the test timezone"
+            (\_ ->
+                let
+                    -- GMT+0100
+                    zone =
+                        Time.customZone (1 * 60) []
+
+                    offset =
+                        DateTime.getTimezoneOffset zone (Time.millisToPosix posix)
+
+                    -- 2019-04-07 19:00:00 GMT+0100
+                    zonedDateTime =
+                        DateTime.fromPosix (Time.millisToPosix (posix + offset))
+
+                    ( isValidDay, isValidMonth, isValidYear ) =
+                        ( DateTime.getDay zonedDateTime == 7
+                        , DateTime.getMonth zonedDateTime == Apr
+                        , DateTime.getYear zonedDateTime == 2019
+                        )
+
+                    ( areValidHours, areValidMinutes ) =
+                        ( DateTime.getHours zonedDateTime == 19
+                        , DateTime.getMinutes zonedDateTime == 0
+                        )
+
+                    ( areValidSeconds, areValidMillis ) =
+                        ( DateTime.getSeconds zonedDateTime == 0
+                        , DateTime.getMilliseconds zonedDateTime == 0
+                        )
+                in
+                Expect.true "Expected all the rawParts of the created DateTime to be matching the actual date"
+                    (isValidDay && isValidMonth && isValidYear && areValidHours && areValidMinutes && areValidSeconds && areValidMillis)
+            )
+        , test "Testing with GMT-0500 as the test timezone"
+            (\_ ->
+                let
+                    -- GMT-0500
+                    zone =
+                        Time.customZone (-5 * 60) []
+
+                    offset =
+                        DateTime.getTimezoneOffset zone (Time.millisToPosix posix)
+
+                    -- 2019-04-07 13:00:00 GMT-0500
+                    zonedDateTime =
+                        DateTime.fromPosix (Time.millisToPosix (posix + offset))
+
+                    ( isValidDay, isValidMonth, isValidYear ) =
+                        ( DateTime.getDay zonedDateTime == 7
+                        , DateTime.getMonth zonedDateTime == Apr
+                        , DateTime.getYear zonedDateTime == 2019
+                        )
+
+                    ( areValidHours, areValidMinutes ) =
+                        ( DateTime.getHours zonedDateTime == 13
+                        , DateTime.getMinutes zonedDateTime == 0
+                        )
+
+                    ( areValidSeconds, areValidMillis ) =
+                        ( DateTime.getSeconds zonedDateTime == 0
+                        , DateTime.getMilliseconds zonedDateTime == 0
+                        )
+                in
+                Expect.true "Expected all the rawParts of the created DateTime to be matching the actual date"
+                    (isValidDay && isValidMonth && isValidYear && areValidHours && areValidMinutes && areValidSeconds && areValidMillis)
+            )
+        , test "Testing with GMT+0930 as the test timezone"
+            (\_ ->
+                let
+                    -- GMT+0930
+                    zone =
+                        Time.customZone (round (9.5 * 60.0)) []
+
+                    offset =
+                        DateTime.getTimezoneOffset zone (Time.millisToPosix posix)
+
+                    -- 2019-04-08 03:30:00 GMT+0930
+                    zonedDateTime =
+                        DateTime.fromPosix (Time.millisToPosix (posix + offset))
+
+                    ( isValidDay, isValidMonth, isValidYear ) =
+                        ( DateTime.getDay zonedDateTime == 8
+                        , DateTime.getMonth zonedDateTime == Apr
+                        , DateTime.getYear zonedDateTime == 2019
+                        )
+
+                    ( areValidHours, areValidMinutes ) =
+                        ( DateTime.getHours zonedDateTime == 3
+                        , DateTime.getMinutes zonedDateTime == 30
+                        )
+
+                    ( areValidSeconds, areValidMillis ) =
+                        ( DateTime.getSeconds zonedDateTime == 0
+                        , DateTime.getMilliseconds zonedDateTime == 0
+                        )
+                in
+                Expect.true "Expected all the rawParts of the created DateTime to be matching the actual date"
+                    (isValidDay && isValidMonth && isValidYear && areValidHours && areValidMinutes && areValidSeconds && areValidMillis)
+            )
+        , test "Testing with GMT+0000 as the test timezone"
+            (\_ ->
+                let
+                    -- 2019-04-07 18:00:00 UTC
+                    utcDateTime =
+                        DateTime.fromPosix (Time.millisToPosix posix)
+
+                    -- GMT+0000
+                    zone =
+                        Time.customZone (0 * 60) []
+
+                    offset =
+                        DateTime.getTimezoneOffset zone (Time.millisToPosix posix)
+
+                    -- 2019-04-07 18:00:00 GMT+0000
+                    zonedDateTime =
+                        DateTime.fromPosix (Time.millisToPosix (posix + offset))
+                in
+                Expect.true "Expected the GMT+0000 time to be equal to its UTC counterpart"
+                    (utcDateTime == zonedDateTime)
             )
         ]
 

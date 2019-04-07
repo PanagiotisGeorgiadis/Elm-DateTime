@@ -14,6 +14,7 @@ module Clock.Internal exposing
     , hoursFromInt, minutesFromInt, secondsFromInt, millisecondsFromInt
     , hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
     , compareHours, compareMinutes, compareSeconds, compareMilliseconds
+    , fromZonedPosix
     )
 
 {-| The [Clock](Clock#) module was introduced in order to keep track of the `Time` concept.
@@ -82,6 +83,7 @@ in order to get a [DateTime](DateTime#DateTime) which can then be converted into
 @docs hoursFromInt, minutesFromInt, secondsFromInt, millisecondsFromInt
 @docs hoursToInt, minutesToInt, secondsToInt, millisecondsToInt
 @docs compareHours, compareMinutes, compareSeconds, compareMilliseconds
+@docs fromZonedPosix
 
 -}
 
@@ -169,6 +171,20 @@ fromPosix posix =
         , minutes = Minute (Time_.toMinute Time_.utc posix)
         , seconds = Second (Time_.toSecond Time_.utc posix)
         , milliseconds = Millisecond (Time_.toMillis Time_.utc posix)
+        }
+
+
+{-| Constructs a [Time](Clock#Time) from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time and
+a [timezone](https://package.elm-lang.org/packages/elm/time/latest/Time#Zone). This function shouldn't be exposed to the consumer because
+of the reasons outlined on this [issue](https://github.com/PanagiotisGeorgiadis/Elm-DateTime/issues/2).
+-}
+fromZonedPosix : Time_.Zone -> Time_.Posix -> Time
+fromZonedPosix zone posix =
+    Time
+        { hours = Hour (Time_.toHour zone posix)
+        , minutes = Minute (Time_.toMinute zone posix)
+        , seconds = Second (Time_.toSecond zone posix)
+        , milliseconds = Millisecond (Time_.toMillis zone posix)
         }
 
 

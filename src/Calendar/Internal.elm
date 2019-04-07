@@ -11,6 +11,7 @@ module Calendar.Internal exposing
     , months, millisInADay
     , Year(..), Month, Day(..)
     , millisSinceEpoch, millisSinceStartOfTheYear, millisSinceStartOfTheMonth
+    , fromZonedPosix
     )
 
 {-| The [Calendar](Calendar#) module was introduced in order to keep track of the `Calendar Date` concept.
@@ -77,6 +78,7 @@ a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 
 @docs Year, Month, Day
 @docs millisSinceEpoch, millisSinceStartOfTheYear, millisSinceStartOfTheMonth
+@docs fromZonedPosix
 
 -}
 
@@ -127,7 +129,7 @@ type alias RawDate =
 
 
 
--- -- Creating a `Date`
+-- Creating a `Date`
 
 
 {-| Construct a [Date](Calendar#Date) from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time.
@@ -155,6 +157,19 @@ fromPosix posix =
         { year = Year (Time.toYear Time.utc posix)
         , month = Time.toMonth Time.utc posix
         , day = Day (Time.toDay Time.utc posix)
+        }
+
+
+{-| Constructs a [Date](Calendar#Date) from a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix) time and
+a [timezone](https://package.elm-lang.org/packages/elm/time/latest/Time#Zone). This function shouldn't be exposed to the consumer because
+of the reasons outlined on this [issue](https://github.com/PanagiotisGeorgiadis/Elm-DateTime/issues/2).
+-}
+fromZonedPosix : Time.Zone -> Time.Posix -> Date
+fromZonedPosix zone posix =
+    Date
+        { year = Year (Time.toYear zone posix)
+        , month = Time.toMonth zone posix
+        , day = Day (Time.toDay zone posix)
         }
 
 
