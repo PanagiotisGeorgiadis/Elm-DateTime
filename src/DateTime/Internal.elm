@@ -7,7 +7,7 @@ module DateTime.Internal exposing
     , incrementYear, incrementMonth, incrementDay, incrementHours, incrementMinutes, incrementSeconds, incrementMilliseconds
     , decrementYear, decrementMonth, decrementDay, decrementHours, decrementMinutes, decrementSeconds, decrementMilliseconds
     , compare, compareDates, compareTime
-    , getTimezoneOffset, getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
+    , getTimezoneOffset, getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, lastDayOf, sort
     , rollDayBackwards, rollDayForward
     )
 
@@ -59,7 +59,7 @@ you can _**attempt**_ to construct a `DateTime` by using a combination of a
 
 # Utilities
 
-@docs getTimezoneOffset, getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, sort
+@docs getTimezoneOffset, getDateRange, getDatesInMonth, getDayDiff, getWeekday, isLeapYear, lastDayOf, sort
 
 
 # Exposed for Testing Purposes
@@ -934,6 +934,23 @@ getWeekday (DateTime dateTime) =
 isLeapYear : DateTime -> Bool
 isLeapYear (DateTime { date, time }) =
     Calendar.isLeapYear date
+
+
+{-| Returns the **last day** of the combination of the `Year` and `Month` parts of the given [DateTime](DateTime#DateTime).
+
+    -- dateTime == 1 Dec 2018 12:00:00.000
+    lastDayOf dateTime -- 31 : Int
+
+    -- dateTime2 == 1 Feb 2019 22:00:00.000
+    lastDayOf dateTime2 -- 28 : Int
+
+    -- dateTime3 = 1 Feb 2020 21:00:00.000
+    lastDayOf dateTime3 -- 29 : Int
+
+-}
+lastDayOf : DateTime -> Int
+lastDayOf (DateTime { date }) =
+    Calendar.lastDayOf date
 
 
 {-| Sorts incrementally a list of [DateTime](DateTime#DateTime).

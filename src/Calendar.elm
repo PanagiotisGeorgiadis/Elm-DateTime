@@ -7,7 +7,7 @@ module Calendar exposing
     , incrementYear, incrementMonth, incrementDay
     , decrementYear, decrementMonth, decrementDay
     , compare
-    , getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, sort
+    , getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, lastDayOf, sort
     , months, millisInADay
     )
 
@@ -63,7 +63,7 @@ a [Posix](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 
 # Utilities
 
-@docs getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, sort
+@docs getDateRange, getDatesInMonth, getDayDiff, getFollowingMonths, getPrecedingMonths, getWeekday, isLeapYear, lastDayOf, sort
 
 
 # Constants
@@ -488,6 +488,23 @@ getWeekday =
 isLeapYear : Date -> Bool
 isLeapYear =
     Internal.isLeapYear << Internal.getYear
+
+
+{-| Returns the __last day__ of the combination of the `Year` and `Month` parts of the given [Date](Calendar#Date).
+
+    -- date == 1 Dec 2018
+    lastDayOf date -- 31 : Int
+
+    -- date2 == 1 Feb 2019
+    lastDayOf date2 -- 28 : Int
+
+    -- date3 = 1 Feb 2020
+    lastDayOf date3 -- 29 : Int
+
+-}
+lastDayOf : Date -> Int
+lastDayOf date =
+    Internal.dayToInt <| Internal.lastDayOf (Internal.getYear date) (Internal.getMonth date)
 
 
 {-| Sorts incrementally a list of [Dates](Calendar#Date).
