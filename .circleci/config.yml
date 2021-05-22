@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # Docker image version
-      - image: circleci/node:8.4.0
+      - image: cimg/node:14.17.0
 
     steps:
       - add_ssh_keys:
@@ -32,7 +32,7 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:8.4.0
+      - image: cimg/node:14.17.0
 
     steps:
       - add_ssh_keys:

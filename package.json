@@ -4,7 +4,7 @@
   "description": "A date time package built on top of elm/time package in order to give a \"human readable representation\" of time. This package works with POSIX time and it doesn't take into consideration any time zone. If you want an implementation of a specific time zone you'll need to implement it in your app. A really good read on time and time zones can start from the elm/time README page (https://package.elm-lang.org/packages/elm/time/latest/).",
   "main": "index.js",
   "scripts": {
-    "elm-make": "elm make ./src/DateTime.elm --output=./elm.bundle.js",
+    "elm-make": "elm make ./src/DateTime.elm --output=/dev/null",
     "elm-docs": "elm make --docs=docs.json",
     "test": "elm-test",
     "elm-doc-preview": "elm-doc-preview",
