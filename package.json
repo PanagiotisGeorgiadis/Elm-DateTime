@@ -23,8 +23,8 @@
   "author": "Panagiotis Georgiadis",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "elm": "^0.19.0-bugfix6",
-    "elm-test": "^0.19.1"
+    "elm": "^0.19.1-5",
+    "elm-test": "^0.19.1-revision7"
   },
   "devDependencies": {
     "elm-doc-preview": "^1.0.7"
