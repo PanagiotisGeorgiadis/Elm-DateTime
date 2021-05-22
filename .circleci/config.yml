@@ -6,14 +6,17 @@ jobs:
       - image: circleci/node:8.4.0
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "1c:aa:be:76:64:29:b0:8d:ba:aa:41:89:d4:41:8e:5f"
       # Checkout the code.
       - checkout
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package-lock.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
           name: Install npm dependencies
@@ -32,13 +35,17 @@ jobs:
       - image: circleci/node:8.4.0
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "1c:aa:be:76:64:29:b0:8d:ba:aa:41:89:d4:41:8e:5f"
+
       - checkout
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package-lock.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
           name: Test the code
